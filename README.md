@@ -2,7 +2,8 @@
 
 This package provides a function which will extract text color value from predefined array of color like values.
 
-Comparison of the words is case-insensitive.
+- Comparison of the words is case-insensitive.
+- Word separators are space, start/end of strong, trailing plus sign.
 
 ## Example
 

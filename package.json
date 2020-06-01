@@ -1,6 +1,6 @@
 {
   "name": "extract-color-from-text",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Extract text color from another text.",
   "main": "index.js",
   "scripts": {

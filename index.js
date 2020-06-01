@@ -112,8 +112,6 @@ const belgiumColors = [
   'zwart',
 ];
 
-const text = 'APPLE Refurbished iPhone SE 16GB Roségoud+';
-
 function selectColorsLanguage(language) {
   switch (language) {
     case 'en':
@@ -138,5 +136,3 @@ function extractColor(text, language = 'en') {
   }
   return '';
 }
-
-console.log(extractColor(text));
