@@ -1,9 +1,10 @@
 require('dotenv').config();
+require('colors');
 const express = require('express');
 require('./db');
 const morgan = require('morgan');
-require('colors');
 const bootcamps = require('./routes/bootcamps');
+const globalErrorMiddleware = require('./controllers/error');
 
 const app = express();
 
@@ -11,7 +12,11 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
+app.use(express.json({ limit: '10kb' }));
+
 app.use('/api/v1/bootcamps', bootcamps);
+
+app.use(globalErrorMiddleware);
 
 const PORT = process.env.PORT || 3100;
 
