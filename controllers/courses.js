@@ -1,5 +1,6 @@
 const Course = require('../models/course');
 const Bootcamp = require('../models/bootcamp');
+const Filters = require('../utils/filters');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 
@@ -9,10 +10,19 @@ exports.getCourses = catchAsync(async (req, res, next) => {
   if (req.params.bootcampId) {
     query = Course.find({ bootcamp: req.params.bootcampId });
   } else {
-    query = Course.find().populate({
-      path: 'bootcamp',
-      select: 'name description',
-    });
+    filtered = new Filters(
+      Course.find().populate({
+        path: 'bootcamp',
+        select: 'name description',
+      }),
+      req.query
+    )
+      .filter()
+      .select()
+      .sort()
+      .paginate();
+
+    query = filtered.docs;
   }
 
   const courses = await query;

@@ -1,8 +1,10 @@
+const path = require('path');
 require('dotenv').config();
 require('colors');
 const express = require('express');
 require('./db');
 const morgan = require('morgan');
+const fileupload = require('express-fileupload');
 const bootcamps = require('./routes/bootcamps');
 const courses = require('./routes/courses');
 const globalErrorMiddleware = require('./controllers/error');
@@ -14,6 +16,9 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use(express.json({ limit: '10kb' }));
+app.use(fileupload());
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/v1/bootcamps', bootcamps);
 app.use('/api/v1/courses', courses);

@@ -1,64 +1,21 @@
+const path = require('path');
 const Bootcamp = require('../models/bootcamp');
 const geocoder = require('../utils/geocoder');
+const Filters = require('../utils/filters');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 
 exports.getBootcamps = catchAsync(async (req, res, next) => {
-  let query;
+  const filtered = new Filters(Bootcamp.find().populate('courses'), req.query)
+    .filter()
+    .select()
+    .sort()
+    .paginate();
+  const bootcamps = await filtered.docs;
 
-  const reqQuery = { ...req.query };
-
-  const removeFields = ['select', 'sort', 'page', 'limit'];
-  removeFields.forEach((field) => delete reqQuery[field]);
-
-  let queryStr = JSON.stringify(reqQuery);
-  queryStr = queryStr.replace(
-    /\b(gt|gte|lt|lte|in)\b/g,
-    (match) => `$${match}`
-  );
-
-  query = Bootcamp.find(JSON.parse(queryStr)).populate('courses');
-
-  if (req.query.select) {
-    const fields = req.query.select.split(',').join(' ');
-    query = query.select(fields);
-  }
-
-  if (req.query.sort) {
-    const sortBy = req.query.sort.split(',').join(' ');
-    query = query.sort(sortBy);
-  } else {
-    query = query.sort('-createdAt');
-  }
-
-  const page = parseInt(req.query.page, 10) || 1;
-  const limit = parseInt(req.query.limit, 10) || 10;
-  const startIndex = (page - 1) * limit;
-  const endIndex = page * limit;
-  const total = await Bootcamp.countDocuments();
-  query = query.skip(startIndex).limit(limit);
-
-  const pagination = {};
-
-  if (endIndex < total) {
-    pagination.next = {
-      page: page + 1,
-      limit,
-    };
-  }
-
-  if (startIndex > 0 && endIndex <= total) {
-    pagination.prev = {
-      page: page - 1,
-      limit,
-    };
-  }
-
-  const bootcamps = await query;
   res.status(200).json({
     success: true,
     results: bootcamps.length,
-    pagination,
     data: bootcamps,
   });
 });
@@ -126,4 +83,39 @@ exports.getBootcampsInRadius = catchAsync(async (req, res, next) => {
   res
     .status(200)
     .json({ success: true, results: bootcamps.length, data: bootcamps });
+});
+
+exports.bootcampPhotoUpload = catchAsync(async (req, res, next) => {
+  const bootcamp = await Bootcamp.findById(req.params.id);
+
+  if (!bootcamp) {
+    return next(
+      new AppError(`Bootcamp with id: ${req.params.id} not found`, 404)
+    );
+  }
+
+  if (!req.files) {
+    return next(new AppError('Please upload a photo.', 400));
+  }
+
+  const file = req.files.imageFile;
+
+  if (!file.mimetype.startsWith('image')) {
+    return next(new AppError('Please upload an image file.', 400));
+  }
+  if (file.size > 1000000) {
+    return next(new AppError('File size should be less than 1MB.', 400));
+  }
+
+  file.name = `photo_${bootcamp._id}${path.parse(file.name).ext}`;
+
+  file.mv(`./public/uploads/${file.name}`, async (err) => {
+    if (err) {
+      return next(new AppError('Upload failed'.red.underline.bold, 500));
+    }
+
+    await Bootcamp.findByIdAndUpdate(req.params.id, { photo: file.name });
+
+    res.status(200).json({ success: true, data: file.name });
+  });
 });
