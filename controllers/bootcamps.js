@@ -17,7 +17,7 @@ exports.getBootcamps = catchAsync(async (req, res, next) => {
     (match) => `$${match}`
   );
 
-  query = Bootcamp.find(JSON.parse(queryStr));
+  query = Bootcamp.find(JSON.parse(queryStr)).populate('courses');
 
   if (req.query.select) {
     const fields = req.query.select.split(',').join(' ');
@@ -32,7 +32,7 @@ exports.getBootcamps = catchAsync(async (req, res, next) => {
   }
 
   const page = parseInt(req.query.page, 10) || 1;
-  const limit = parseInt(req.query.limit, 10) || 1;
+  const limit = parseInt(req.query.limit, 10) || 10;
   const startIndex = (page - 1) * limit;
   const endIndex = page * limit;
   const total = await Bootcamp.countDocuments();
@@ -96,13 +96,16 @@ exports.updateBootcamp = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteBootcamp = catchAsync(async (req, res, next) => {
-  const bootcamp = await Bootcamp.findByIdAndDelete(req.params.id);
+  // findByIdAndDelete will not trigger schema middlewares, so here later remove method is used.
+  const bootcamp = await Bootcamp.findById(req.params.id);
 
   if (!bootcamp) {
     return next(
       new AppError(`Bootcamp with id: ${req.params.id} not found`, 404)
     );
   }
+
+  bootcamp.remove();
 
   res.status(200).json({ success: true, data: null });
 });
