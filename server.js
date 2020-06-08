@@ -4,6 +4,7 @@ require('colors');
 const express = require('express');
 require('./db');
 const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
 const fileupload = require('express-fileupload');
 const auth = require('./routes/auth');
 const bootcamps = require('./routes/bootcamps');
@@ -18,6 +19,8 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(express.json({ limit: '10kb' }));
 app.use(fileupload());
+
+app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
