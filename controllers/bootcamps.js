@@ -62,7 +62,7 @@ exports.updateBootcamp = catchAsync(async (req, res, next) => {
   if (bootcamp.user.toString() !== req.user.id && req.user.role !== 'admin') {
     return next(
       new AppError(
-        `User with id: ${req.params.id} is not allowed to update this resource`,
+        `User with id: ${req.user.id} is not allowed to update this resource`,
         401
       )
     );
@@ -89,7 +89,7 @@ exports.deleteBootcamp = catchAsync(async (req, res, next) => {
   if (bootcamp.user.toString() !== req.user.id && req.user.role !== 'admin') {
     return next(
       new AppError(
-        `User with id: ${req.params.id} is not allowed to delete this resource`,
+        `User with id: ${req.user.id} is not allowed to delete this resource`,
         401
       )
     );
@@ -130,7 +130,7 @@ exports.bootcampPhotoUpload = catchAsync(async (req, res, next) => {
   if (bootcamp.user.toString() !== req.user.id && req.user.role !== 'admin') {
     return next(
       new AppError(
-        `User with id: ${req.params.id} is not allowed to update this resource`,
+        `User with id: ${req.user.id} is not allowed to update this resource`,
         401
       )
     );

@@ -49,12 +49,22 @@ exports.getCourse = catchAsync(async (req, res, next) => {
 
 exports.addCourse = catchAsync(async (req, res, next) => {
   req.body.bootcamp = req.params.bootcampId;
+  req.body.user = req.user.id;
 
   const bootcamp = await Bootcamp.findById(req.params.bootcampId);
 
   if (!bootcamp) {
     return next(
       new AppError(`Bootcamp with id: ${req.params.bootcampId} not found.`, 404)
+    );
+  }
+
+  if (bootcamp.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    return next(
+      new AppError(
+        `User with id: ${req.user.id} is not allowed to add course to bootcamp with id ${bootcamp._id}`,
+        401
+      )
     );
   }
 
@@ -72,6 +82,15 @@ exports.updateCourse = catchAsync(async (req, res, next) => {
     );
   }
 
+  if (course.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    return next(
+      new AppError(
+        `User with id: ${req.user.id} is not allowed to update course with id ${course._id}`,
+        401
+      )
+    );
+  }
+
   course = await Course.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true,
@@ -86,6 +105,15 @@ exports.deleteCourse = catchAsync(async (req, res, next) => {
   if (!course) {
     return next(
       new AppError(`Course with id: ${req.params.id} not found.`, 404)
+    );
+  }
+
+  if (course.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    return next(
+      new AppError(
+        `User with id: ${req.user.id} is not allowed to delete course with id ${course._id}`,
+        401
+      )
     );
   }
 
