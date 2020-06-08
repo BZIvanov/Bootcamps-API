@@ -33,21 +33,45 @@ exports.getBootcamp = catchAsync(async (req, res, next) => {
 });
 
 exports.createBootcamp = catchAsync(async (req, res, next) => {
+  req.body.user = req.user.id;
+
+  const publishedBootcamp = await Bootcamp.findOne({ user: req.user.id });
+
+  if (publishedBootcamp && req.user.role !== 'admin') {
+    return next(
+      new AppError(
+        `User with id ${req.user.id} has already published a bootcamp`,
+        400
+      )
+    );
+  }
+
   const bootcamp = await Bootcamp.create(req.body);
   res.status(201).json({ success: true, data: bootcamp });
 });
 
 exports.updateBootcamp = catchAsync(async (req, res, next) => {
-  const bootcamp = await Bootcamp.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
+  let bootcamp = await Bootcamp.findById(req.params.id);
 
   if (!bootcamp) {
     return next(
       new AppError(`Bootcamp with id: ${req.params.id} not found`, 404)
     );
   }
+
+  if (bootcamp.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    return next(
+      new AppError(
+        `User with id: ${req.params.id} is not allowed to update this resource`,
+        401
+      )
+    );
+  }
+
+  bootcamp = await Bootcamp.findOneAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
 
   res.status(200).json({ success: true, data: bootcamp });
 });
@@ -59,6 +83,15 @@ exports.deleteBootcamp = catchAsync(async (req, res, next) => {
   if (!bootcamp) {
     return next(
       new AppError(`Bootcamp with id: ${req.params.id} not found`, 404)
+    );
+  }
+
+  if (bootcamp.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    return next(
+      new AppError(
+        `User with id: ${req.params.id} is not allowed to delete this resource`,
+        401
+      )
     );
   }
 
@@ -91,6 +124,15 @@ exports.bootcampPhotoUpload = catchAsync(async (req, res, next) => {
   if (!bootcamp) {
     return next(
       new AppError(`Bootcamp with id: ${req.params.id} not found`, 404)
+    );
+  }
+
+  if (bootcamp.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    return next(
+      new AppError(
+        `User with id: ${req.params.id} is not allowed to update this resource`,
+        401
+      )
     );
   }
 
