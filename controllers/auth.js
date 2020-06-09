@@ -56,6 +56,31 @@ exports.getMe = catchAsync(async (req, res, next) => {
   res.status(200).json({ success: true, data: user });
 });
 
+exports.updateDetails = catchAsync(async (req, res, next) => {
+  const fields = { name: req.body.name, email: req.body.email };
+
+  const user = await User.findByIdAndUpdate(req.user.id, fields, {
+    new: true,
+    runValidators: true,
+  });
+
+  res.status(200).json({ success: true, data: user });
+});
+
+exports.updatePassword = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user.id).select('+password');
+  console.log(req.body.newPassword);
+  console.log(req.body.currentPassword);
+  console.log(user);
+  if (!(await user.matchPassword(req.body.currentPassword))) {
+    return next(new AppError('Incorrect password', 401));
+  }
+
+  user.password = req.body.newPassword;
+  await user.save();
+  sendTokenResponse(user, 200, res);
+});
+
 exports.forgotPassword = catchAsync(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
 
