@@ -2,6 +2,7 @@ const path = require('path');
 require('dotenv').config();
 require('colors');
 const express = require('express');
+const securityMiddlewares = require('./security');
 require('./db');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
@@ -23,6 +24,8 @@ app.use(express.json({ limit: '10kb' }));
 app.use(fileupload());
 
 app.use(cookieParser());
+
+securityMiddlewares(app);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
