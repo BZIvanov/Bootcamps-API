@@ -40,7 +40,7 @@ but before that you need to update your **.env** file.
 1. Mapquest.
 
 - Go to [Mapquest]('https://developer.mapquest.com/') and create your free acount.
-- navigate to **MyKeys** and get _Consumer Key_ value, this is your GEOCODER_API_KEY.
+- navigate to **ManageKeys**, expand **My Application** and get _Consumer Key_ value, this is your GEOCODER_API_KEY.
 
 2. MailTrap
 
