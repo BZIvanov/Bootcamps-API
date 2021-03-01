@@ -1,47 +1,46 @@
-const mongoose = require('mongoose');
+const { Schema, model } = require('mongoose');
 
-const schema = new mongoose.Schema({
-  title: {
-    type: String,
-    trim: true,
-    required: [true, 'Please provide a course title'],
+const schema = new Schema(
+  {
+    title: {
+      type: String,
+      trim: true,
+      required: [true, 'Please provide a course title'],
+    },
+    description: {
+      type: String,
+      required: [true, 'Please provide a description'],
+    },
+    weeks: {
+      type: Number,
+      required: [true, 'Please provide number of weeks'],
+    },
+    tuition: {
+      type: Number,
+      required: [true, 'Please provide tuituin cost'],
+    },
+    minimumSkill: {
+      type: String,
+      required: [true, 'Please provide minimum skill'],
+      enum: ['beginner', 'intermediate', 'advanced'],
+    },
+    scolarshipAvailable: {
+      type: Boolean,
+      default: false,
+    },
+    bootcamp: {
+      type: Schema.Types.ObjectId,
+      ref: 'Bootcamp',
+      required: true,
+    },
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
   },
-  description: {
-    type: String,
-    required: [true, 'Please provide a description'],
-  },
-  weeks: {
-    type: Number,
-    required: [true, 'Please provide number of weeks'],
-  },
-  tuition: {
-    type: Number,
-    required: [true, 'Please provide tuituin cost'],
-  },
-  minimumSkill: {
-    type: String,
-    required: [true, 'Please provide minimum skill'],
-    enum: ['beginner', 'intermediate', 'advanced'],
-  },
-  scolarshipAvailable: {
-    type: Boolean,
-    default: false,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-  bootcamp: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'Bootcamp',
-    required: true,
-  },
-  user: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'User',
-    required: true,
-  },
-});
+  { timestamps: true }
+);
 
 schema.statics.getAverageCost = async function (bootcampId) {
   const agg = await this.aggregate([
@@ -73,4 +72,4 @@ schema.pre('save', function () {
   this.constructor.getAverageCost(this.bootcamp);
 });
 
-module.exports = mongoose.model('Course', schema);
+module.exports = model('Course', schema);

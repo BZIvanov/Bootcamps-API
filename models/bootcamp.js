@@ -1,9 +1,9 @@
-const mongoose = require('mongoose');
+const { Schema, model } = require('mongoose');
 const validator = require('validator');
 const slugify = require('slugify');
 const geocoder = require('../utils/geocoder');
 
-const schema = new mongoose.Schema(
+const schema = new Schema(
   {
     name: {
       type: String,
@@ -97,12 +97,8 @@ const schema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
     user: {
-      type: mongoose.Schema.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
     },
@@ -110,6 +106,7 @@ const schema = new mongoose.Schema(
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
+    timestamps: true,
   }
 );
 
@@ -147,4 +144,4 @@ schema.virtual('courses', {
   justOne: false,
 });
 
-module.exports = mongoose.model('Bootcamp', schema);
+module.exports = model('Bootcamp', schema);

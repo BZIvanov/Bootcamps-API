@@ -31,8 +31,8 @@
     "mongoose": "^5.11.15",
     "node-geocoder": "^3.27.0",
     "nodemailer": "^6.4.8",
-    "slugify": "^1.4.0",
-    "validator": "^13.0.0",
+    "slugify": "^1.4.7",
+    "validator": "^13.5.2",
     "xss-clean": "^0.1.1"
   }
 }

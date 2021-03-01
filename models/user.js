@@ -1,38 +1,37 @@
 const crypto = require('crypto');
-const mongoose = require('mongoose');
+const { Schema, model } = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const schema = new mongoose.Schema({
-  name: {
-    type: String,
-    trim: true,
-    required: [true, 'Please provide a name'],
+const schema = new Schema(
+  {
+    name: {
+      type: String,
+      trim: true,
+      required: [true, 'Please provide a name'],
+    },
+    email: {
+      type: String,
+      unique: true,
+      validate: [validator.isEmail, 'Please provide a valid email'],
+    },
+    password: {
+      type: String,
+      required: [true, 'Please provide a password'],
+      minlength: 6,
+      select: false,
+    },
+    role: {
+      type: String,
+      enum: ['user', 'publisher'],
+      default: 'user',
+    },
+    resetPasswordToken: String,
+    resetPasswordExpire: Date,
   },
-  email: {
-    type: String,
-    unique: true,
-    validate: [validator.isEmail, 'Please provide a valid email'],
-  },
-  password: {
-    type: String,
-    required: [true, 'Please provide a password'],
-    minlength: 6,
-    select: false,
-  },
-  role: {
-    type: String,
-    enum: ['user', 'publisher'],
-    default: 'user',
-  },
-  resetPasswordToken: String,
-  resetPasswordExpire: Date,
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+  { timestamps: true }
+);
 
 schema.pre('save', async function (next) {
   if (!this.isModified('password')) {
@@ -65,4 +64,4 @@ schema.methods.getResetPasswordToken = function () {
   return resetToken;
 };
 
-module.exports = mongoose.model('User', schema);
+module.exports = model('User', schema);
