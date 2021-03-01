@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const log = require('../utils/log');
 
 mongoose
   .connect(process.env.DB_URI, {
@@ -8,7 +9,8 @@ mongoose
     useFindAndModify: false,
   })
   .then((connection) => {
-    console.log(
+    log(
+      'info',
       `DB connection successful and ready for ${connection.connections[0].host}`
     );
   });

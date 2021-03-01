@@ -11,13 +11,13 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "colors": "^1.4.0",
     "morgan": "^1.10.0",
     "ndb": "^1.1.5",
     "nodemon": "^2.0.7"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "colors": "^1.4.0",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
@@ -28,7 +28,7 @@
     "helmet": "^3.22.0",
     "hpp": "^0.2.3",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.9.18",
+    "mongoose": "^5.11.15",
     "node-geocoder": "^3.27.0",
     "nodemailer": "^6.4.8",
     "slugify": "^1.4.0",

@@ -1,10 +1,6 @@
 const TYPES = ['info', 'success', 'warning'];
 
-module.exports = (type, message, err) => {
-  if (process.env.NODE_ENV === 'production') {
-    return;
-  }
-
+module.exports = (type, message, err = '') => {
   if (!TYPES.includes(type) || !message) {
     return console.log('Incorrect message format.');
   }
