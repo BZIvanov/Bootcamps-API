@@ -19,7 +19,7 @@ const schema = new Schema(
     password: {
       type: String,
       required: [true, 'Please provide a password'],
-      minlength: 6,
+      minlength: 8,
       select: false,
     },
     role: {
@@ -44,7 +44,7 @@ schema.pre('save', async function (next) {
 
 schema.methods.getSignedJwtToken = function () {
   return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN,
+    expiresIn: '1d',
   });
 };
 

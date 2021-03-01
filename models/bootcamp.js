@@ -135,6 +135,7 @@ schema.pre('save', async function (next) {
 
 schema.pre('remove', async function (next) {
   await this.model('Course').deleteMany({ bootcamp: this._id });
+  next();
 });
 
 schema.virtual('courses', {
