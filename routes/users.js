@@ -8,7 +8,7 @@ const {
 } = require('../controllers/users');
 const { protect, authorize } = require('../controllers/auth');
 
-// these two will aplly to all our routes
+// these two will aplly to all our users routes
 router.use(protect);
 router.use(authorize('admin'));
 

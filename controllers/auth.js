@@ -106,7 +106,11 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   const text = `Here is your password reset URL:\n\n${resetUrl}`;
 
   try {
-    sendEmail({ email: user.email, subject: 'Password reset token', text });
+    await sendEmail({
+      email: user.email,
+      subject: 'Password reset token',
+      text,
+    });
   } catch (err) {
     console.log('Sending mail error'.red.underline.bold, err);
     user.resetPasswordToken = undefined;
