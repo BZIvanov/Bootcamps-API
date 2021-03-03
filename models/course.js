@@ -68,7 +68,7 @@ schema.post('save', function () {
   this.constructor.getAverageCost(this.bootcamp);
 });
 
-schema.pre('save', function () {
+schema.pre('remove', function () {
   this.constructor.getAverageCost(this.bootcamp);
 });
 

@@ -25,8 +25,6 @@ but before that you need to update your **.env** file.
 - GEOCODER_API_KEY - geocoder api key (read below how to use)
 
 - JWT_SECRET - jsonwebtoken secret
-- JWT_EXPIRES_IN - expiration time for the jswonwebtoken
-- JWT_COOKIE_EXPIRES_IN - expiration time for the jsonwebtoken cookies
 
 - SMTP_HOST - mail host (read below how to use)
 - SMTP_PORT - mail port, default 2525
