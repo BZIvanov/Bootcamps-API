@@ -8,7 +8,6 @@ const app = express();
 require('./startup/db');
 require('./startup/security')(app);
 require('./startup/express')(app);
-require('./startup/routes')(app);
 
 const PORT = process.env.PORT || 3100;
 const server = app.listen(PORT, () =>

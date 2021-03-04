@@ -15,9 +15,10 @@ const sendTokenResponse = (user, statusCode, res) => {
   };
 
   res
+    .header('Authorization', `Bearer ${token}`)
     .status(statusCode)
     .cookie('token', token, options)
-    .json({ success: true, token });
+    .json({ success: true });
 };
 
 exports.register = catchAsync(async (req, res, next) => {
