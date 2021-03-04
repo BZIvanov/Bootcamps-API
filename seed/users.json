@@ -1,0 +1,23 @@
+[
+  {
+    "_id": "60400c1c148cf728f47ccff5",
+    "name": "Iva",
+    "email": "iva@mail.com",
+    "password": "12345678",
+    "role": "user"
+  },
+  {
+    "_id": "60408b786ef3ae60d09fa995",
+    "name": "Marina",
+    "email": "marina@mail.com",
+    "password": "12345678",
+    "role": "user"
+  },
+  {
+    "_id": "60408fa85d070246b8ebc755",
+    "name": "Toni",
+    "email": "toni@mail.com",
+    "password": "12345678",
+    "role": "user"
+  }
+]

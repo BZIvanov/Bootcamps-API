@@ -3,10 +3,11 @@ const path = require('path');
 require('dotenv').config();
 const mongoose = require('mongoose');
 require('colors');
+const User = require('../models/user');
 const Bootcamp = require('../models/bootcamp');
 const Course = require('../models/course');
 
-mongoose.connect(process.env.DB_PATH, {
+mongoose.connect(process.env.DB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
@@ -15,6 +16,10 @@ mongoose.connect(process.env.DB_PATH, {
 
 const seedData = async () => {
   try {
+    const usersSeedDataPath = path.join(__dirname, 'users.json');
+    const users = fs.readFileSync(usersSeedDataPath, 'utf8');
+    await User.create(JSON.parse(users));
+
     const bootcampsSeedDataPath = path.join(__dirname, 'bootcamps.json');
     const bootcamps = fs.readFileSync(bootcampsSeedDataPath, 'utf8');
     await Bootcamp.create(JSON.parse(bootcamps));
@@ -32,6 +37,7 @@ const seedData = async () => {
 
 const deleteData = async () => {
   try {
+    await User.deleteMany();
     await Bootcamp.deleteMany();
     await Course.deleteMany();
     console.log('All documents were deleted.'.green.bgGray.bold);

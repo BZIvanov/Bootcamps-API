@@ -26,7 +26,7 @@ exports.register = catchAsync(async (req, res, next) => {
 
   const user = await User.create({ name, email, password, role });
 
-  sendTokenResponse(user, 200, res);
+  sendTokenResponse(user, 201, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -51,11 +51,12 @@ exports.login = catchAsync(async (req, res, next) => {
 
 exports.logout = catchAsync(async (req, res, next) => {
   res.cookie('token', 'none', {
-    expires: new Date(Date.now() + 10 * 1000),
+    expires: new Date(Date.now() + 5 * 1000),
     httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
   });
 
-  res.status(200).json({ success: true, data: null });
+  res.status(200).json({ success: true });
 });
 
 exports.getMe = catchAsync(async (req, res, next) => {

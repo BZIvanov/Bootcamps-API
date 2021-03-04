@@ -1,10 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+      }
+      body {
+        padding: 10px;
+      }
+      .title {
+        display: flex;
+        margin-bottom: 3px;
+        background-color: rgb(202, 220, 235);
+        padding: 3px;
+      }
+      .route {
+        padding: 5px;
+        border: 1px solid #ccc;
+      }
+      .get {
+        background-color: #d9e49d;
+        padding: 3px;
+      }
+      .post {
+        background-color: #9ddfe4;
+        padding: 3px;
+      }
+      .body {
+        padding-left: 10px;
+      }
+    </style>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>API</title>
   </head>
-  <body></body>
+  <body>
+    <div>
+      <h3>Auth</h3>
+      <div class="route">
+        <div class="title">
+          <h4>Register</h4>
+          <span>&nbsp; - register new user</span>
+        </div>
+        <p class="post"><strong>POST</strong> /api/v1/auth/register</p>
+        <div class="body">
+          <pre>
+{
+  "name": "Ina",
+  "email": "ina@mail.com",
+  "password": "12345678",
+  "role": "user"
+}
+          </pre>
+        </div>
+      </div>
+      <div class="route">
+        <div class="title">
+          <h4>Login</h4>
+          <span>&nbsp; - login already registered user</span>
+        </div>
+        <p class="post"><strong>POST</strong> /api/v1/auth/login</p>
+        <div class="body">
+          <pre>
+{
+  "email": "ina@mail.com",
+  "password": "12345678"
+}
+          </pre>
+        </div>
+      </div>
+      <div class="route">
+        <div class="title">
+          <h4>Logout</h4>
+          <span>&nbsp; - logout user</span>
+        </div>
+        <p class="get"><strong>GET</strong> /api/v1/auth/logout</p>
+      </div>
+    </div>
+  </body>
 </html>
