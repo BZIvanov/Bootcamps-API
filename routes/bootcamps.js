@@ -8,7 +8,8 @@ const {
   getBootcampsInRadius,
   bootcampPhotoUpload,
 } = require('../controllers/bootcamps');
-const { protect, authorize } = require('../controllers/auth');
+const authenticate = require('../middlewares/authenticate');
+const authorize = require('../middlewares/authorize');
 const coursesRouter = require('./courses');
 const reviewsRouter = require('./reviews');
 
@@ -19,15 +20,15 @@ router.use('/:bootcampId/reviews', reviewsRouter);
 router
   .route('/')
   .get(getBootcamps)
-  .post(protect, authorize('publisher', 'admin'), createBootcamp);
+  .post(authenticate, authorize('publisher', 'admin'), createBootcamp);
 router
   .route('/:id')
   .get(getBootcamp)
-  .put(protect, authorize('publisher', 'admin'), updateBootcamp)
-  .delete(protect, authorize('publisher', 'admin'), deleteBootcamp);
+  .put(authenticate, authorize('publisher', 'admin'), updateBootcamp)
+  .delete(authenticate, authorize('publisher', 'admin'), deleteBootcamp);
 router
   .route('/:id/photo')
-  .put(protect, authorize('publisher', 'admin'), bootcampPhotoUpload);
+  .put(authenticate, authorize('publisher', 'admin'), bootcampPhotoUpload);
 router.route('/radius/:zipcode/:distance').get(getBootcampsInRadius);
 
 module.exports = router;

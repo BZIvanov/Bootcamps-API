@@ -6,10 +6,11 @@ const {
   updateUser,
   deleteUser,
 } = require('../controllers/users');
-const { protect, authorize } = require('../controllers/auth');
+const authenticate = require('../middlewares/authenticate');
+const authorize = require('../middlewares/authorize');
 
 // these two will aplly to all our users routes
-router.use(protect);
+router.use(authenticate);
 router.use(authorize('admin'));
 
 router.route('/').get(getUsers).post(createUser);

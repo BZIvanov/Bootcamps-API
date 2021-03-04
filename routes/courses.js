@@ -6,16 +6,17 @@ const {
   updateCourse,
   deleteCourse,
 } = require('../controllers/courses');
-const { protect, authorize } = require('../controllers/auth');
+const authenticate = require('../middlewares/authenticate');
+const authorize = require('../middlewares/authorize');
 
 router
   .route('/')
   .get(getCourses)
-  .post(protect, authorize('publisher', 'admin'), addCourse);
+  .post(authenticate, authorize('publisher', 'admin'), addCourse);
 router
   .route('/:id')
   .get(getCourse)
-  .put(protect, authorize('publisher', 'admin'), updateCourse)
-  .delete(protect, authorize('publisher', 'admin'), deleteCourse);
+  .put(authenticate, authorize('publisher', 'admin'), updateCourse)
+  .delete(authenticate, authorize('publisher', 'admin'), deleteCourse);
 
 module.exports = router;
