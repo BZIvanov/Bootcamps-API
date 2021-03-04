@@ -4,7 +4,6 @@ const AppError = require('../utils/appError');
 const User = require('../models/user');
 
 module.exports = catchAsync(async (req, res, next) => {
-  console.log(req.headers);
   let token;
   if (
     req.headers.authorization &&

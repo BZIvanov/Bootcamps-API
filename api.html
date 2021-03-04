@@ -9,26 +9,45 @@
       body {
         padding: 10px;
       }
+      hr {
+        margin: 15px 0;
+      }
       .title {
         display: flex;
         margin-bottom: 3px;
-        background-color: rgb(202, 220, 235);
+        background-color: rgb(37, 86, 126);
+        color: rgb(243, 252, 252);
         padding: 3px;
       }
       .route {
         padding: 5px;
-        border: 1px solid #ccc;
+        border: 1px solid rgb(204, 204, 204);
       }
       .get {
-        background-color: #d9e49d;
+        background-color: #e9f0c6;
         padding: 3px;
       }
       .post {
-        background-color: #9ddfe4;
+        background-color: #caecee;
+        padding: 3px;
+      }
+      .put {
+        background-color: #dbcaee;
+        padding: 3px;
+      }
+      .delete {
+        background-color: #eed2ca;
         padding: 3px;
       }
       .body {
         padding-left: 10px;
+      }
+      ul {
+        margin: 3px 15px;
+      }
+      .details {
+        background-color: rgb(245, 242, 242);
+        padding: 5px;
       }
     </style>
     <meta charset="UTF-8" />
@@ -77,6 +96,94 @@
           <span>&nbsp; - logout user</span>
         </div>
         <p class="get"><strong>GET</strong> /api/v1/auth/logout</p>
+      </div>
+    </div>
+
+    <hr />
+
+    <div>
+      <h3>Bootcamps</h3>
+      <div class="route">
+        <div class="title">
+          <h4>Create</h4>
+          <span>&nbsp; - create new bootcamp</span>
+        </div>
+        <p class="post"><strong>POST</strong> /api/v1/bootcamps</p>
+        <div class="body">
+          <pre>
+{
+  "name": "SoftSkills",
+  "description": "Learn some things",
+  "website": "https://www.soft-skills.com",
+  "address": "bulevard Cherni vrah 100, 1407 Hladilnika, Sofia",
+  "careers": "Business"
+}
+          </pre>
+        </div>
+        <div class="details">
+          <p>Details:</p>
+          <ul>
+            <li>
+              Only users with role publisher or admin can create bootcamps
+            </li>
+            <li>Users with role publisher can have only 1 bootcamp</li>
+            <li>Location is created based on the provided address.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="route">
+        <div class="title">
+          <h4>Get bootcamps</h4>
+          <span>&nbsp; - get all/filtered bootcamps</span>
+        </div>
+        <p class="get"><strong>GET</strong> /api/v1/bootcamps</p>
+      </div>
+      <div class="route">
+        <div class="title">
+          <h4>Get bootcamp</h4>
+          <span>&nbsp; - get bootcamp by id</span>
+        </div>
+        <p class="get"><strong>GET</strong> /api/v1/bootcamps/:id</p>
+      </div>
+      <div class="route">
+        <div class="title">
+          <h4>Update bootcamp</h4>
+          <span>&nbsp; - update bootcamp by id</span>
+        </div>
+        <p class="put"><strong>PUT</strong> /api/v1/bootcamps/:id</p>
+        <div class="body">
+          <pre>
+{
+  "name": "SoftSkillsPro",
+  "description": "Learn some more things."
+}
+          </pre>
+        </div>
+        <div class="details">
+          <p>Details:</p>
+          <ul>
+            <li>
+              Require authentication and authorization. Users can edit only
+              their own bootcamps, admins can edit any bootcamp.
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="route">
+        <div class="title">
+          <h4>Delete bootcamp</h4>
+          <span>&nbsp; - delete bootcamp by id</span>
+        </div>
+        <p class="delete"><strong>DELETE</strong> /api/v1/bootcamps/:id</p>
+        <div class="details">
+          <p>Details:</p>
+          <ul>
+            <li>
+              Require authentication and authorization. Users can delete only
+              their own bootcamps, admins can delete any bootcamp.
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </body>

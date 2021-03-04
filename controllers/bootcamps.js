@@ -98,7 +98,7 @@ exports.deleteBootcamp = catchAsync(async (req, res, next) => {
   // remove method is important to be used like this to trigger the pre method of the schema
   bootcamp.remove();
 
-  res.status(200).json({ success: true, data: null });
+  res.status(200).json({ success: true });
 });
 
 exports.getBootcampsInRadius = catchAsync(async (req, res, next) => {
