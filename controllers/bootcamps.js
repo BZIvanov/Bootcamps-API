@@ -3,7 +3,7 @@ const Bootcamp = require('../models/bootcamp');
 const geocoder = require('../utils/geocoder');
 const Filters = require('../utils/filters');
 const AppError = require('../utils/appError');
-const catchAsync = require('../utils/catchAsync');
+const catchAsync = require('../middlewares/catch-async');
 
 exports.getBootcamps = catchAsync(async (req, res, next) => {
   const filtered = new Filters(Bootcamp.find().populate('courses'), req.query)

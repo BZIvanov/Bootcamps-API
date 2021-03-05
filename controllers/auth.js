@@ -2,7 +2,7 @@ const crypto = require('crypto');
 const User = require('../models/user');
 const sendEmail = require('../utils/sendEmail');
 const AppError = require('../utils/appError');
-const catchAsync = require('../utils/catchAsync');
+const catchAsync = require('../middlewares/catch-async');
 
 const sendTokenResponse = (user, statusCode, res) => {
   const token = user.getSignedJwtToken();

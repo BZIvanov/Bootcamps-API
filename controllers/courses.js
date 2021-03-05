@@ -2,7 +2,7 @@ const Course = require('../models/course');
 const Bootcamp = require('../models/bootcamp');
 const Filters = require('../utils/filters');
 const AppError = require('../utils/appError');
-const catchAsync = require('../utils/catchAsync');
+const catchAsync = require('../middlewares/catch-async');
 
 exports.getCourses = catchAsync(async (req, res, next) => {
   let query;
