@@ -24,10 +24,6 @@ const schema = new Schema(
       required: [true, 'Please provide minimum skill'],
       enum: ['beginner', 'intermediate', 'advanced'],
     },
-    scolarshipAvailable: {
-      type: Boolean,
-      default: false,
-    },
     bootcamp: {
       type: Schema.Types.ObjectId,
       ref: 'Bootcamp',

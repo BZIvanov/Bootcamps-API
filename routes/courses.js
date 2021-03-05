@@ -2,7 +2,7 @@ const router = require('express').Router({ mergeParams: true });
 const {
   getCourses,
   getCourse,
-  addCourse,
+  createCourse,
   updateCourse,
   deleteCourse,
 } = require('../controllers/courses');
@@ -12,7 +12,7 @@ const authorize = require('../middlewares/authorize');
 router
   .route('/')
   .get(getCourses)
-  .post(authenticate, authorize('publisher', 'admin'), addCourse);
+  .post(authenticate, authorize('publisher', 'admin'), createCourse);
 router
   .route('/:id')
   .get(getCourse)

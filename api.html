@@ -74,6 +74,14 @@
 }
           </pre>
         </div>
+        <div class="details">
+          <p>Details:</p>
+          <ul>
+            <li>
+              Users with role Admin should be manually updated in the database
+            </li>
+          </ul>
+        </div>
       </div>
       <div class="route">
         <div class="title">
@@ -137,6 +145,21 @@
           <span>&nbsp; - get all/filtered bootcamps</span>
         </div>
         <p class="get"><strong>GET</strong> /api/v1/bootcamps</p>
+        <p class="get">
+          <strong>GET</strong> /api/v1/bootcamps?averageCost[lte]=10000
+        </p>
+        <p class="get">
+          <strong>GET</strong>
+          /api/v1/bootcamps?averageCost[lte]=10000&location.city=Lozenec
+        </p>
+        <p class="get">
+          <strong>GET</strong> /api/v1/bootcamps?careers[in]=Business
+        </p>
+        <p class="get">
+          <strong>GET</strong> /api/v1/bootcamps?select=name,description
+        </p>
+        <p class="get"><strong>GET</strong> /api/v1/bootcamps?sort=-name</p>
+        <p class="get"><strong>GET</strong> /api/v1/bootcamps?page=1&limit=3</p>
       </div>
       <div class="route">
         <div class="title">
@@ -181,6 +204,128 @@
             <li>
               Require authentication and authorization. Users can delete only
               their own bootcamps, admins can delete any bootcamp.
+            </li>
+            <li>
+              All courses related to the deleted bootcamp should be also
+              deleted.
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="route">
+        <div class="title">
+          <h4>Get by Distance</h4>
+          <span>&nbsp; - get bootcamps by specified zipcode and distance</span>
+        </div>
+        <p class="get">
+          <strong>GET</strong> /api/v1/bootcamps/radius/:zipcode/:distance
+        </p>
+      </div>
+    </div>
+
+    <hr />
+
+    <div>
+      <h3>Courses</h3>
+      <div class="route">
+        <div class="title">
+          <h4>Create</h4>
+          <span>&nbsp; - create new course</span>
+        </div>
+        <p class="post">
+          <strong>POST</strong> /api/v1/bootcamps/:bootcampId/courses
+        </p>
+        <div class="body">
+          <pre>
+{
+  "title": "Java",
+  "description": "Learn Java",
+  "weeks": 4,
+  "tuition": 123,
+  "minimumSkill": "beginner",
+  "user": "60408b786ef3ae60d09fa995"
+}
+          </pre>
+        </div>
+        <div class="details">
+          <p>Details:</p>
+          <ul>
+            <li>Only users with role publisher or admin can create courses</li>
+            <li>
+              Users with role publisher can post courses only in bootcamps
+              created by them.
+            </li>
+            <li>
+              When creating new course average courses cost should be calculated
+              for the Bootcamp model
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="route">
+        <div class="title">
+          <h4>Get bootcamp's courses</h4>
+          <span>&nbsp; - get all courses for specific bootcamp</span>
+        </div>
+        <p class="get">
+          <strong>GET</strong> /api/v1/bootcamps/:bootcampId/courses
+        </p>
+      </div>
+      <div class="route">
+        <div class="title">
+          <h4>Get courses</h4>
+          <span>&nbsp; - get all/filtered courses</span>
+        </div>
+        <p class="get"><strong>GET</strong> /api/v1/courses</p>
+      </div>
+      <div class="route">
+        <div class="title">
+          <h4>Get a course</h4>
+          <span>&nbsp; - get course by id</span>
+        </div>
+        <p class="get"><strong>GET</strong> /api/v1/courses/:courseId</p>
+      </div>
+      <div class="route">
+        <div class="title">
+          <h4>Update</h4>
+          <span>&nbsp; - update course fields</span>
+        </div>
+        <p class="put"><strong>PUT</strong> /api/v1/courses/:courseId</p>
+        <div class="body">
+          <pre>
+{
+  "title": "Java Script",
+  "description": "Learn Java Script",
+  "weeks": 3
+}
+          </pre>
+        </div>
+        <div class="details">
+          <p>Details:</p>
+          <ul>
+            <li>Only users with role publisher or admin can update courses</li>
+            <li>
+              Users with role publisher can update courses created by them.
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="route">
+        <div class="title">
+          <h4>Delete</h4>
+          <span>&nbsp; - delete specific course</span>
+        </div>
+        <p class="delete"><strong>DELETE</strong> /api/v1/courses/:courseId</p>
+        <div class="details">
+          <p>Details:</p>
+          <ul>
+            <li>Only users with role publisher or admin can delete courses</li>
+            <li>
+              Users with role publisher can delete courses created by them.
+            </li>
+            <li>
+              When deleting course, average courses cost should be calculated
+              for the Bootcamp model
             </li>
           </ul>
         </div>
