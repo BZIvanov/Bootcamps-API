@@ -20,7 +20,7 @@ module.exports = catchAsync(async (req, res, next) => {
     );
   }
 
-  const decoded = await jwt.verify(token, process.env.JWT_SECRET);
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
   const currentUser = await User.findById(decoded.id);
   if (!currentUser) {

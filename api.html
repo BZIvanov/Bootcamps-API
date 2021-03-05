@@ -105,6 +105,13 @@
         </div>
         <p class="get"><strong>GET</strong> /api/v1/auth/logout</p>
       </div>
+      <div class="route">
+        <div class="title">
+          <h4>Me</h4>
+          <span>&nbsp; - get current user</span>
+        </div>
+        <p class="get"><strong>GET</strong> /api/v1/auth/me</p>
+      </div>
     </div>
 
     <hr />
@@ -221,6 +228,37 @@
           <strong>GET</strong> /api/v1/bootcamps/radius/:zipcode/:distance
         </p>
       </div>
+      <div class="route">
+        <div class="title">
+          <h4>Bootcamp photo</h4>
+          <span>&nbsp; - upload image for a bootcamp</span>
+        </div>
+        <p class="put">
+          <strong>PUT</strong> /api/v1/bootcamps/:bootcampId/photo
+        </p>
+        <div class="body">
+          <pre>
+{
+  "imageFile": "image.png",
+}
+          </pre>
+        </div>
+        <div class="details">
+          <p>Details:</p>
+          <ul>
+            <li>Only creators of the bootcamp or admin can upload photo</li>
+            <li>
+              The request body is of type form-data with key imageFile and value
+              the image file itself
+            </li>
+            <li>File is saved in folder ./public/uploads</li>
+            <li>
+              In the browser you should be able to access the image on
+              http://localhost:3100/uploads/file-name.png
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
 
     <hr />
@@ -242,8 +280,7 @@
   "description": "Learn Java",
   "weeks": 4,
   "tuition": 123,
-  "minimumSkill": "beginner",
-  "user": "60408b786ef3ae60d09fa995"
+  "minimumSkill": "beginner"
 }
           </pre>
         </div>

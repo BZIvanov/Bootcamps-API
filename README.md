@@ -44,3 +44,9 @@ but before that you need to update your **.env** file.
 
 - Go to [MailTrap]('https://mailtrap.io/) and create your free acount.
 - navigate to **Settings** and under **SMTP** heading you will find your credentials. Host is your SMTP_HOST, Port is your SMTP_PORT, same for Username and Password
+
+## Supported routes
+
+For the supported routes you can use, simply open the api.html file in the browser.
+
+Supported authentication methods are jwt token in the header and cookies. Comment out the one you don't need.

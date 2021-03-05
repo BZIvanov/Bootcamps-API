@@ -35,10 +35,6 @@ const schema = new Schema(
       type: String,
       maxlength: [20, 'Phone number should be at most 20 characters'],
     },
-    email: {
-      type: String,
-      validate: [validator.isEmail, 'Please provide a valid email'],
-    },
     address: {
       type: String,
       required: [true, 'Please provide an address'],
@@ -80,22 +76,6 @@ const schema = new Schema(
     photo: {
       type: String,
       default: 'no-photo.jpg',
-    },
-    housing: {
-      type: Boolean,
-      default: false,
-    },
-    jobAssistance: {
-      type: Boolean,
-      default: false,
-    },
-    jobGuarantee: {
-      type: Boolean,
-      default: false,
-    },
-    acceptGi: {
-      type: Boolean,
-      default: false,
     },
     user: {
       type: Schema.Types.ObjectId,

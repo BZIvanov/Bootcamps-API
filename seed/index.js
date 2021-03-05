@@ -16,17 +16,21 @@ mongoose.connect(process.env.DB_URI, {
 
 const seedData = async () => {
   try {
-    const usersSeedDataPath = path.join(__dirname, 'users.json');
-    const users = fs.readFileSync(usersSeedDataPath, 'utf8');
-    await User.create(JSON.parse(users));
+    const bootcamps = JSON.parse(
+      fs.readFileSync(path.join(__dirname, 'bootcamps.json'), 'utf-8')
+    );
 
-    const bootcampsSeedDataPath = path.join(__dirname, 'bootcamps.json');
-    const bootcamps = fs.readFileSync(bootcampsSeedDataPath, 'utf8');
-    await Bootcamp.create(JSON.parse(bootcamps));
+    const courses = JSON.parse(
+      fs.readFileSync(path.join(__dirname, 'courses.json'), 'utf-8')
+    );
 
-    const coursesSeedDataPath = path.join(__dirname, 'courses.json');
-    const courses = fs.readFileSync(coursesSeedDataPath, 'utf8');
-    await Course.create(JSON.parse(courses));
+    const users = JSON.parse(
+      fs.readFileSync(path.join(__dirname, 'users.json'), 'utf-8')
+    );
+
+    await Bootcamp.create(bootcamps);
+    await Course.create(courses);
+    await User.create(users);
 
     console.log('Successfuly seeded data to DB'.green.bgGray.bold);
     process.exit();
@@ -40,6 +44,7 @@ const deleteData = async () => {
     await User.deleteMany();
     await Bootcamp.deleteMany();
     await Course.deleteMany();
+
     console.log('All documents were deleted.'.green.bgGray.bold);
     process.exit();
   } catch (error) {

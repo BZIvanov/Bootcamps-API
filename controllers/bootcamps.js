@@ -154,7 +154,7 @@ exports.bootcampPhotoUpload = catchAsync(async (req, res, next) => {
 
   file.mv(`./public/uploads/${file.name}`, async (err) => {
     if (err) {
-      return next(new AppError('Upload failed'.red.underline.bold, 500));
+      return next(new AppError('Upload failed', 500));
     }
 
     await Bootcamp.findByIdAndUpdate(req.params.id, { photo: file.name });
