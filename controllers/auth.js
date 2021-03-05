@@ -65,7 +65,14 @@ exports.getMe = catchAsync(async (req, res, next) => {
 });
 
 exports.updateDetails = catchAsync(async (req, res, next) => {
-  const fields = { name: req.body.name, email: req.body.email };
+  const { name, email } = req.body;
+  const fields = {};
+  if (name) {
+    fields.name = name;
+  }
+  if (email) {
+    fields.email = email;
+  }
 
   const user = await User.findByIdAndUpdate(req.user.id, fields, {
     new: true,
@@ -77,14 +84,20 @@ exports.updateDetails = catchAsync(async (req, res, next) => {
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id).select('+password');
-  console.log(req.body.newPassword);
-  console.log(req.body.currentPassword);
-  console.log(user);
-  if (!(await user.matchPassword(req.body.currentPassword))) {
+
+  const { currentPassword, newPassword } = req.body;
+
+  if (!currentPassword || !newPassword) {
+    return next(
+      new AppError('Both current and new passwords are required', 400)
+    );
+  }
+
+  if (!(await user.matchPassword(currentPassword))) {
     return next(new AppError('Incorrect password', 401));
   }
 
-  user.password = req.body.newPassword;
+  user.password = newPassword;
   await user.save();
   sendTokenResponse(user, 200, res);
 });

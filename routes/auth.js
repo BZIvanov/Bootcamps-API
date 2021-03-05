@@ -16,8 +16,8 @@ router.route('/login').post(login);
 router.route('/logout').get(logout);
 router.route('/me').get(authenticate, getMe);
 router.route('/update-details').put(authenticate, updateDetails);
-router.route('/forgot-password').post(forgotPassword);
 router.route('/update-password').put(authenticate, updatePassword);
+router.route('/forgot-password').post(forgotPassword);
 router.route('/reset-password/:resettoken').put(resetPassword);
 
 module.exports = router;

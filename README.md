@@ -37,13 +37,16 @@ but before that you need to update your **.env** file.
 
 1. Mapquest.
 
-- Go to [Mapquest]('https://developer.mapquest.com/') and create your free acount.
+- Go to [Mapquest](https://developer.mapquest.com/) and create your free acount.
 - navigate to **ManageKeys**, expand **My Application** and get _Consumer Key_ value, this is your GEOCODER_API_KEY.
 
 2. MailTrap
 
-- Go to [MailTrap]('https://mailtrap.io/) and create your free acount.
-- navigate to **Settings** and under **SMTP** heading you will find your credentials. Host is your SMTP_HOST, Port is your SMTP_PORT, same for Username and Password
+MailTrap can be replaced with any other mail provider, but it is a good choice for this example API.
+
+- Go to [MailTrap](https://mailtrap.io/) and create your free acount.
+- you will be redirected to **My Inbox** and under the tab **SMTP Settings** you can see **Integrations** dropdown menu. Select _Nodemailer_ and you will have your credentials ready to be copied.
+- if sending mail with Postman, you can use any mail in the body and you will receive the mail in mailtrap.
 
 ## Supported routes
 

@@ -112,6 +112,73 @@
         </div>
         <p class="get"><strong>GET</strong> /api/v1/auth/me</p>
       </div>
+      <div class="route">
+        <div class="title">
+          <h4>Forgot password</h4>
+          <span
+            >&nbsp; - generate reset token and send password reset link</span
+          >
+        </div>
+        <p class="post"><strong>POST</strong> /api/v1/auth/forgot-password</p>
+        <div class="body">
+          <pre>
+{
+  "email": "ina@mail.com"
+}
+          </pre>
+        </div>
+        <div class="details">
+          <p>Details:</p>
+          <ul>
+            <li>The token will be valid for 10 minutes</li>
+          </ul>
+        </div>
+      </div>
+      <div class="route">
+        <div class="title">
+          <h4>Reset password</h4>
+          <span>&nbsp; - use the link from the mail</span>
+        </div>
+        <p class="put">
+          <strong>PUT</strong> /api/v1/auth/reset-password/:token
+        </p>
+        <div class="body">
+          <pre>
+{
+  "password": "qwertyui"
+}
+          </pre>
+        </div>
+      </div>
+      <div class="route">
+        <div class="title">
+          <h4>Update user details</h4>
+          <span>&nbsp; - update name, email or both</span>
+        </div>
+        <p class="put"><strong>PUT</strong> /api/v1/auth/update-details</p>
+        <div class="body">
+          <pre>
+{
+  "name": "Marina Ivanova"
+}
+          </pre>
+        </div>
+      </div>
+      <div class="route">
+        <div class="title">
+          <h4>Update password</h4>
+          <span>&nbsp; - update user's password</span>
+        </div>
+        <p class="put"><strong>PUT</strong> /api/v1/auth/update-password</p>
+        <div class="body">
+          <pre>
+{
+  "currentPassword": "12345678",
+  "newPassword": "123456789"
+}
+          </pre>
+        </div>
+      </div>
     </div>
 
     <hr />
