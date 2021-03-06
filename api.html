@@ -435,5 +435,93 @@
         </div>
       </div>
     </div>
+
+    <hr />
+
+    <div>
+      <h3>Users</h3>
+      <div class="route">
+        <div class="title">
+          <h4>Create</h4>
+          <span>&nbsp; - create new user</span>
+        </div>
+        <p class="post"><strong>POST</strong> /api/v1/users</p>
+        <div class="body">
+          <pre>
+{
+  "name": "Evgeni",
+  "email": "evgeni@mail.com",
+  "password": "12345678"
+}
+          </pre>
+        </div>
+        <div class="details">
+          <p>Details:</p>
+          <ul>
+            <li>Only admins can create users</li>
+          </ul>
+        </div>
+      </div>
+      <div class="route">
+        <div class="title">
+          <h4>Get users</h4>
+          <span>&nbsp; - get all/filtered users</span>
+        </div>
+        <p class="get"><strong>GET</strong> /api/v1/users</p>
+        <div class="details">
+          <p>Details:</p>
+          <ul>
+            <li>Only admins can get users list</li>
+          </ul>
+        </div>
+      </div>
+      <div class="route">
+        <div class="title">
+          <h4>Get a user</h4>
+          <span>&nbsp; - get user by id</span>
+        </div>
+        <p class="get"><strong>GET</strong> /api/v1/users/:userId</p>
+        <div class="details">
+          <p>Details:</p>
+          <ul>
+            <li>Only admins can get user details</li>
+          </ul>
+        </div>
+      </div>
+      <div class="route">
+        <div class="title">
+          <h4>Update a user</h4>
+          <span>&nbsp; - update user by id</span>
+        </div>
+        <p class="put"><strong>PUT</strong> /api/v1/users/:userId</p>
+        <div class="body">
+          <pre>
+{
+  "name": "Evgeni A.",
+  "email": "evgeni-a@mail.com"
+}
+          </pre>
+        </div>
+        <div class="details">
+          <p>Details:</p>
+          <ul>
+            <li>Only admins can update user details</li>
+          </ul>
+        </div>
+      </div>
+      <div class="route">
+        <div class="title">
+          <h4>Delete a user</h4>
+          <span>&nbsp; - delete user by id</span>
+        </div>
+        <p class="delete"><strong>DELETE</strong> /api/v1/users/:userId</p>
+        <div class="details">
+          <p>Details:</p>
+          <ul>
+            <li>Only admins can delete users</li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

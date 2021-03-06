@@ -11,11 +11,15 @@ exports.getUsers = catchAsync(async (req, res, next) => {
     .paginate();
   const users = await filtered.docs;
 
-  res.status(200).json({ success: true, data: users });
+  res.status(200).json({ success: true, results: users.length, data: users });
 });
 
 exports.getUser = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.params.id);
+
+  if (!user) {
+    return next(new AppError(`User with id ${req.params.id} not found`, 404));
+  }
 
   res.status(200).json({ success: true, data: user });
 });
@@ -23,20 +27,34 @@ exports.getUser = catchAsync(async (req, res, next) => {
 exports.createUser = catchAsync(async (req, res, next) => {
   const user = await User.create(req.body);
 
-  res.status(201).json({ success: true, data: user });
+  const { password, ...rest } = user._doc;
+
+  res.status(201).json({ success: true, data: { ...rest } });
 });
 
 exports.updateUser = catchAsync(async (req, res, next) => {
-  const user = await User.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
+  const { name, email } = req.body;
+
+  const user = await User.findByIdAndUpdate(
+    req.params.id,
+    { name, email },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
 
   res.status(200).json({ success: true, data: user });
 });
 
 exports.deleteUser = catchAsync(async (req, res, next) => {
-  await User.findByIdAndDelete(req.params.id);
-  // TODO check if user is found
-  res.status(200).json({ success: true, data: null });
+  const user = await User.findById(req.params.id);
+
+  if (!user) {
+    return next(new AppError(`User with id: ${req.params.id} not found.`, 404));
+  }
+
+  await user.remove();
+
+  res.status(200).json({ success: true });
 });
