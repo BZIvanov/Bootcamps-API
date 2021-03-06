@@ -31,5 +31,17 @@
     "name": "Miro",
     "email": "miro@mail.com",
     "password": "12345678"
+  },
+  {
+    "_id": "60435a8087a35f61683a380a",
+    "name": "Petar",
+    "email": "petar@mail.com",
+    "password": "12345678"
+  },
+  {
+    "_id": "60435a8087a35f61683a380b",
+    "name": "Kalina",
+    "email": "kalina@mail.com",
+    "password": "12345678"
   }
 ]

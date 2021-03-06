@@ -10,7 +10,7 @@ exports.getReviews = catchAsync(async (req, res, next) => {
   if (req.params.bootcampId) {
     query = Review.find({ bootcamp: req.params.bootcampId });
   } else {
-    filtered = new Filters(
+    const filtered = new Filters(
       Review.find().populate({
         path: 'bootcamp',
         select: 'name description',
@@ -45,7 +45,7 @@ exports.getReview = catchAsync(async (req, res, next) => {
   res.status(200).json({ success: true, data: review });
 });
 
-exports.addReview = catchAsync(async (req, res, next) => {
+exports.createReview = catchAsync(async (req, res, next) => {
   req.body.bootcamp = req.params.bootcampId;
   req.body.user = req.user.id;
 
@@ -94,5 +94,5 @@ exports.deleteReview = catchAsync(async (req, res, next) => {
 
   await review.remove();
 
-  res.status(200).json({ success: true, data: null });
+  res.status(200).json({ success: true });
 });

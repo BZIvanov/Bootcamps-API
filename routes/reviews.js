@@ -2,7 +2,7 @@ const router = require('express').Router({ mergeParams: true });
 const {
   getReviews,
   getReview,
-  addReview,
+  createReview,
   updateReview,
   deleteReview,
 } = require('../controllers/reviews');
@@ -12,7 +12,7 @@ const authorize = require('../middlewares/authorize');
 router
   .route('/')
   .get(getReviews)
-  .post(authenticate, authorize('user', 'admin'), addReview);
+  .post(authenticate, authorize('user', 'admin'), createReview);
 router
   .route('/:id')
   .get(getReview)

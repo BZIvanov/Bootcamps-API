@@ -6,6 +6,7 @@ require('colors');
 const User = require('../models/user');
 const Bootcamp = require('../models/bootcamp');
 const Course = require('../models/course');
+const Review = require('../models/review');
 
 mongoose.connect(process.env.DB_URI, {
   useNewUrlParser: true,
@@ -16,6 +17,8 @@ mongoose.connect(process.env.DB_URI, {
 
 const seedData = async () => {
   try {
+    console.log('Seeding data...'.blue.bgBlack.bold);
+
     const bootcamps = JSON.parse(
       fs.readFileSync(path.join(__dirname, 'bootcamps.json'), 'utf-8')
     );
@@ -28,14 +31,27 @@ const seedData = async () => {
       fs.readFileSync(path.join(__dirname, 'users.json'), 'utf-8')
     );
 
+    const reviews = JSON.parse(
+      fs.readFileSync(path.join(__dirname, 'reviews.json'), 'utf-8')
+    );
+
     await Bootcamp.create(bootcamps);
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
     await Course.create(courses);
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
     await User.create(users);
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    await Review.create(reviews);
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
     console.log('Successfuly seeded data to DB'.green.bgGray.bold);
     process.exit();
   } catch (error) {
     console.log('DB seed data error'.red.bgGray.bold, error);
+    process.exit();
   }
 };
 
@@ -44,6 +60,7 @@ const deleteData = async () => {
     await User.deleteMany();
     await Bootcamp.deleteMany();
     await Course.deleteMany();
+    await Review.deleteMany();
 
     console.log('All documents were deleted.'.green.bgGray.bold);
     process.exit();

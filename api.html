@@ -523,5 +523,100 @@
         </div>
       </div>
     </div>
+
+    <hr />
+
+    <div>
+      <h3>Reviews</h3>
+      <div class="route">
+        <div class="title">
+          <h4>Create</h4>
+          <span>&nbsp; - create new review</span>
+        </div>
+        <p class="post">
+          <strong>POST</strong> /api/v1/bootcamps/:bootcampId/reviews
+        </p>
+        <div class="body">
+          <pre>
+{
+  "title": "Some title",
+  "text": "some text",
+  "rating": 7
+}
+          </pre>
+        </div>
+        <div class="details">
+          <p>Details:</p>
+          <ul>
+            <li>One user can create one review per bootcamp.</li>
+            <li>
+              Users with role publisher are not allowed to create reviews.
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="route">
+        <div class="title">
+          <h4>Get reviews</h4>
+          <span>&nbsp; - get all/filtered reviews</span>
+        </div>
+        <p class="get"><strong>GET</strong> /api/v1/reviews</p>
+      </div>
+      <div class="route">
+        <div class="title">
+          <h4>Get bootcamp reviews</h4>
+          <span>&nbsp; - get all reviews for specific bootcamp</span>
+        </div>
+        <p class="get">
+          <strong>GET</strong> /api/v1/bootcamps/:bootcampId/reviews
+        </p>
+      </div>
+      <div class="route">
+        <div class="title">
+          <h4>Get a review</h4>
+          <span>&nbsp; - get review by id</span>
+        </div>
+        <p class="get"><strong>GET</strong> /api/v1/reviews/:reviewId</p>
+      </div>
+      <div class="route">
+        <div class="title">
+          <h4>Update a review</h4>
+          <span>&nbsp; - update review by id</span>
+        </div>
+        <p class="put"><strong>PUT</strong> /api/v1/reviews/:reviewId</p>
+        <div class="body">
+          <pre>
+{
+  "title": "new title"
+}
+          </pre>
+        </div>
+        <div class="details">
+          <p>Details:</p>
+          <ul>
+            <li>
+              Users can update only reviews they created, admin can update any
+              review.
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="route">
+        <div class="title">
+          <h4>Delete a review</h4>
+          <span>&nbsp; - delete review by id</span>
+        </div>
+        <p class="delete"><strong>DELETE</strong> /api/v1/reviews/:reviewId</p>
+        <div class="details">
+          <p>Details:</p>
+          <ul>
+            <li>
+              Users can delete only reviews they created, admin can delete any
+              review.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
