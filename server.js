@@ -6,7 +6,6 @@ const log = require('./utils/log');
 const app = express();
 
 require('./startup/db');
-require('./startup/security')(app);
 require('./startup/express')(app);
 
 const PORT = process.env.PORT || 3100;
