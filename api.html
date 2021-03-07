@@ -223,10 +223,6 @@
           <strong>GET</strong> /api/v1/bootcamps?averageCost[lte]=10000
         </p>
         <p class="get">
-          <strong>GET</strong>
-          /api/v1/bootcamps?averageCost[lte]=10000&location.city=Lozenec
-        </p>
-        <p class="get">
           <strong>GET</strong> /api/v1/bootcamps?careers[in]=Business
         </p>
         <p class="get">
@@ -234,6 +230,15 @@
         </p>
         <p class="get"><strong>GET</strong> /api/v1/bootcamps?sort=-name</p>
         <p class="get"><strong>GET</strong> /api/v1/bootcamps?page=1&limit=3</p>
+        <div class="details">
+          <p>Details:</p>
+          <ul>
+            <li>
+              Each course which belong to this bootcamp should be also
+              populated.
+            </li>
+          </ul>
+        </div>
       </div>
       <div class="route">
         <div class="title">
@@ -381,6 +386,15 @@
           <span>&nbsp; - get all/filtered courses</span>
         </div>
         <p class="get"><strong>GET</strong> /api/v1/courses</p>
+        <div class="details">
+          <p>Details:</p>
+          <ul>
+            <li>
+              Data for the bootcamp to which this course belongs should be also
+              populated. Only id, name and description for the bootcamp.
+            </li>
+          </ul>
+        </div>
       </div>
       <div class="route">
         <div class="title">
