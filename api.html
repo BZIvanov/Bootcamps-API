@@ -566,6 +566,10 @@
             <li>
               Users with role publisher are not allowed to create reviews.
             </li>
+            <li>
+              Average rating should be calculated for the bootcamp to which this
+              review belongs to.
+            </li>
           </ul>
         </div>
       </div>
@@ -591,6 +595,15 @@
           <span>&nbsp; - get review by id</span>
         </div>
         <p class="get"><strong>GET</strong> /api/v1/reviews/:reviewId</p>
+        <div class="details">
+          <p>Details:</p>
+          <ul>
+            <li>
+              Id, name and description should be populated for the bootcamp to
+              which the review belongs to.
+            </li>
+          </ul>
+        </div>
       </div>
       <div class="route">
         <div class="title">
@@ -627,6 +640,10 @@
             <li>
               Users can delete only reviews they created, admin can delete any
               review.
+            </li>
+            <li>
+              Average rating should be calculated for the bootcamp to which this
+              review belongs to.
             </li>
           </ul>
         </div>
