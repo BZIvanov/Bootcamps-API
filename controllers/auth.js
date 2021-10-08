@@ -20,7 +20,7 @@ const sendTokenResponse = (user, statusCode, res) => {
     .json({ success: true });
 };
 
-exports.register = catchAsync(async (req, res, next) => {
+exports.register = catchAsync(async (req, res) => {
   const { name, email, password, role } = req.body;
 
   const user = await User.create({ name, email, password, role });
@@ -48,7 +48,7 @@ exports.login = catchAsync(async (req, res, next) => {
   sendTokenResponse(user, 200, res);
 });
 
-exports.logout = catchAsync(async (req, res, next) => {
+exports.logout = catchAsync(async (req, res) => {
   res.cookie('token', 'none', {
     expires: new Date(Date.now() + 5 * 1000),
     httpOnly: true,
@@ -58,13 +58,13 @@ exports.logout = catchAsync(async (req, res, next) => {
   res.status(200).json({ success: true });
 });
 
-exports.getMe = catchAsync(async (req, res, next) => {
+exports.getMe = catchAsync(async (req, res) => {
   const user = await User.findById(req.user.id);
 
   res.status(200).json({ success: true, data: user });
 });
 
-exports.updateDetails = catchAsync(async (req, res, next) => {
+exports.updateDetails = catchAsync(async (req, res) => {
   const { name, email } = req.body;
   const fields = {};
   if (name) {

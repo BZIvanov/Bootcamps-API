@@ -33,7 +33,7 @@ const schema = new Schema(
   { timestamps: true }
 );
 
-schema.pre('save', async function (next) {
+schema.pre('save', async function updateUserPassword(next) {
   if (!this.isModified('password')) {
     next();
   }
@@ -42,17 +42,19 @@ schema.pre('save', async function (next) {
   next();
 });
 
-schema.methods.getSignedJwtToken = function () {
+schema.methods.getSignedJwtToken = function signJWTToken() {
   return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
     expiresIn: '1d',
   });
 };
 
-schema.methods.matchPassword = async function (incomingPassword) {
-  return await bcrypt.compare(incomingPassword, this.password);
+schema.methods.matchPassword = async function comparePasswords(
+  incomingPassword
+) {
+  return bcrypt.compare(incomingPassword, this.password);
 };
 
-schema.methods.getResetPasswordToken = function () {
+schema.methods.getResetPasswordToken = function generateResetPasswordToken() {
   const resetToken = crypto.randomBytes(20).toString('hex');
 
   this.resetPasswordToken = crypto

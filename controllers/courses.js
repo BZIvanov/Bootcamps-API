@@ -4,7 +4,7 @@ const Filters = require('../utils/filters');
 const AppError = require('../utils/appError');
 const catchAsync = require('../middlewares/catch-async');
 
-exports.getCourses = catchAsync(async (req, res, next) => {
+exports.getCourses = catchAsync(async (req, res) => {
   let query;
 
   if (req.params.bootcampId) {

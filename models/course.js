@@ -38,7 +38,9 @@ const schema = new Schema(
   { timestamps: true }
 );
 
-schema.statics.getAverageCost = async function (bootcampId) {
+schema.statics.getAverageCost = async function averageCostAggregation(
+  bootcampId
+) {
   const agg = await this.aggregate([
     {
       $match: { bootcamp: bootcampId },
@@ -60,11 +62,11 @@ schema.statics.getAverageCost = async function (bootcampId) {
   }
 };
 
-schema.post('save', function () {
+schema.post('save', function averageCostBeforeSave() {
   this.constructor.getAverageCost(this.bootcamp);
 });
 
-schema.pre('remove', function () {
+schema.pre('remove', function averageCostBeforeRemove() {
   this.constructor.getAverageCost(this.bootcamp);
 });
 

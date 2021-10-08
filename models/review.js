@@ -35,7 +35,9 @@ const schema = new Schema(
 // 1 review per user only
 schema.index({ bootcamp: 1, user: 1 }, { unique: true });
 
-schema.statics.getAverageRating = async function (bootcampId) {
+schema.statics.getAverageRating = async function averageRatingAggregation(
+  bootcampId
+) {
   const agg = await this.aggregate([
     {
       $match: { bootcamp: bootcampId },
@@ -57,11 +59,11 @@ schema.statics.getAverageRating = async function (bootcampId) {
   }
 };
 
-schema.post('save', function () {
+schema.post('save', function averageRatingBeforeSave() {
   this.constructor.getAverageRating(this.bootcamp);
 });
 
-schema.pre('remove', function () {
+schema.pre('remove', function averageRatingBeforeRemove() {
   this.constructor.getAverageRating(this.bootcamp);
 });
 

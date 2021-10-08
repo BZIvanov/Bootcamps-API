@@ -1,6 +1,6 @@
 const AppError = require('../utils/appError');
 
-module.exports = (err, req, res, next) => {
+module.exports = (err, req, res) => {
   let error = { ...err };
   error.message = err.message;
 

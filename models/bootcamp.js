@@ -90,12 +90,12 @@ const schema = new Schema(
   }
 );
 
-schema.pre('save', function (next) {
+schema.pre('save', function generateSlug(next) {
   this.slug = slugify(this.name, { lower: true });
   next();
 });
 
-schema.pre('save', async function (next) {
+schema.pre('save', async function generateLocation(next) {
   const loc = await geocoder.geocode(this.address);
   this.location = {
     type: 'Point',
@@ -113,7 +113,7 @@ schema.pre('save', async function (next) {
   next();
 });
 
-schema.pre('remove', async function (next) {
+schema.pre('remove', async function deleteBootcampCourses(next) {
   await this.model('Course').deleteMany({ bootcamp: this._id });
   next();
 });
