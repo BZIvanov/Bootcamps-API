@@ -10,12 +10,10 @@
     "ecmaVersion": 12
   },
   "rules": {
-    "prettier/prettier": [
-      "error",
-      {
-        "endOfLine": "auto"
-      }
-    ],
-    "no-console": "off"
+    "prettier/prettier": ["error", { "endOfLine": "auto" }],
+    "no-console": "off",
+    "consistent-return": "off",
+    "no-underscore-dangle": ["error", { "allow": ["_id", "_doc"] }],
+    "import/no-extraneous-dependencies": "off"
   }
 }

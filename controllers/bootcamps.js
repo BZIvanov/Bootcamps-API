@@ -5,7 +5,7 @@ const Filters = require('../utils/filters');
 const AppError = require('../utils/appError');
 const catchAsync = require('../middlewares/catch-async');
 
-exports.getBootcamps = catchAsync(async (req, res, next) => {
+exports.getBootcamps = catchAsync(async (req, res) => {
   const filtered = new Filters(Bootcamp.find().populate('courses'), req.query)
     .filter()
     .select()
@@ -101,7 +101,7 @@ exports.deleteBootcamp = catchAsync(async (req, res, next) => {
   res.status(200).json({ success: true });
 });
 
-exports.getBootcampsInRadius = catchAsync(async (req, res, next) => {
+exports.getBootcampsInRadius = catchAsync(async (req, res) => {
   const { zipcode, distance } = req.params;
 
   const loc = await geocoder.geocode(zipcode);

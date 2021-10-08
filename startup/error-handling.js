@@ -1,6 +1,6 @@
 const log = require('../utils/log');
 
-module.exports = function (server) {
+module.exports = function appErrorsHandler(server) {
   process.on('uncaughtException', (err) => {
     log('warning', 'Uncaught exception! Shutting down server and node...', err);
 

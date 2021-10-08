@@ -21,7 +21,7 @@ const limiter = rateLimit({
   max: 100,
 });
 
-module.exports = function (app) {
+module.exports = function startApp(app) {
   if (process.env.NODE_ENV !== 'production') {
     app.use(morgan('dev'));
   }

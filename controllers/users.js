@@ -3,7 +3,7 @@ const Filters = require('../utils/filters');
 const AppError = require('../utils/appError');
 const catchAsync = require('../middlewares/catch-async');
 
-exports.getUsers = catchAsync(async (req, res, next) => {
+exports.getUsers = catchAsync(async (req, res) => {
   const filtered = new Filters(User.find(), req.query)
     .filter()
     .select()
@@ -24,7 +24,7 @@ exports.getUser = catchAsync(async (req, res, next) => {
   res.status(200).json({ success: true, data: user });
 });
 
-exports.createUser = catchAsync(async (req, res, next) => {
+exports.createUser = catchAsync(async (req, res) => {
   const user = await User.create(req.body);
 
   const { password, ...rest } = user._doc;
@@ -32,7 +32,7 @@ exports.createUser = catchAsync(async (req, res, next) => {
   res.status(201).json({ success: true, data: { ...rest } });
 });
 
-exports.updateUser = catchAsync(async (req, res, next) => {
+exports.updateUser = catchAsync(async (req, res) => {
   const { name, email } = req.body;
 
   const user = await User.findOneAndUpdate(
