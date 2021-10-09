@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const status = require('http-status');
 const User = require('../models/user');
 const sendEmail = require('../utils/sendEmail');
 const AppError = require('../utils/appError');
@@ -25,7 +26,7 @@ exports.register = catchAsync(async (req, res) => {
 
   const user = await User.create({ name, email, password, role });
 
-  sendTokenResponse(user, 201, res);
+  sendTokenResponse(user, status.CREATED, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {

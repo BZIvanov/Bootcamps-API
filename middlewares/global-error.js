@@ -1,6 +1,7 @@
 const AppError = require('../utils/appError');
 
-module.exports = (err, req, res) => {
+// always keep all 4 parameters for this function or it will not fire
+module.exports = (err, req, res, next) => {
   let error = { ...err };
   error.message = err.message;
 
