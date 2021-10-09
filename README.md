@@ -53,3 +53,7 @@ MailTrap can be replaced with any other mail provider, but it is a good choice f
 For the supported routes you can use, simply open the api.html file in the browser.
 
 Supported authentication methods are jwt token in the header and cookies. Comment out the one you don't need.
+
+## ESLint and Prettier
+
+Install eslint and prettier as VS Code extensions.

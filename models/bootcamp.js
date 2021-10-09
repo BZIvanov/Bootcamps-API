@@ -2,6 +2,7 @@ const { Schema, model } = require('mongoose');
 const validator = require('validator');
 const slugify = require('slugify');
 const geocoder = require('../utils/geocoder');
+const { Bootcamp, Course, User } = require('../constants');
 
 const schema = new Schema(
   {
@@ -79,7 +80,7 @@ const schema = new Schema(
     },
     user: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: User,
       required: true,
     },
   },
@@ -114,15 +115,15 @@ schema.pre('save', async function generateLocation(next) {
 });
 
 schema.pre('remove', async function deleteBootcampCourses(next) {
-  await this.model('Course').deleteMany({ bootcamp: this._id });
+  await this.model(Course).deleteMany({ bootcamp: this._id });
   next();
 });
 
 schema.virtual('courses', {
-  ref: 'Course',
+  ref: Course,
   localField: '_id',
   foreignField: 'bootcamp',
   justOne: false,
 });
 
-module.exports = model('Bootcamp', schema);
+module.exports = model(Bootcamp, schema);
