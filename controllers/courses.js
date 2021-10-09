@@ -4,6 +4,9 @@ const Bootcamp = require('../models/bootcamp');
 const Filters = require('../utils/filters');
 const AppError = require('../utils/appError');
 const catchAsync = require('../middlewares/catch-async');
+const {
+  userTypes: { admin },
+} = require('../constants');
 
 exports.getCourses = catchAsync(async (req, res) => {
   let query;
@@ -66,7 +69,7 @@ exports.createCourse = catchAsync(async (req, res, next) => {
     );
   }
 
-  if (bootcamp.user.toString() !== req.user.id && req.user.role !== 'admin') {
+  if (bootcamp.user.toString() !== req.user.id && req.user.role !== admin) {
     return next(
       new AppError(
         `User with id: ${req.user.id} is not allowed to add course to bootcamp with id ${bootcamp._id}`,
@@ -92,7 +95,7 @@ exports.updateCourse = catchAsync(async (req, res, next) => {
     );
   }
 
-  if (course.user.toString() !== req.user.id && req.user.role !== 'admin') {
+  if (course.user.toString() !== req.user.id && req.user.role !== admin) {
     return next(
       new AppError(
         `User with id: ${req.user.id} is not allowed to update course with id ${course._id}`,
@@ -121,7 +124,7 @@ exports.deleteCourse = catchAsync(async (req, res, next) => {
     );
   }
 
-  if (course.user.toString() !== req.user.id && req.user.role !== 'admin') {
+  if (course.user.toString() !== req.user.id && req.user.role !== admin) {
     return next(
       new AppError(
         `User with id: ${req.user.id} is not allowed to delete course with id ${course._id}`,

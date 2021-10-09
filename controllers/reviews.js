@@ -4,6 +4,9 @@ const Bootcamp = require('../models/bootcamp');
 const Filters = require('../utils/filters');
 const AppError = require('../utils/appError');
 const catchAsync = require('../middlewares/catch-async');
+const {
+  userTypes: { admin },
+} = require('../constants');
 
 exports.getReviews = catchAsync(async (req, res) => {
   let query;
@@ -83,7 +86,7 @@ exports.updateReview = catchAsync(async (req, res, next) => {
     );
   }
 
-  if (review.user.toString() !== req.user.id && req.user.role !== 'admin') {
+  if (review.user.toString() !== req.user.id && req.user.role !== admin) {
     return next(
       new AppError('Not authorized to update review', status.UNAUTHORIZED)
     );
@@ -109,7 +112,7 @@ exports.deleteReview = catchAsync(async (req, res, next) => {
     );
   }
 
-  if (review.user.toString() !== req.user.id && req.user.role !== 'admin') {
+  if (review.user.toString() !== req.user.id && req.user.role !== admin) {
     return next(
       new AppError('Not authorized to update review', status.UNAUTHORIZED)
     );

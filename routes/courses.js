@@ -8,15 +8,18 @@ const {
 } = require('../controllers/courses');
 const authenticate = require('../middlewares/authenticate');
 const authorize = require('../middlewares/authorize');
+const {
+  userTypes: { publisher, admin },
+} = require('../constants');
 
 router
   .route('/')
   .get(getCourses)
-  .post(authenticate, authorize('publisher', 'admin'), createCourse);
+  .post(authenticate, authorize(publisher, admin), createCourse);
 router
   .route('/:id')
   .get(getCourse)
-  .put(authenticate, authorize('publisher', 'admin'), updateCourse)
-  .delete(authenticate, authorize('publisher', 'admin'), deleteCourse);
+  .put(authenticate, authorize(publisher, admin), updateCourse)
+  .delete(authenticate, authorize(publisher, admin), deleteCourse);
 
 module.exports = router;

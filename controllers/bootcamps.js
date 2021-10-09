@@ -5,6 +5,9 @@ const geocoder = require('../utils/geocoder');
 const Filters = require('../utils/filters');
 const AppError = require('../utils/appError');
 const catchAsync = require('../middlewares/catch-async');
+const {
+  userTypes: { admin },
+} = require('../constants');
 
 exports.getBootcamps = catchAsync(async (req, res) => {
   const filtered = new Filters(Bootcamp.find().populate('courses'), req.query)
@@ -41,7 +44,7 @@ exports.createBootcamp = catchAsync(async (req, res, next) => {
 
   const publishedBootcamp = await Bootcamp.findOne({ user: req.user.id });
 
-  if (publishedBootcamp && req.user.role !== 'admin') {
+  if (publishedBootcamp && req.user.role !== admin) {
     return next(
       new AppError(
         `User with id ${req.user.id} has already published a bootcamp`,
@@ -66,7 +69,7 @@ exports.updateBootcamp = catchAsync(async (req, res, next) => {
     );
   }
 
-  if (bootcamp.user.toString() !== req.user.id && req.user.role !== 'admin') {
+  if (bootcamp.user.toString() !== req.user.id && req.user.role !== admin) {
     return next(
       new AppError(
         `User with id: ${req.user.id} is not allowed to update this resource`,
@@ -96,7 +99,7 @@ exports.deleteBootcamp = catchAsync(async (req, res, next) => {
     );
   }
 
-  if (bootcamp.user.toString() !== req.user.id && req.user.role !== 'admin') {
+  if (bootcamp.user.toString() !== req.user.id && req.user.role !== admin) {
     return next(
       new AppError(
         `User with id: ${req.user.id} is not allowed to delete this resource`,
@@ -141,7 +144,7 @@ exports.bootcampPhotoUpload = catchAsync(async (req, res, next) => {
     );
   }
 
-  if (bootcamp.user.toString() !== req.user.id && req.user.role !== 'admin') {
+  if (bootcamp.user.toString() !== req.user.id && req.user.role !== admin) {
     return next(
       new AppError(
         `User with id: ${req.user.id} is not allowed to update this resource`,
