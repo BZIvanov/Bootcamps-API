@@ -8,15 +8,18 @@ const {
 } = require('../controllers/reviews');
 const authenticate = require('../middlewares/authenticate');
 const authorize = require('../middlewares/authorize');
+const {
+  userTypes: { user, admin },
+} = require('../constants');
 
 router
   .route('/')
   .get(getReviews)
-  .post(authenticate, authorize('user', 'admin'), createReview);
+  .post(authenticate, authorize(user, admin), createReview);
 router
   .route('/:id')
   .get(getReview)
-  .put(authenticate, authorize('user', 'admin'), updateReview)
-  .delete(authenticate, authorize('user', 'admin'), deleteReview);
+  .put(authenticate, authorize(user, admin), updateReview)
+  .delete(authenticate, authorize(user, admin), deleteReview);
 
 module.exports = router;

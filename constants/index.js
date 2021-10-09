@@ -14,4 +14,5 @@ exports.User = 'User';
 exports.userTypes = {
   user: 'user',
   publisher: 'publisher',
+  admin: 'admin',
 };

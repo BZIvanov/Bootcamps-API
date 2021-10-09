@@ -8,10 +8,13 @@ const {
 } = require('../controllers/users');
 const authenticate = require('../middlewares/authenticate');
 const authorize = require('../middlewares/authorize');
+const {
+  userTypes: { admin },
+} = require('../constants');
 
 // these two will aplly to all our users routes
 router.use(authenticate);
-router.use(authorize('admin'));
+router.use(authorize(admin));
 
 router.route('/').get(getUsers).post(createUser);
 router.route('/:id').get(getUser).put(updateUser).delete(deleteUser);
