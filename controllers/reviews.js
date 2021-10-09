@@ -1,3 +1,4 @@
+const status = require('http-status');
 const Review = require('../models/review');
 const Bootcamp = require('../models/bootcamp');
 const Filters = require('../utils/filters');
@@ -28,7 +29,7 @@ exports.getReviews = catchAsync(async (req, res) => {
   const reviews = await query;
 
   res
-    .status(200)
+    .status(status.OK)
     .json({ success: true, results: reviews.length, data: reviews });
 });
 
@@ -39,10 +40,15 @@ exports.getReview = catchAsync(async (req, res, next) => {
   });
 
   if (!review) {
-    return next(new AppError(`Review with id ${req.params.id} not found`, 404));
+    return next(
+      new AppError(
+        `Review with id ${req.params.id} not found`,
+        status.NOT_FOUND
+      )
+    );
   }
 
-  res.status(200).json({ success: true, data: review });
+  res.status(status.OK).json({ success: true, data: review });
 });
 
 exports.createReview = catchAsync(async (req, res, next) => {
@@ -53,24 +59,34 @@ exports.createReview = catchAsync(async (req, res, next) => {
 
   if (!bootcamp) {
     return next(
-      new AppError(`Bootcamp with id ${req.params.bootcampId} not found`, 404)
+      new AppError(
+        `Bootcamp with id ${req.params.bootcampId} not found`,
+        status.NOT_FOUND
+      )
     );
   }
 
   const review = await Review.create(req.body);
 
-  res.status(201).json({ success: true, data: review });
+  res.status(status.CREATED).json({ success: true, data: review });
 });
 
 exports.updateReview = catchAsync(async (req, res, next) => {
   let review = await Review.findById(req.params.id);
 
   if (!review) {
-    return next(new AppError(`Review with id ${req.params.id} not found`, 404));
+    return next(
+      new AppError(
+        `Review with id ${req.params.id} not found`,
+        status.NOT_FOUND
+      )
+    );
   }
 
   if (review.user.toString() !== req.user.id && req.user.role !== 'admin') {
-    return next(new AppError('Not authorized to update review', 401));
+    return next(
+      new AppError('Not authorized to update review', status.UNAUTHORIZED)
+    );
   }
 
   review = await Review.findByIdAndUpdate(req.params.id, req.body, {
@@ -78,21 +94,28 @@ exports.updateReview = catchAsync(async (req, res, next) => {
     runValidators: true,
   });
 
-  res.status(200).json({ success: true, data: review });
+  res.status(status.OK).json({ success: true, data: review });
 });
 
 exports.deleteReview = catchAsync(async (req, res, next) => {
   const review = await Review.findById(req.params.id);
 
   if (!review) {
-    return next(new AppError(`Review with id ${req.params.id} not found`, 404));
+    return next(
+      new AppError(
+        `Review with id ${req.params.id} not found`,
+        status.NOT_FOUND
+      )
+    );
   }
 
   if (review.user.toString() !== req.user.id && req.user.role !== 'admin') {
-    return next(new AppError('Not authorized to update review', 401));
+    return next(
+      new AppError('Not authorized to update review', status.UNAUTHORIZED)
+    );
   }
 
   await review.remove();
 
-  res.status(200).json({ success: true });
+  res.status(status.OK).json({ success: true });
 });

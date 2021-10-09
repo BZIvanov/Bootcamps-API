@@ -4,14 +4,15 @@ const User = require('../models/user');
 const sendEmail = require('../utils/sendEmail');
 const AppError = require('../utils/appError');
 const catchAsync = require('../middlewares/catch-async');
+const { environment } = require('../constants');
 
 const sendTokenResponse = (user, statusCode, res) => {
   const token = user.getSignedJwtToken();
 
   const options = {
-    expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+    expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 1 day
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.NODE_ENV === environment.production,
   };
 
   res
@@ -33,36 +34,38 @@ exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return next(new AppError('Please provide email and password', 400));
+    return next(
+      new AppError('Please provide email and password', status.BAD_REQUEST)
+    );
   }
 
   const user = await User.findOne({ email }).select('+password');
   if (!user) {
-    return next(new AppError('Invalid credentials', 401));
+    return next(new AppError('Invalid credentials', status.UNAUTHORIZED));
   }
 
   const isMatch = await user.matchPassword(password);
   if (!isMatch) {
-    return next(new AppError('Invalid credentials', 401));
+    return next(new AppError('Invalid credentials', status.UNAUTHORIZED));
   }
 
-  sendTokenResponse(user, 200, res);
+  sendTokenResponse(user, status.OK, res);
 });
 
 exports.logout = catchAsync(async (req, res) => {
   res.cookie('token', 'none', {
     expires: new Date(Date.now() + 5 * 1000),
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.NODE_ENV === environment.production,
   });
 
-  res.status(200).json({ success: true });
+  res.status(status.OK).json({ success: true });
 });
 
 exports.getMe = catchAsync(async (req, res) => {
   const user = await User.findById(req.user.id);
 
-  res.status(200).json({ success: true, data: user });
+  res.status(status.OK).json({ success: true, data: user });
 });
 
 exports.updateDetails = catchAsync(async (req, res) => {
@@ -80,7 +83,7 @@ exports.updateDetails = catchAsync(async (req, res) => {
     runValidators: true,
   });
 
-  res.status(200).json({ success: true, data: user });
+  res.status(status.OK).json({ success: true, data: user });
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
@@ -100,7 +103,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
   user.password = newPassword;
   await user.save();
-  sendTokenResponse(user, 200, res);
+  sendTokenResponse(user, status.OK, res);
 });
 
 exports.forgotPassword = catchAsync(async (req, res, next) => {
@@ -131,10 +134,12 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
     await user.save({ validateBeforeSave: false });
-    return next(new AppError('Email was not sent!', 500));
+    return next(
+      new AppError('Email was not sent!', status.INTERNAL_SERVER_ERROR)
+    );
   }
 
-  res.status(200).json({ success: true });
+  res.status(status.OK).json({ success: true });
 });
 
 exports.resetPassword = catchAsync(async (req, res, next) => {
@@ -149,7 +154,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   });
 
   if (!user) {
-    return next(new AppError('Invalid token', 400));
+    return next(new AppError('Invalid token', status.BAD_REQUEST));
   }
 
   user.password = req.body.password;
@@ -157,5 +162,5 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   user.resetPasswordExpire = undefined;
   await user.save();
 
-  sendTokenResponse(user, 200, res);
+  sendTokenResponse(user, status.OK, res);
 });
