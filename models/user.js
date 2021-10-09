@@ -3,6 +3,7 @@ const { Schema, model } = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { User, userTypes } = require('../constants');
 
 const schema = new Schema(
   {
@@ -24,8 +25,8 @@ const schema = new Schema(
     },
     role: {
       type: String,
-      enum: ['user', 'publisher'],
-      default: 'user',
+      enum: Object.values(userTypes),
+      default: userTypes.user,
     },
     resetPasswordToken: String,
     resetPasswordExpire: Date,
@@ -66,4 +67,4 @@ schema.methods.getResetPasswordToken = function generateResetPasswordToken() {
   return resetToken;
 };
 
-module.exports = model('User', schema);
+module.exports = model(User, schema);

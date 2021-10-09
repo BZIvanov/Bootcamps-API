@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const { Bootcamp, Review, User } = require('../constants');
 
 const schema = new Schema(
   {
@@ -20,12 +21,12 @@ const schema = new Schema(
     },
     bootcamp: {
       type: Schema.Types.ObjectId,
-      ref: 'Bootcamp',
+      ref: Bootcamp,
       required: true,
     },
     user: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: User,
       required: true,
     },
   },
@@ -51,7 +52,7 @@ schema.statics.getAverageRating = async function averageRatingAggregation(
   ]);
 
   try {
-    await this.model('Bootcamp').findByIdAndUpdate(bootcampId, {
+    await this.model(Bootcamp).findByIdAndUpdate(bootcampId, {
       averageRating: agg[0].averageRating,
     });
   } catch (err) {
@@ -67,4 +68,4 @@ schema.pre('remove', function averageRatingBeforeRemove() {
   this.constructor.getAverageRating(this.bootcamp);
 });
 
-module.exports = model('Review', schema);
+module.exports = model(Review, schema);
