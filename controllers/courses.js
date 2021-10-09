@@ -1,3 +1,4 @@
+const status = require('http-status');
 const Course = require('../models/course');
 const Bootcamp = require('../models/bootcamp');
 const Filters = require('../utils/filters');
@@ -28,7 +29,7 @@ exports.getCourses = catchAsync(async (req, res) => {
   const courses = await query;
 
   res
-    .status(200)
+    .status(status.OK)
     .json({ success: true, results: courses.length, data: courses });
 });
 
@@ -40,11 +41,14 @@ exports.getCourse = catchAsync(async (req, res, next) => {
 
   if (!course) {
     return next(
-      new AppError(`Course with id: ${req.params.id} not found.`, 404)
+      new AppError(
+        `Course with id: ${req.params.id} not found.`,
+        status.NOT_FOUND
+      )
     );
   }
 
-  res.status(200).json({ success: true, data: course });
+  res.status(status.OK).json({ success: true, data: course });
 });
 
 exports.createCourse = catchAsync(async (req, res, next) => {
@@ -55,7 +59,10 @@ exports.createCourse = catchAsync(async (req, res, next) => {
 
   if (!bootcamp) {
     return next(
-      new AppError(`Bootcamp with id: ${req.params.bootcampId} not found.`, 404)
+      new AppError(
+        `Bootcamp with id: ${req.params.bootcampId} not found.`,
+        status.NOT_FOUND
+      )
     );
   }
 
@@ -63,14 +70,14 @@ exports.createCourse = catchAsync(async (req, res, next) => {
     return next(
       new AppError(
         `User with id: ${req.user.id} is not allowed to add course to bootcamp with id ${bootcamp._id}`,
-        401
+        status.UNAUTHORIZED
       )
     );
   }
 
   const course = await Course.create(req.body);
 
-  res.status(201).json({ success: true, data: course });
+  res.status(status.CREATED).json({ success: true, data: course });
 });
 
 exports.updateCourse = catchAsync(async (req, res, next) => {
@@ -78,7 +85,10 @@ exports.updateCourse = catchAsync(async (req, res, next) => {
 
   if (!course) {
     return next(
-      new AppError(`Course with id: ${req.params.id} not found.`, 404)
+      new AppError(
+        `Course with id: ${req.params.id} not found.`,
+        status.NOT_FOUND
+      )
     );
   }
 
@@ -86,7 +96,7 @@ exports.updateCourse = catchAsync(async (req, res, next) => {
     return next(
       new AppError(
         `User with id: ${req.user.id} is not allowed to update course with id ${course._id}`,
-        401
+        status.UNAUTHORIZED
       )
     );
   }
@@ -96,7 +106,7 @@ exports.updateCourse = catchAsync(async (req, res, next) => {
     runValidators: true,
   });
 
-  res.status(200).json({ success: true, data: course });
+  res.status(status.OK).json({ success: true, data: course });
 });
 
 exports.deleteCourse = catchAsync(async (req, res, next) => {
@@ -104,7 +114,10 @@ exports.deleteCourse = catchAsync(async (req, res, next) => {
 
   if (!course) {
     return next(
-      new AppError(`Course with id: ${req.params.id} not found.`, 404)
+      new AppError(
+        `Course with id: ${req.params.id} not found.`,
+        status.NOT_FOUND
+      )
     );
   }
 
@@ -112,12 +125,12 @@ exports.deleteCourse = catchAsync(async (req, res, next) => {
     return next(
       new AppError(
         `User with id: ${req.user.id} is not allowed to delete course with id ${course._id}`,
-        401
+        status.UNAUTHORIZED
       )
     );
   }
 
   await course.remove();
 
-  res.status(200).json({ success: true });
+  res.status(status.OK).json({ success: true });
 });

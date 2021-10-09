@@ -15,6 +15,7 @@ const courses = require('../routes/courses');
 const reviews = require('../routes/reviews');
 const users = require('../routes/users');
 const globalError = require('../middlewares/global-error');
+const { environment } = require('../constants');
 
 const limiter = rateLimit({
   windowMs: 10 * 60 * 1000,
@@ -22,7 +23,7 @@ const limiter = rateLimit({
 });
 
 module.exports = function startApp(app) {
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV !== environment.production) {
     app.use(morgan('dev'));
   }
 

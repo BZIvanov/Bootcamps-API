@@ -1,3 +1,4 @@
+const status = require('http-status');
 const User = require('../models/user');
 const Filters = require('../utils/filters');
 const AppError = require('../utils/appError');
@@ -11,17 +12,21 @@ exports.getUsers = catchAsync(async (req, res) => {
     .paginate();
   const users = await filtered.docs;
 
-  res.status(200).json({ success: true, results: users.length, data: users });
+  res
+    .status(status.OK)
+    .json({ success: true, results: users.length, data: users });
 });
 
 exports.getUser = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.params.id);
 
   if (!user) {
-    return next(new AppError(`User with id ${req.params.id} not found`, 404));
+    return next(
+      new AppError(`User with id ${req.params.id} not found`, status.NOT_FOUND)
+    );
   }
 
-  res.status(200).json({ success: true, data: user });
+  res.status(status.OK).json({ success: true, data: user });
 });
 
 exports.createUser = catchAsync(async (req, res) => {
@@ -29,7 +34,7 @@ exports.createUser = catchAsync(async (req, res) => {
 
   const { password, ...rest } = user._doc;
 
-  res.status(201).json({ success: true, data: { ...rest } });
+  res.status(status.CREATED).json({ success: true, data: { ...rest } });
 });
 
 exports.updateUser = catchAsync(async (req, res) => {
@@ -44,17 +49,22 @@ exports.updateUser = catchAsync(async (req, res) => {
     }
   );
 
-  res.status(200).json({ success: true, data: user });
+  res.status(status.OK).json({ success: true, data: user });
 });
 
 exports.deleteUser = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.params.id);
 
   if (!user) {
-    return next(new AppError(`User with id: ${req.params.id} not found.`, 404));
+    return next(
+      new AppError(
+        `User with id: ${req.params.id} not found.`,
+        status.NOT_FOUND
+      )
+    );
   }
 
   await user.remove();
 
-  res.status(200).json({ success: true });
+  res.status(status.OK).json({ success: true });
 });

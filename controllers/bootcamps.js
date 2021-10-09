@@ -1,4 +1,5 @@
 const path = require('path');
+const status = require('http-status');
 const Bootcamp = require('../models/bootcamp');
 const geocoder = require('../utils/geocoder');
 const Filters = require('../utils/filters');
@@ -13,7 +14,7 @@ exports.getBootcamps = catchAsync(async (req, res) => {
     .paginate();
   const bootcamps = await filtered.docs;
 
-  res.status(200).json({
+  res.status(status.OK).json({
     success: true,
     results: bootcamps.length,
     data: bootcamps,
@@ -25,7 +26,10 @@ exports.getBootcamp = catchAsync(async (req, res, next) => {
 
   if (!bootcamp) {
     return next(
-      new AppError(`Bootcamp with id: ${req.params.id} not found`, 404)
+      new AppError(
+        `Bootcamp with id: ${req.params.id} not found`,
+        status.NOT_FOUND
+      )
     );
   }
 
@@ -41,13 +45,13 @@ exports.createBootcamp = catchAsync(async (req, res, next) => {
     return next(
       new AppError(
         `User with id ${req.user.id} has already published a bootcamp`,
-        400
+        status.BAD_REQUEST
       )
     );
   }
 
   const bootcamp = await Bootcamp.create(req.body);
-  res.status(201).json({ success: true, data: bootcamp });
+  res.status(status.CREATED).json({ success: true, data: bootcamp });
 });
 
 exports.updateBootcamp = catchAsync(async (req, res, next) => {
@@ -55,7 +59,10 @@ exports.updateBootcamp = catchAsync(async (req, res, next) => {
 
   if (!bootcamp) {
     return next(
-      new AppError(`Bootcamp with id: ${req.params.id} not found`, 404)
+      new AppError(
+        `Bootcamp with id: ${req.params.id} not found`,
+        status.NOT_FOUND
+      )
     );
   }
 
@@ -63,7 +70,7 @@ exports.updateBootcamp = catchAsync(async (req, res, next) => {
     return next(
       new AppError(
         `User with id: ${req.user.id} is not allowed to update this resource`,
-        401
+        status.UNAUTHORIZED
       )
     );
   }
@@ -73,7 +80,7 @@ exports.updateBootcamp = catchAsync(async (req, res, next) => {
     runValidators: true,
   });
 
-  res.status(200).json({ success: true, data: bootcamp });
+  res.status(status.OK).json({ success: true, data: bootcamp });
 });
 
 exports.deleteBootcamp = catchAsync(async (req, res, next) => {
@@ -82,7 +89,10 @@ exports.deleteBootcamp = catchAsync(async (req, res, next) => {
 
   if (!bootcamp) {
     return next(
-      new AppError(`Bootcamp with id: ${req.params.id} not found`, 404)
+      new AppError(
+        `Bootcamp with id: ${req.params.id} not found`,
+        status.NOT_FOUND
+      )
     );
   }
 
@@ -90,7 +100,7 @@ exports.deleteBootcamp = catchAsync(async (req, res, next) => {
     return next(
       new AppError(
         `User with id: ${req.user.id} is not allowed to delete this resource`,
-        401
+        status.UNAUTHORIZED
       )
     );
   }
@@ -98,7 +108,7 @@ exports.deleteBootcamp = catchAsync(async (req, res, next) => {
   // remove method is important to be used like this to trigger the pre method of the schema
   bootcamp.remove();
 
-  res.status(200).json({ success: true });
+  res.status(status.OK).json({ success: true });
 });
 
 exports.getBootcampsInRadius = catchAsync(async (req, res) => {
@@ -115,7 +125,7 @@ exports.getBootcampsInRadius = catchAsync(async (req, res) => {
   });
 
   res
-    .status(200)
+    .status(status.OK)
     .json({ success: true, results: bootcamps.length, data: bootcamps });
 });
 
@@ -124,7 +134,10 @@ exports.bootcampPhotoUpload = catchAsync(async (req, res, next) => {
 
   if (!bootcamp) {
     return next(
-      new AppError(`Bootcamp with id: ${req.params.id} not found`, 404)
+      new AppError(
+        `Bootcamp with id: ${req.params.id} not found`,
+        status.NOT_FOUND
+      )
     );
   }
 
@@ -132,33 +145,37 @@ exports.bootcampPhotoUpload = catchAsync(async (req, res, next) => {
     return next(
       new AppError(
         `User with id: ${req.user.id} is not allowed to update this resource`,
-        401
+        status.UNAUTHORIZED
       )
     );
   }
 
   if (!req.files) {
-    return next(new AppError('Please upload a photo.', 400));
+    return next(new AppError('Please upload a photo.', status.BAD_REQUEST));
   }
 
   const file = req.files.imageFile;
 
   if (!file.mimetype.startsWith('image')) {
-    return next(new AppError('Please upload an image file.', 400));
+    return next(
+      new AppError('Please upload an image file.', status.BAD_REQUEST)
+    );
   }
   if (file.size > 1000000) {
-    return next(new AppError('File size should be less than 1MB.', 400));
+    return next(
+      new AppError('File size should be less than 1MB.', status.BAD_REQUEST)
+    );
   }
 
   file.name = `photo_${bootcamp._id}${path.parse(file.name).ext}`;
 
   file.mv(`./public/uploads/${file.name}`, async (err) => {
     if (err) {
-      return next(new AppError('Upload failed', 500));
+      return next(new AppError('Upload failed', status.INTERNAL_SERVER_ERROR));
     }
 
     await Bootcamp.findByIdAndUpdate(req.params.id, { photo: file.name });
 
-    res.status(200).json({ success: true, data: file.name });
+    res.status(status.OK).json({ success: true, data: file.name });
   });
 });
