@@ -117,9 +117,9 @@ exports.deleteBootcamp = catchAsync(async (req, res, next) => {
 exports.getBootcampsInRadius = catchAsync(async (req, res) => {
   const { zipcode, distance } = req.params;
 
-  const loc = await geocoder.geocode(zipcode);
-  const lat = loc[0].latitude;
-  const lng = loc[0].longitude;
+  const [loc] = await geocoder.geocode({ zipcode, country: 'BG' });
+  const lat = loc.latitude;
+  const lng = loc.longitude;
   const EARTH_RADIUS_KM = 6378;
   const radius = distance / EARTH_RADIUS_KM;
 
