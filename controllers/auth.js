@@ -93,12 +93,15 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
   if (!currentPassword || !newPassword) {
     return next(
-      new AppError('Both current and new passwords are required', 400)
+      new AppError(
+        'Both current and new passwords are required',
+        status.BAD_REQUEST
+      )
     );
   }
 
   if (!(await user.matchPassword(currentPassword))) {
-    return next(new AppError('Incorrect password', 401));
+    return next(new AppError('Incorrect password', status.UNAUTHORIZED));
   }
 
   user.password = newPassword;
@@ -110,7 +113,9 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
 
   if (!user) {
-    return next(new AppError('There is no user with that e-mail', 404));
+    return next(
+      new AppError('There is no user with that e-mail', status.NOT_FOUND)
+    );
   }
 
   const resetToken = user.getResetPasswordToken();

@@ -1,7 +1,7 @@
 const path = require('path');
 const status = require('http-status');
 const Bootcamp = require('../models/bootcamp');
-const geocoder = require('../utils/geocoder');
+const geocoder = require('../providers/geocoder');
 const Filters = require('../utils/filters');
 const AppError = require('../utils/appError');
 const catchAsync = require('../middlewares/catch-async');
@@ -36,7 +36,7 @@ exports.getBootcamp = catchAsync(async (req, res, next) => {
     );
   }
 
-  res.status(200).json({ success: true, data: bootcamp });
+  res.status(status.OK).json({ success: true, data: bootcamp });
 });
 
 exports.createBootcamp = catchAsync(async (req, res, next) => {
