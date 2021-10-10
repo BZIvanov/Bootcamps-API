@@ -119,6 +119,7 @@ schema.pre('remove', async function deleteBootcampCourses(next) {
   next();
 });
 
+// this is to get the courses for the bootcamp, when we request the bootcamp
 schema.virtual('courses', {
   ref: Course,
   localField: '_id',

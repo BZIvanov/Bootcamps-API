@@ -16,7 +16,7 @@ const {
   userTypes: { publisher, admin },
 } = require('../constants');
 
-// /api/v1/bootcamps/123/courses => in the course router it will be just '/' with the same method
+// /api/v1/bootcamps/123/courses => this will go to courses router where it will be just '/' with the same method
 router.use('/:bootcampId/courses', coursesRouter);
 router.use('/:bootcampId/reviews', reviewsRouter);
 
