@@ -63,10 +63,10 @@ schema.statics.getAverageCost = async function averageCostAggregation(
   }
 };
 
+// with the below 2 hooks we want to recalculate the average bootcamp price everytime we add or remove a course
 schema.post('save', function averageCostBeforeSave() {
   this.constructor.getAverageCost(this.bootcamp);
 });
-
 schema.pre('remove', function averageCostBeforeRemove() {
   this.constructor.getAverageCost(this.bootcamp);
 });

@@ -133,6 +133,7 @@ exports.deleteCourse = catchAsync(async (req, res, next) => {
     );
   }
 
+  // here is important to use remove method to trigger remove hook in the model
   await course.remove();
 
   res.status(status.OK).json({ success: true });
