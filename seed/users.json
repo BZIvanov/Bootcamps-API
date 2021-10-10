@@ -21,6 +21,13 @@
     "role": "publisher"
   },
   {
+    "_id": "6161b71656f277401c47c0f5",
+    "name": "Vanq",
+    "email": "vanq@mail.com",
+    "password": "12345678",
+    "role": "publisher"
+  },
+  {
     "_id": "604090aceceafa43d02f7856",
     "name": "Alex",
     "email": "alex@mail.com",

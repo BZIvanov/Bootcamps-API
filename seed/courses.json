@@ -48,5 +48,15 @@
     "minimumSkill": "intermediate",
     "bootcamp": "6041edc7d34b6a547cd7b1cb",
     "user": "60408b786ef3ae60d09fa995"
+  },
+  {
+    "_id": "6163109bdc9e494370dc5df3",
+    "title": "Red and Pink roses",
+    "description": "You will learn how to grow and plant red and pink roses",
+    "weeks": 15,
+    "tuition": 5000,
+    "minimumSkill": "beginner",
+    "bootcamp": "6161ea3d5c1add21887bdc62",
+    "user": "6161b71656f277401c47c0f5"
   }
 ]

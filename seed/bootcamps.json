@@ -6,7 +6,7 @@
     "description": "Learn vanilla javascript, regular expression and much more ...",
     "website": "https://easy-soft-skills.com",
     "phone": "0895 123 456",
-    "address": "bulevard Cherni vrah 100, 1407 Hladilnika, Sofia",
+    "address": "bul. 'Slivnitsa' 88, Sofia, Bulgaria",
     "careers": ["Web Development", "UI/UX", "Business"]
   },
   {
@@ -16,7 +16,7 @@
     "description": "Learn many different frameworks and libraries such as React, Angular and Vue",
     "website": "https://awesome-technologies.com",
     "phone": "0896 123 457",
-    "address": "ul. Zlatarska 7, 4000 Kapana, Plovdiv",
+    "address": "bul. 'Sankt Peterburg' 59, Plovdiv, Bulgaria",
     "careers": ["Web Development", "Other"]
   },
   {
@@ -28,5 +28,15 @@
     "phone": "0897 777 123",
     "address": "ulitsa Dicho Petrov, Smolyan, Smolyan 4700, BG",
     "careers": ["Web Development", "Mobile Development"]
+  },
+  {
+    "_id": "6161ea3d5c1add21887bdc62",
+    "user": "6161b71656f277401c47c0f5",
+    "name": "Gardening",
+    "description": "Learn how to grow the most beautiful flowers.",
+    "website": "https://flowers-and-gardens.com",
+    "phone": "0893 158 225",
+    "address": "bul. 'Cherni vrah' 100, Sofia, Bulgaria",
+    "careers": ["Other"]
   }
 ]
