@@ -18,7 +18,7 @@ const schema = new Schema(
     },
     tuition: {
       type: Number,
-      required: [true, 'Please provide tuituin cost'],
+      required: [true, 'Please provide tuition cost'],
     },
     minimumSkill: {
       type: String,

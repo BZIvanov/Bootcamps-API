@@ -2,7 +2,7 @@
 
 Short list of examples with the security packages.
 
-- **MongosSanitize** - it will help with something like logging in with the below credentials
+- **MongosSanitize** - it will help with something like logging in with the below credentials. Note that this package will change the request query object.
 
 ```javascript
 {
