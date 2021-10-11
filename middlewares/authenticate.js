@@ -12,7 +12,7 @@ module.exports = catchAsync(async (req, res, next) => {
   ) {
     [, token] = req.headers.authorization.split(' ');
   } else if (req.cookies.token) {
-    token = req.cookies.jwt;
+    token = req.cookies.token;
   }
 
   if (!token) {
