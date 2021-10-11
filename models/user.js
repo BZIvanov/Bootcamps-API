@@ -14,6 +14,7 @@ const schema = new Schema(
     },
     email: {
       type: String,
+      required: [true, 'Please provide an email'],
       unique: true,
       validate: [validator.isEmail, 'Please provide a valid email'],
     },
@@ -25,7 +26,10 @@ const schema = new Schema(
     },
     role: {
       type: String,
-      enum: Object.values(userTypes),
+      // admin should be modified manually in the database
+      enum: Object.values(userTypes).filter(
+        (userType) => userType !== userTypes.admin
+      ),
       default: userTypes.user,
     },
     resetPasswordToken: String,
@@ -34,7 +38,7 @@ const schema = new Schema(
   { timestamps: true }
 );
 
-schema.pre('save', async function updateUserPassword(next) {
+schema.pre('save', async function hashUserPassword(next) {
   if (!this.isModified('password')) {
     next();
   }
