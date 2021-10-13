@@ -19,3 +19,5 @@ Short list of examples with the security packages.
   "description": "some description",
 }
 ```
+
+- **Helmet** - adds additional security headers and allow us to configure them
