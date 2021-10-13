@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const status = require('http-status');
 const User = require('../models/user');
-const sendEmail = require('../utils/sendEmail');
+const sendEmail = require('../providers/mailer');
 const AppError = require('../utils/appError');
 const catchAsync = require('../middlewares/catch-async');
 const { environment } = require('../constants');
@@ -70,13 +70,11 @@ exports.getMe = catchAsync(async (req, res) => {
 
 exports.updateDetails = catchAsync(async (req, res) => {
   const { name, email } = req.body;
-  const fields = {};
-  if (name) {
-    fields.name = name;
-  }
-  if (email) {
-    fields.email = email;
-  }
+
+  const fields = {
+    ...(name && { name }),
+    ...(email && { email }),
+  };
 
   const user = await User.findByIdAndUpdate(req.user.id, fields, {
     new: true,
