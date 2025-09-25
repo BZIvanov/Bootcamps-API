@@ -1,7 +1,6 @@
 const { Schema, model } = require('mongoose');
 const validator = require('validator');
 const slugify = require('slugify');
-const geocoder = require('../providers/geocoder');
 const { Bootcamp, Course, User } = require('../constants');
 
 const schema = new Schema(
@@ -40,22 +39,6 @@ const schema = new Schema(
       type: String,
       required: [true, 'Please provide an address'],
     },
-    location: {
-      type: {
-        type: String,
-        enum: ['Point'],
-      },
-      coordinates: {
-        type: [Number],
-        index: '2dsphere',
-      },
-      formattedAddress: String,
-      street: String,
-      city: String,
-      state: String,
-      zipcode: String,
-      country: String,
-    },
     careers: {
       type: [String],
       required: true,
@@ -93,24 +76,6 @@ const schema = new Schema(
 
 schema.pre('save', function generateSlug(next) {
   this.slug = slugify(this.name, { lower: true });
-  next();
-});
-
-schema.pre('save', async function generateLocation(next) {
-  const [loc] = await geocoder.geocode(this.address);
-  this.location = {
-    type: 'Point',
-    coordinates: [loc.longitude, loc.latitude],
-    formattedAddress: loc.formattedAddress,
-    street: loc.streetName,
-    city: loc.city,
-    state: loc.stateCode,
-    zipcode: loc.zipcode,
-    country: loc.countryCode,
-  };
-
-  this.address = undefined;
-
   next();
 });
 

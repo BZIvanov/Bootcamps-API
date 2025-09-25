@@ -44,7 +44,6 @@
     "http-status": "^1.5.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.15",
-    "node-geocoder": "^3.27.0",
     "nodemailer": "^6.5.0",
     "slugify": "^1.4.7",
     "validator": "^13.5.2",

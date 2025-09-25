@@ -5,7 +5,6 @@ const {
   createBootcamp,
   updateBootcamp,
   deleteBootcamp,
-  getBootcampsInRadius,
   bootcampPhotoUpload,
 } = require('../controllers/bootcamps');
 const authenticate = require('../middlewares/authenticate');
@@ -32,6 +31,5 @@ router
 router
   .route('/:id/photo')
   .put(authenticate, authorize(publisher, admin), bootcampPhotoUpload);
-router.route('/radius/:zipcode/:distance').get(getBootcampsInRadius);
 
 module.exports = router;

@@ -1,7 +1,6 @@
 const path = require('path');
 const status = require('http-status');
 const Bootcamp = require('../models/bootcamp');
-const geocoder = require('../providers/geocoder');
 const Filters = require('../utils/filters');
 const AppError = require('../utils/appError');
 const catchAsync = require('../middlewares/catch-async');
@@ -112,24 +111,6 @@ exports.deleteBootcamp = catchAsync(async (req, res, next) => {
   bootcamp.remove();
 
   res.status(status.OK).json({ success: true });
-});
-
-exports.getBootcampsInRadius = catchAsync(async (req, res) => {
-  const { zipcode, distance } = req.params;
-
-  const [loc] = await geocoder.geocode({ zipcode, country: 'BG' });
-  const lat = loc.latitude;
-  const lng = loc.longitude;
-  const EARTH_RADIUS_KM = 6378;
-  const radius = distance / EARTH_RADIUS_KM;
-
-  const bootcamps = await Bootcamp.find({
-    location: { $geoWithin: { $centerSphere: [[lng, lat], radius] } },
-  });
-
-  res
-    .status(status.OK)
-    .json({ success: true, results: bootcamps.length, data: bootcamps });
 });
 
 exports.bootcampPhotoUpload = catchAsync(async (req, res, next) => {
