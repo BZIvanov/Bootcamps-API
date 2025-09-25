@@ -1,4 +1,4 @@
-const status = require('http-status');
+const { status: httpStatus } = require('http-status');
 const Course = require('../models/course');
 const Bootcamp = require('../models/bootcamp');
 const Filters = require('../utils/filters');
@@ -32,7 +32,7 @@ exports.getCourses = catchAsync(async (req, res) => {
   const courses = await query;
 
   res
-    .status(status.OK)
+    .status(httpStatus.OK)
     .json({ success: true, results: courses.length, data: courses });
 });
 
@@ -46,12 +46,12 @@ exports.getCourse = catchAsync(async (req, res, next) => {
     return next(
       new AppError(
         `Course with id: ${req.params.id} not found.`,
-        status.NOT_FOUND
+        httpStatus.NOT_FOUND
       )
     );
   }
 
-  res.status(status.OK).json({ success: true, data: course });
+  res.status(httpStatus.OK).json({ success: true, data: course });
 });
 
 exports.createCourse = catchAsync(async (req, res, next) => {
@@ -64,7 +64,7 @@ exports.createCourse = catchAsync(async (req, res, next) => {
     return next(
       new AppError(
         `Bootcamp with id: ${req.params.bootcampId} not found.`,
-        status.NOT_FOUND
+        httpStatus.NOT_FOUND
       )
     );
   }
@@ -73,14 +73,14 @@ exports.createCourse = catchAsync(async (req, res, next) => {
     return next(
       new AppError(
         `User with id: ${req.user.id} is not allowed to add course to bootcamp with id ${bootcamp._id}`,
-        status.UNAUTHORIZED
+        httpStatus.UNAUTHORIZED
       )
     );
   }
 
   const course = await Course.create(req.body);
 
-  res.status(status.CREATED).json({ success: true, data: course });
+  res.status(httpStatus.CREATED).json({ success: true, data: course });
 });
 
 exports.updateCourse = catchAsync(async (req, res, next) => {
@@ -90,7 +90,7 @@ exports.updateCourse = catchAsync(async (req, res, next) => {
     return next(
       new AppError(
         `Course with id: ${req.params.id} not found.`,
-        status.NOT_FOUND
+        httpStatus.NOT_FOUND
       )
     );
   }
@@ -99,7 +99,7 @@ exports.updateCourse = catchAsync(async (req, res, next) => {
     return next(
       new AppError(
         `User with id: ${req.user.id} is not allowed to update course with id ${course._id}`,
-        status.UNAUTHORIZED
+        httpStatus.UNAUTHORIZED
       )
     );
   }
@@ -109,7 +109,7 @@ exports.updateCourse = catchAsync(async (req, res, next) => {
     runValidators: true,
   });
 
-  res.status(status.OK).json({ success: true, data: course });
+  res.status(httpStatus.OK).json({ success: true, data: course });
 });
 
 exports.deleteCourse = catchAsync(async (req, res, next) => {
@@ -119,7 +119,7 @@ exports.deleteCourse = catchAsync(async (req, res, next) => {
     return next(
       new AppError(
         `Course with id: ${req.params.id} not found.`,
-        status.NOT_FOUND
+        httpStatus.NOT_FOUND
       )
     );
   }
@@ -128,7 +128,7 @@ exports.deleteCourse = catchAsync(async (req, res, next) => {
     return next(
       new AppError(
         `User with id: ${req.user.id} is not allowed to delete course with id ${course._id}`,
-        status.UNAUTHORIZED
+        httpStatus.UNAUTHORIZED
       )
     );
   }
@@ -136,5 +136,5 @@ exports.deleteCourse = catchAsync(async (req, res, next) => {
   // here is important to use remove method to trigger remove hook in the model
   await course.remove();
 
-  res.status(status.OK).json({ success: true });
+  res.status(httpStatus.OK).json({ success: true });
 });

@@ -1,4 +1,4 @@
-const status = require('http-status');
+const { status: httpStatus } = require('http-status');
 const AppError = require('../utils/appError');
 
 module.exports =
@@ -8,7 +8,7 @@ module.exports =
       return next(
         new AppError(
           'User is not authorized to access this route',
-          status.FORBIDDEN
+          httpStatus.FORBIDDEN
         )
       );
     }

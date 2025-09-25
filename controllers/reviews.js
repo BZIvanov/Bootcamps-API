@@ -1,4 +1,4 @@
-const status = require('http-status');
+const { status: httpStatus } = require('http-status');
 const Review = require('../models/review');
 const Bootcamp = require('../models/bootcamp');
 const Filters = require('../utils/filters');
@@ -32,7 +32,7 @@ exports.getReviews = catchAsync(async (req, res) => {
   const reviews = await query;
 
   res
-    .status(status.OK)
+    .status(httpStatus.OK)
     .json({ success: true, results: reviews.length, data: reviews });
 });
 
@@ -46,12 +46,12 @@ exports.getReview = catchAsync(async (req, res, next) => {
     return next(
       new AppError(
         `Review with id ${req.params.id} not found`,
-        status.NOT_FOUND
+        httpStatus.NOT_FOUND
       )
     );
   }
 
-  res.status(status.OK).json({ success: true, data: review });
+  res.status(httpStatus.OK).json({ success: true, data: review });
 });
 
 exports.createReview = catchAsync(async (req, res, next) => {
@@ -64,14 +64,14 @@ exports.createReview = catchAsync(async (req, res, next) => {
     return next(
       new AppError(
         `Bootcamp with id ${req.params.bootcampId} not found`,
-        status.NOT_FOUND
+        httpStatus.NOT_FOUND
       )
     );
   }
 
   const review = await Review.create(req.body);
 
-  res.status(status.CREATED).json({ success: true, data: review });
+  res.status(httpStatus.CREATED).json({ success: true, data: review });
 });
 
 exports.updateReview = catchAsync(async (req, res, next) => {
@@ -81,14 +81,14 @@ exports.updateReview = catchAsync(async (req, res, next) => {
     return next(
       new AppError(
         `Review with id ${req.params.id} not found`,
-        status.NOT_FOUND
+        httpStatus.NOT_FOUND
       )
     );
   }
 
   if (review.user.toString() !== req.user.id && req.user.role !== admin) {
     return next(
-      new AppError('Not authorized to update review', status.UNAUTHORIZED)
+      new AppError('Not authorized to update review', httpStatus.UNAUTHORIZED)
     );
   }
 
@@ -97,7 +97,7 @@ exports.updateReview = catchAsync(async (req, res, next) => {
     runValidators: true,
   });
 
-  res.status(status.OK).json({ success: true, data: review });
+  res.status(httpStatus.OK).json({ success: true, data: review });
 });
 
 exports.deleteReview = catchAsync(async (req, res, next) => {
@@ -107,18 +107,18 @@ exports.deleteReview = catchAsync(async (req, res, next) => {
     return next(
       new AppError(
         `Review with id ${req.params.id} not found`,
-        status.NOT_FOUND
+        httpStatus.NOT_FOUND
       )
     );
   }
 
   if (review.user.toString() !== req.user.id && req.user.role !== admin) {
     return next(
-      new AppError('Not authorized to delete review', status.UNAUTHORIZED)
+      new AppError('Not authorized to delete review', httpStatus.UNAUTHORIZED)
     );
   }
 
   await review.remove();
 
-  res.status(status.OK).json({ success: true });
+  res.status(httpStatus.OK).json({ success: true });
 });

@@ -13,7 +13,7 @@ npm install
 npm run dev
 ```
 
-but before that you need to update your **.env** file.
+But before that you need to create your **.env** file. You can copy-paste the content from the file `.env.example` to the file `.env` and update with the correct values
 
 ## Environment variables
 

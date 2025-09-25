@@ -1,4 +1,4 @@
-const status = require('http-status');
+const { status: httpStatus } = require('http-status');
 const jwt = require('jsonwebtoken');
 const catchAsync = require('./catch-async');
 const AppError = require('../utils/appError');
@@ -19,7 +19,7 @@ module.exports = catchAsync(async (req, res, next) => {
     return next(
       new AppError(
         'You are not logged in! Please log in to get access.',
-        status.UNAUTHORIZED
+        httpStatus.UNAUTHORIZED
       )
     );
   }
@@ -28,7 +28,7 @@ module.exports = catchAsync(async (req, res, next) => {
 
   const currentUser = await User.findById(decoded.id);
   if (!currentUser) {
-    return next(new AppError('User not found', status.UNAUTHORIZED));
+    return next(new AppError('User not found', httpStatus.UNAUTHORIZED));
   }
 
   req.user = currentUser;
