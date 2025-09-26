@@ -1,9 +1,9 @@
-const crypto = require('crypto');
-const { Schema, model } = require('mongoose');
-const validator = require('validator');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const { User, userTypes } = require('../constants');
+import crypto from 'crypto';
+import { Schema, model } from 'mongoose';
+import validator from 'validator';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { User, userTypes } from '../constants/index.js';
 
 const schema = new Schema(
   {
@@ -71,4 +71,4 @@ schema.methods.getResetPasswordToken = function generateResetPasswordToken() {
   return resetToken;
 };
 
-module.exports = model(User, schema);
+export default model(User, schema);

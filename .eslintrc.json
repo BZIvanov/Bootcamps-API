@@ -13,9 +13,9 @@
     "prettier/prettier": ["error", { "endOfLine": "auto" }],
     "no-console": "off",
     "consistent-return": "off",
-    "no-underscore-dangle": ["error", { "allow": ["_id", "_doc"] }],
+    "no-underscore-dangle": "off", // Allow dangling underscore in variable names. Added during refactoring, consider removing
     "import/no-extraneous-dependencies": "off",
     "no-unused-vars": ["error", { "argsIgnorePattern": "next" }],
-    "quotes": [2, "single"]
+    "import/extensions": "off" // Don't show error for specifying file extension while importing .js files. Added during refactoring, consider removing
   }
 }

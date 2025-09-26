@@ -1,5 +1,5 @@
-const { Schema, model } = require('mongoose');
-const { Bootcamp, Review, User } = require('../constants');
+import { Schema, model } from 'mongoose';
+import { Bootcamp, Review, User } from '../constants/index.js';
 
 const schema = new Schema(
   {
@@ -68,4 +68,4 @@ schema.pre('remove', function averageRatingBeforeRemove() {
   this.constructor.getAverageRating(this.bootcamp);
 });
 
-module.exports = model(Review, schema);
+export default model(Review, schema);

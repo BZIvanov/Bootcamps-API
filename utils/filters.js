@@ -1,4 +1,4 @@
-module.exports = class {
+export default class {
   constructor(docs, query) {
     this.docs = docs;
     this.query = query;
@@ -48,4 +48,4 @@ module.exports = class {
 
     return this;
   }
-};
+}

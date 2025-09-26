@@ -1,7 +1,7 @@
-const { Schema, model } = require('mongoose');
-const validator = require('validator');
-const slugify = require('slugify');
-const { Bootcamp, Course, User } = require('../constants');
+import { Schema, model } from 'mongoose';
+import validator from 'validator';
+import slugify from 'slugify';
+import { Bootcamp, Course, User } from '../constants/index.js';
 
 const schema = new Schema(
   {
@@ -92,4 +92,4 @@ schema.virtual('courses', {
   justOne: false,
 });
 
-module.exports = model(Bootcamp, schema);
+export default model(Bootcamp, schema);

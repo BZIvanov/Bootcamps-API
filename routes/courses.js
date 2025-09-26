@@ -1,25 +1,37 @@
-const router = require('express').Router({ mergeParams: true });
-const {
+import { Router } from 'express';
+import {
   getCourses,
   getCourse,
   createCourse,
   updateCourse,
   deleteCourse,
-} = require('../controllers/courses');
-const authenticate = require('../middlewares/authenticate');
-const authorize = require('../middlewares/authorize');
-const {
-  userTypes: { publisher, admin },
-} = require('../constants');
+} from '../controllers/courses.js';
+import authenticate from '../middlewares/authenticate.js';
+import authorize from '../middlewares/authorize.js';
+import { userTypes } from '../constants/index.js';
+
+const router = Router({ mergeParams: true });
 
 router
   .route('/')
   .get(getCourses)
-  .post(authenticate, authorize(publisher, admin), createCourse);
+  .post(
+    authenticate,
+    authorize(userTypes.publisher, userTypes.admin),
+    createCourse
+  );
 router
   .route('/:id')
   .get(getCourse)
-  .put(authenticate, authorize(publisher, admin), updateCourse)
-  .delete(authenticate, authorize(publisher, admin), deleteCourse);
+  .put(
+    authenticate,
+    authorize(userTypes.publisher, userTypes.admin),
+    updateCourse
+  )
+  .delete(
+    authenticate,
+    authorize(userTypes.publisher, userTypes.admin),
+    deleteCourse
+  );
 
-module.exports = router;
+export default router;

@@ -1,14 +1,12 @@
-const { status: httpStatus } = require('http-status');
-const Review = require('../models/review');
-const Bootcamp = require('../models/bootcamp');
-const Filters = require('../utils/filters');
-const AppError = require('../utils/appError');
-const catchAsync = require('../middlewares/catch-async');
-const {
-  userTypes: { admin },
-} = require('../constants');
+import httpStatus from 'http-status';
+import Review from '../models/review.js';
+import Bootcamp from '../models/bootcamp.js';
+import Filters from '../utils/filters.js';
+import AppError from '../utils/appError.js';
+import catchAsync from '../middlewares/catch-async.js';
+import { userTypes } from '../constants/index.js';
 
-exports.getReviews = catchAsync(async (req, res) => {
+export const getReviews = catchAsync(async (req, res) => {
   let query;
 
   if (req.params.bootcampId) {
@@ -36,7 +34,7 @@ exports.getReviews = catchAsync(async (req, res) => {
     .json({ success: true, results: reviews.length, data: reviews });
 });
 
-exports.getReview = catchAsync(async (req, res, next) => {
+export const getReview = catchAsync(async (req, res, next) => {
   const review = await Review.findById(req.params.id).populate({
     path: 'bootcamp',
     select: 'name description',
@@ -54,7 +52,7 @@ exports.getReview = catchAsync(async (req, res, next) => {
   res.status(httpStatus.OK).json({ success: true, data: review });
 });
 
-exports.createReview = catchAsync(async (req, res, next) => {
+export const createReview = catchAsync(async (req, res, next) => {
   req.body.bootcamp = req.params.bootcampId;
   req.body.user = req.user.id;
 
@@ -74,7 +72,7 @@ exports.createReview = catchAsync(async (req, res, next) => {
   res.status(httpStatus.CREATED).json({ success: true, data: review });
 });
 
-exports.updateReview = catchAsync(async (req, res, next) => {
+export const updateReview = catchAsync(async (req, res, next) => {
   let review = await Review.findById(req.params.id);
 
   if (!review) {
@@ -86,7 +84,10 @@ exports.updateReview = catchAsync(async (req, res, next) => {
     );
   }
 
-  if (review.user.toString() !== req.user.id && req.user.role !== admin) {
+  if (
+    review.user.toString() !== req.user.id &&
+    req.user.role !== userTypes.admin
+  ) {
     return next(
       new AppError('Not authorized to update review', httpStatus.UNAUTHORIZED)
     );
@@ -100,7 +101,7 @@ exports.updateReview = catchAsync(async (req, res, next) => {
   res.status(httpStatus.OK).json({ success: true, data: review });
 });
 
-exports.deleteReview = catchAsync(async (req, res, next) => {
+export const deleteReview = catchAsync(async (req, res, next) => {
   const review = await Review.findById(req.params.id);
 
   if (!review) {
@@ -112,7 +113,10 @@ exports.deleteReview = catchAsync(async (req, res, next) => {
     );
   }
 
-  if (review.user.toString() !== req.user.id && req.user.role !== admin) {
+  if (
+    review.user.toString() !== req.user.id &&
+    req.user.role !== userTypes.admin
+  ) {
     return next(
       new AppError('Not authorized to delete review', httpStatus.UNAUTHORIZED)
     );

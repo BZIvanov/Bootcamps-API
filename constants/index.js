@@ -1,17 +1,17 @@
 // Environments
-exports.environment = {
+export const environment = {
   development: 'development',
   production: 'production',
 };
 
 // Model names
-exports.Bootcamp = 'Bootcamp';
-exports.Course = 'Course';
-exports.Review = 'Review';
-exports.User = 'User';
+export const Bootcamp = 'Bootcamp';
+export const Course = 'Course';
+export const Review = 'Review';
+export const User = 'User';
 
 // User types
-exports.userTypes = {
+export const userTypes = {
   user: 'user',
   publisher: 'publisher',
   admin: 'admin',

@@ -1,14 +1,12 @@
-const { status: httpStatus } = require('http-status');
-const Course = require('../models/course');
-const Bootcamp = require('../models/bootcamp');
-const Filters = require('../utils/filters');
-const AppError = require('../utils/appError');
-const catchAsync = require('../middlewares/catch-async');
-const {
-  userTypes: { admin },
-} = require('../constants');
+import httpStatus from 'http-status';
+import Course from '../models/course.js';
+import Bootcamp from '../models/bootcamp.js';
+import Filters from '../utils/filters.js';
+import AppError from '../utils/appError.js';
+import catchAsync from '../middlewares/catch-async.js';
+import { userTypes } from '../constants/index.js';
 
-exports.getCourses = catchAsync(async (req, res) => {
+export const getCourses = catchAsync(async (req, res) => {
   let query;
 
   if (req.params.bootcampId) {
@@ -36,7 +34,7 @@ exports.getCourses = catchAsync(async (req, res) => {
     .json({ success: true, results: courses.length, data: courses });
 });
 
-exports.getCourse = catchAsync(async (req, res, next) => {
+export const getCourse = catchAsync(async (req, res, next) => {
   const course = await Course.findById(req.params.id).populate({
     path: 'bootcamp',
     select: 'name description',
@@ -54,7 +52,7 @@ exports.getCourse = catchAsync(async (req, res, next) => {
   res.status(httpStatus.OK).json({ success: true, data: course });
 });
 
-exports.createCourse = catchAsync(async (req, res, next) => {
+export const createCourse = catchAsync(async (req, res, next) => {
   req.body.bootcamp = req.params.bootcampId;
   req.body.user = req.user.id;
 
@@ -69,7 +67,10 @@ exports.createCourse = catchAsync(async (req, res, next) => {
     );
   }
 
-  if (bootcamp.user.toString() !== req.user.id && req.user.role !== admin) {
+  if (
+    bootcamp.user.toString() !== req.user.id &&
+    req.user.role !== userTypes.admin
+  ) {
     return next(
       new AppError(
         `User with id: ${req.user.id} is not allowed to add course to bootcamp with id ${bootcamp._id}`,
@@ -83,7 +84,7 @@ exports.createCourse = catchAsync(async (req, res, next) => {
   res.status(httpStatus.CREATED).json({ success: true, data: course });
 });
 
-exports.updateCourse = catchAsync(async (req, res, next) => {
+export const updateCourse = catchAsync(async (req, res, next) => {
   let course = await Course.findById(req.params.id);
 
   if (!course) {
@@ -95,7 +96,10 @@ exports.updateCourse = catchAsync(async (req, res, next) => {
     );
   }
 
-  if (course.user.toString() !== req.user.id && req.user.role !== admin) {
+  if (
+    course.user.toString() !== req.user.id &&
+    req.user.role !== userTypes.admin
+  ) {
     return next(
       new AppError(
         `User with id: ${req.user.id} is not allowed to update course with id ${course._id}`,
@@ -112,7 +116,7 @@ exports.updateCourse = catchAsync(async (req, res, next) => {
   res.status(httpStatus.OK).json({ success: true, data: course });
 });
 
-exports.deleteCourse = catchAsync(async (req, res, next) => {
+export const deleteCourse = catchAsync(async (req, res, next) => {
   const course = await Course.findById(req.params.id);
 
   if (!course) {
@@ -124,7 +128,10 @@ exports.deleteCourse = catchAsync(async (req, res, next) => {
     );
   }
 
-  if (course.user.toString() !== req.user.id && req.user.role !== admin) {
+  if (
+    course.user.toString() !== req.user.id &&
+    req.user.role !== userTypes.admin
+  ) {
     return next(
       new AppError(
         `User with id: ${req.user.id} is not allowed to delete course with id ${course._id}`,

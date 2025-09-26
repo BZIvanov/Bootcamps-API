@@ -1,10 +1,10 @@
-const { status: httpStatus } = require('http-status');
-const jwt = require('jsonwebtoken');
-const catchAsync = require('./catch-async');
-const AppError = require('../utils/appError');
-const User = require('../models/user');
+import httpStatus from 'http-status';
+import jwt from 'jsonwebtoken';
+import AppError from '../utils/appError.js';
+import catchAsync from './catch-async.js';
+import User from '../models/user.js';
 
-module.exports = catchAsync(async (req, res, next) => {
+export default catchAsync(async (req, res, next) => {
   let token;
   if (
     req.headers.authorization &&

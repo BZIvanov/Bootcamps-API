@@ -1,28 +1,29 @@
-const path = require('path');
-const express = require('express');
-const fileupload = require('express-fileupload');
-const cookieParser = require('cookie-parser');
-const morgan = require('morgan');
-const mongoSanitize = require('express-mongo-sanitize');
-const hpp = require('hpp');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
-const cors = require('cors');
-const xss = require('xss-clean');
-const auth = require('../routes/auth');
-const bootcamps = require('../routes/bootcamps');
-const courses = require('../routes/courses');
-const reviews = require('../routes/reviews');
-const users = require('../routes/users');
-const globalError = require('../middlewares/global-error');
-const { environment } = require('../constants');
+import { fileURLToPath } from 'url';
+import path, { dirname } from 'path';
+import express from 'express';
+import fileupload from 'express-fileupload';
+import cookieParser from 'cookie-parser';
+import morgan from 'morgan';
+import mongoSanitize from 'express-mongo-sanitize';
+import hpp from 'hpp';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+import cors from 'cors';
+import xss from 'xss-clean';
+import auth from '../routes/auth.js';
+import bootcamps from '../routes/bootcamps.js';
+import courses from '../routes/courses.js';
+import reviews from '../routes/reviews.js';
+import users from '../routes/users.js';
+import globalError from '../middlewares/global-error.js';
+import { environment } from '../constants/index.js';
 
 const limiter = rateLimit({
   windowMs: 10 * 60 * 1000,
   max: 100,
 });
 
-module.exports = function startApp(app) {
+export default function startApp(app) {
   if (process.env.NODE_ENV !== environment.production) {
     app.use(morgan('dev'));
   }
@@ -44,7 +45,9 @@ module.exports = function startApp(app) {
   app.use('/api/v1/courses', courses);
   app.use('/api/v1/reviews', reviews);
   app.use('/api/v1/users', users);
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
   app.use(express.static(path.join(__dirname, '..', 'public')));
   // globalError has to be the last route
   app.use(globalError);
-};
+}

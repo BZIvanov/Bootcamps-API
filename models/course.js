@@ -1,5 +1,5 @@
-const { Schema, model } = require('mongoose');
-const { Bootcamp, Course, User } = require('../constants');
+import { Schema, model } from 'mongoose';
+import { Bootcamp, Course, User } from '../constants/index.js';
 
 const schema = new Schema(
   {
@@ -71,4 +71,4 @@ schema.pre('remove', function averageCostBeforeRemove() {
   this.constructor.getAverageCost(this.bootcamp);
 });
 
-module.exports = model(Course, schema);
+export default model(Course, schema);

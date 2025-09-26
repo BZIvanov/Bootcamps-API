@@ -1,22 +1,22 @@
-const router = require('express').Router({ mergeParams: true });
-const {
+import { Router } from 'express';
+import {
   getUsers,
   getUser,
   createUser,
   updateUser,
   deleteUser,
-} = require('../controllers/users');
-const authenticate = require('../middlewares/authenticate');
-const authorize = require('../middlewares/authorize');
-const {
-  userTypes: { admin },
-} = require('../constants');
+} from '../controllers/users.js';
+import authenticate from '../middlewares/authenticate.js';
+import authorize from '../middlewares/authorize.js';
+import { userTypes } from '../constants/index.js';
+
+const router = Router({ mergeParams: true });
 
 // these two will aplly to all our users routes
 router.use(authenticate);
-router.use(authorize(admin));
+router.use(authorize(userTypes.admin));
 
 router.route('/').get(getUsers).post(createUser);
 router.route('/:id').get(getUser).put(updateUser).delete(deleteUser);
 
-module.exports = router;
+export default router;

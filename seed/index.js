@@ -1,19 +1,16 @@
-const fs = require('fs');
-const path = require('path');
-require('dotenv').config();
-const mongoose = require('mongoose');
-require('colors');
-const User = require('../models/user');
-const Bootcamp = require('../models/bootcamp');
-const Course = require('../models/course');
-const Review = require('../models/review');
+import fs from 'fs';
+import path from 'path';
+import dotenv from 'dotenv';
+import mongoose from 'mongoose';
+import 'colors';
+import User from '../models/user.js';
+import Bootcamp from '../models/bootcamp.js';
+import Course from '../models/course.js';
+import Review from '../models/review.js';
 
-mongoose.connect(process.env.DB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-  useFindAndModify: false,
-});
+dotenv.config();
+
+mongoose.connect(process.env.DB_URI);
 
 const seedData = async () => {
   try {

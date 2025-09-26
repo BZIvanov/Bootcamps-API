@@ -1,8 +1,8 @@
-const { status: httpStatus } = require('http-status');
-const AppError = require('../utils/appError');
+import httpStatus from 'http-status';
+import AppError from '../utils/appError.js';
 
 // always keep all 4 parameters for this function or it will not fire
-module.exports = (err, req, res, next) => {
+export default (err, req, res, next) => {
   let error = { ...err };
   error.message = err.message;
 

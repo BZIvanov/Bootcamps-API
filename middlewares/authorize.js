@@ -1,8 +1,7 @@
-const { status: httpStatus } = require('http-status');
-const AppError = require('../utils/appError');
+import httpStatus from 'http-status';
+import AppError from '../utils/appError.js';
 
-module.exports =
-  (...roles) =>
+export default (...roles) =>
   (req, res, next) => {
     if (!roles.includes(req.user.role)) {
       return next(

@@ -1,6 +1,6 @@
 const TYPES = ['info', 'success', 'warning'];
 
-module.exports = (type, message, err = '') => {
+export default (type, message, err = '') => {
   if (!TYPES.includes(type) || !message) {
     return console.log('Incorrect message format.');
   }

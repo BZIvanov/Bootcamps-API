@@ -1,14 +1,12 @@
-const path = require('path');
-const { status: httpStatus } = require('http-status');
-const Bootcamp = require('../models/bootcamp');
-const Filters = require('../utils/filters');
-const AppError = require('../utils/appError');
-const catchAsync = require('../middlewares/catch-async');
-const {
-  userTypes: { admin },
-} = require('../constants');
+import path from 'path';
+import httpStatus from 'http-status';
+import Bootcamp from '../models/bootcamp.js';
+import Filters from '../utils/filters.js';
+import AppError from '../utils/appError.js';
+import catchAsync from '../middlewares/catch-async.js';
+import { userTypes } from '../constants/index.js';
 
-exports.getBootcamps = catchAsync(async (req, res) => {
+export const getBootcamps = catchAsync(async (req, res) => {
   const filtered = new Filters(Bootcamp.find().populate('courses'), req.query)
     .filter()
     .select()
@@ -23,7 +21,7 @@ exports.getBootcamps = catchAsync(async (req, res) => {
   });
 });
 
-exports.getBootcamp = catchAsync(async (req, res, next) => {
+export const getBootcamp = catchAsync(async (req, res, next) => {
   const bootcamp = await Bootcamp.findById(req.params.id);
 
   if (!bootcamp) {
@@ -38,12 +36,12 @@ exports.getBootcamp = catchAsync(async (req, res, next) => {
   res.status(httpStatus.OK).json({ success: true, data: bootcamp });
 });
 
-exports.createBootcamp = catchAsync(async (req, res, next) => {
+export const createBootcamp = catchAsync(async (req, res, next) => {
   req.body.user = req.user.id;
 
   const publishedBootcamp = await Bootcamp.findOne({ user: req.user.id });
 
-  if (publishedBootcamp && req.user.role !== admin) {
+  if (publishedBootcamp && req.user.role !== userTypes.admin) {
     return next(
       new AppError(
         `User with id ${req.user.id} has already published a bootcamp`,
@@ -56,7 +54,7 @@ exports.createBootcamp = catchAsync(async (req, res, next) => {
   res.status(httpStatus.CREATED).json({ success: true, data: bootcamp });
 });
 
-exports.updateBootcamp = catchAsync(async (req, res, next) => {
+export const updateBootcamp = catchAsync(async (req, res, next) => {
   let bootcamp = await Bootcamp.findById(req.params.id);
 
   if (!bootcamp) {
@@ -68,7 +66,10 @@ exports.updateBootcamp = catchAsync(async (req, res, next) => {
     );
   }
 
-  if (bootcamp.user.toString() !== req.user.id && req.user.role !== admin) {
+  if (
+    bootcamp.user.toString() !== req.user.id &&
+    req.user.role !== userTypes.admin
+  ) {
     return next(
       new AppError(
         `User with id: ${req.user.id} is not allowed to update this resource`,
@@ -85,7 +86,7 @@ exports.updateBootcamp = catchAsync(async (req, res, next) => {
   res.status(httpStatus.OK).json({ success: true, data: bootcamp });
 });
 
-exports.deleteBootcamp = catchAsync(async (req, res, next) => {
+export const deleteBootcamp = catchAsync(async (req, res, next) => {
   // findByIdAndDelete will not trigger schema middlewares, so here later remove method is used.
   const bootcamp = await Bootcamp.findById(req.params.id);
 
@@ -98,7 +99,10 @@ exports.deleteBootcamp = catchAsync(async (req, res, next) => {
     );
   }
 
-  if (bootcamp.user.toString() !== req.user.id && req.user.role !== admin) {
+  if (
+    bootcamp.user.toString() !== req.user.id &&
+    req.user.role !== userTypes.admin
+  ) {
     return next(
       new AppError(
         `User with id: ${req.user.id} is not allowed to delete this resource`,
@@ -113,7 +117,7 @@ exports.deleteBootcamp = catchAsync(async (req, res, next) => {
   res.status(httpStatus.OK).json({ success: true });
 });
 
-exports.bootcampPhotoUpload = catchAsync(async (req, res, next) => {
+export const bootcampPhotoUpload = catchAsync(async (req, res, next) => {
   const bootcamp = await Bootcamp.findById(req.params.id);
 
   if (!bootcamp) {
@@ -125,7 +129,10 @@ exports.bootcampPhotoUpload = catchAsync(async (req, res, next) => {
     );
   }
 
-  if (bootcamp.user.toString() !== req.user.id && req.user.role !== admin) {
+  if (
+    bootcamp.user.toString() !== req.user.id &&
+    req.user.role !== userTypes.admin
+  ) {
     return next(
       new AppError(
         `User with id: ${req.user.id} is not allowed to update this resource`,
