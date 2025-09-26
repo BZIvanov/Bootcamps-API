@@ -15,6 +15,16 @@ npm run dev
 
 But before that you need to create your **.env** file. You can copy-paste the content from the file `.env.example` to the file `.env` and update with the correct values
 
+## Available Scripts
+
+| Script                | Description                                                                                                                                     |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm start`           | Start the app in production mode                                                                                                                |
+| `npm run dev`         | Start the app in development mode                                                                                                               |
+| `npm run debug`       | Start the app in the debugging mode. Checkout the `Debugging` section in this repo `https://github.com/BZIvanov/Learning-Node.js` for more info |
+| `npm run seed-data`   | Seed data in the database                                                                                                                       |
+| `npm run delete-data` | Delete seeded data in the database                                                                                                              |
+
 ## Environment variables
 
 - NODE_ENV - environment, development by default
