@@ -2,12 +2,12 @@
   "name": "node-api",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "src/server.js",
   "type": "module",
   "scripts": {
-    "start": "set NODE_ENV=production&& node server.js",
-    "dev": "nodemon server.js",
-    "debug": "ndb server.js",
+    "start": "set NODE_ENV=production&& node src/server.js",
+    "dev": "nodemon src/server.js",
+    "debug": "ndb src/server.js",
     "seed-data": "node seed -i",
     "delete-data": "node seed -d"
   },
