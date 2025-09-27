@@ -20,16 +20,19 @@ const limiter = rateLimit({
   max: 100,
 });
 
-export default function startApp(app) {
+export default function configureApp(app) {
   app.use(express.json({ limit: '10kb' }));
-  app.use(fileupload());
-  app.use(cookieParser());
 
-  // hpp must be included after the json parse middleware
+  app.use(fileupload({ limits: { fileSize: 5 * 1024 * 1024 } })); // 5MB max
+
   app.use(hpp());
   app.use(helmet());
+
   app.use(limiter);
-  app.use(cors());
+
+  app.use(cors({ origin: process.env.CLIENT_URL || '*' }));
+
+  app.use(cookieParser());
 
   app.use(httpLogger);
 
@@ -38,9 +41,11 @@ export default function startApp(app) {
   app.use('/api/v1/courses', courses);
   app.use('/api/v1/reviews', reviews);
   app.use('/api/v1/users', users);
+
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = dirname(__filename);
   app.use(express.static(path.join(__dirname, '..', '..', 'public')));
-  // globalError has to be the last route
+
+  // Global error handler last
   app.use(globalError);
 }

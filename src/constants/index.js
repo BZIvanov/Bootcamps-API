@@ -1,9 +1,3 @@
-// Environments
-export const environment = {
-  development: 'development',
-  production: 'production',
-};
-
 // Model names
 export const Bootcamp = 'Bootcamp';
 export const Course = 'Course';

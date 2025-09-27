@@ -3,7 +3,7 @@ import httpStatus from 'http-status';
 import User from '../models/user.js';
 import sendEmail from '../providers/mailer.js';
 import AppError from '../utils/appError.js';
-import { environment } from '../constants/index.js';
+import { isProd } from '../config/env.js';
 
 const sendTokenResponse = (user, statusCode, res) => {
   const token = user.getSignedJwtToken();
@@ -11,7 +11,7 @@ const sendTokenResponse = (user, statusCode, res) => {
   const options = {
     expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 1 day
     httpOnly: true,
-    secure: process.env.NODE_ENV === environment.production,
+    secure: isProd,
   };
 
   res
@@ -55,7 +55,7 @@ export const logout = async (req, res) => {
   res.cookie('token', 'none', {
     expires: new Date(Date.now() + 5 * 1000),
     httpOnly: true,
-    secure: process.env.NODE_ENV === environment.production,
+    secure: isProd,
   });
 
   res.status(httpStatus.OK).json({ success: true });
