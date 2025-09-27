@@ -1,3 +1,5 @@
+# Bootcamps API
+
 ## How to use?
 
 1. Clone the Github Repo.

@@ -3,10 +3,10 @@ import path from 'path';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import 'colors';
-import User from '../models/user.js';
-import Bootcamp from '../models/bootcamp.js';
-import Course from '../models/course.js';
-import Review from '../models/review.js';
+import User from '../src/models/user.js';
+import Bootcamp from '../src/models/bootcamp.js';
+import Course from '../src/models/course.js';
+import Review from '../src/models/review.js';
 
 dotenv.config();
 
