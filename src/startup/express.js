@@ -3,7 +3,6 @@ import path, { dirname } from 'path';
 import express from 'express';
 import fileupload from 'express-fileupload';
 import cookieParser from 'cookie-parser';
-import morgan from 'morgan';
 import hpp from 'hpp';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
@@ -14,7 +13,7 @@ import courses from '../routes/courses.js';
 import reviews from '../routes/reviews.js';
 import users from '../routes/users.js';
 import globalError from '../middlewares/global-error.js';
-import { environment } from '../constants/index.js';
+import httpLogger from '../middlewares/httpLogger.js';
 
 const limiter = rateLimit({
   windowMs: 10 * 60 * 1000,
@@ -22,10 +21,6 @@ const limiter = rateLimit({
 });
 
 export default function startApp(app) {
-  if (process.env.NODE_ENV !== environment.production) {
-    app.use(morgan('dev'));
-  }
-
   app.use(express.json({ limit: '10kb' }));
   app.use(fileupload());
   app.use(cookieParser());
@@ -35,6 +30,8 @@ export default function startApp(app) {
   app.use(helmet());
   app.use(limiter);
   app.use(cors());
+
+  app.use(httpLogger);
 
   app.use('/api/v1/auth', auth);
   app.use('/api/v1/bootcamps', bootcamps);

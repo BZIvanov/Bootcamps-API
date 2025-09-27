@@ -1,10 +1,9 @@
 import mongoose from 'mongoose';
-import log from '../utils/log.js';
+import logger from '../config/logger.js';
 
 export default function startDb() {
   mongoose.connect(process.env.DB_URI).then((connection) => {
-    log(
-      'info',
+    logger.info(
       `DB connection successful and ready for ${connection.connections[0].host}`
     );
   });

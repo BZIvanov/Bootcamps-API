@@ -132,7 +132,7 @@ export const forgotPassword = async (req, res, next) => {
       text,
     });
   } catch (err) {
-    console.log('Sending mail error'.red.underline.bold, err);
+    req.log.error({ err }, 'Error sending forgot password email');
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
     await user.save({ validateBeforeSave: false });

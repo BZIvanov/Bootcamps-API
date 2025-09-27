@@ -1,17 +1,19 @@
-import log from '../utils/log.js';
+import logger from '../config/logger.js';
 
 export default function appErrorsHandler(server) {
   process.on('uncaughtException', (err) => {
-    log('warning', 'Uncaught exception! Shutting down server and node...', err);
+    logger.fatal(
+      { err },
+      'Uncaught exception! Shutting down server and node...'
+    );
 
     server.close(() => process.exit(1));
   });
 
   process.on('unhandledRejection', (err) => {
-    log(
-      'warning',
-      'Unhandled rejection! Shutting down server and node...',
-      err
+    logger.fatal(
+      { err },
+      'Unhandled rejection! Shutting down server and node...'
     );
 
     server.close(() => process.exit(1));
