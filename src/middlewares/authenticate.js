@@ -1,10 +1,11 @@
 import httpStatus from 'http-status';
 import jwt from 'jsonwebtoken';
 import AppError from '../utils/appError.js';
-import catchAsync from './catch-async.js';
 import User from '../models/user.js';
 
-export default catchAsync(async (req, res, next) => {
+const { jwtVerify } = jwt;
+
+export default async (req, res, next) => {
   let token;
   if (
     req.headers.authorization &&
@@ -24,7 +25,7 @@ export default catchAsync(async (req, res, next) => {
     );
   }
 
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  const decoded = await jwtVerify(token, process.env.JWT_SECRET);
 
   const currentUser = await User.findById(decoded.id);
   if (!currentUser) {
@@ -33,4 +34,4 @@ export default catchAsync(async (req, res, next) => {
 
   req.user = currentUser;
   next();
-});
+};

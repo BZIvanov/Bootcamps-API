@@ -3,7 +3,6 @@ import httpStatus from 'http-status';
 import User from '../models/user.js';
 import sendEmail from '../providers/mailer.js';
 import AppError from '../utils/appError.js';
-import catchAsync from '../middlewares/catch-async.js';
 import { environment } from '../constants/index.js';
 
 const sendTokenResponse = (user, statusCode, res) => {
@@ -22,15 +21,15 @@ const sendTokenResponse = (user, statusCode, res) => {
     .json({ success: true });
 };
 
-export const register = catchAsync(async (req, res) => {
+export const register = async (req, res) => {
   const { name, email, password, role } = req.body;
 
   const user = await User.create({ name, email, password, role });
 
   sendTokenResponse(user, httpStatus.CREATED, res);
-});
+};
 
-export const login = catchAsync(async (req, res, next) => {
+export const login = async (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -50,9 +49,9 @@ export const login = catchAsync(async (req, res, next) => {
   }
 
   sendTokenResponse(user, httpStatus.OK, res);
-});
+};
 
-export const logout = catchAsync(async (req, res) => {
+export const logout = async (req, res) => {
   res.cookie('token', 'none', {
     expires: new Date(Date.now() + 5 * 1000),
     httpOnly: true,
@@ -60,15 +59,15 @@ export const logout = catchAsync(async (req, res) => {
   });
 
   res.status(httpStatus.OK).json({ success: true });
-});
+};
 
-export const getMe = catchAsync(async (req, res) => {
+export const getMe = async (req, res) => {
   const user = await User.findById(req.user.id);
 
   res.status(httpStatus.OK).json({ success: true, data: user });
-});
+};
 
-export const updateDetails = catchAsync(async (req, res) => {
+export const updateDetails = async (req, res) => {
   const { name, email } = req.body;
 
   const fields = {
@@ -82,9 +81,9 @@ export const updateDetails = catchAsync(async (req, res) => {
   });
 
   res.status(httpStatus.OK).json({ success: true, data: user });
-});
+};
 
-export const updatePassword = catchAsync(async (req, res, next) => {
+export const updatePassword = async (req, res, next) => {
   const user = await User.findById(req.user.id).select('+password');
 
   const { currentPassword, newPassword } = req.body;
@@ -105,9 +104,9 @@ export const updatePassword = catchAsync(async (req, res, next) => {
   user.password = newPassword;
   await user.save();
   sendTokenResponse(user, httpStatus.OK, res);
-});
+};
 
-export const forgotPassword = catchAsync(async (req, res, next) => {
+export const forgotPassword = async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
 
   if (!user) {
@@ -143,9 +142,9 @@ export const forgotPassword = catchAsync(async (req, res, next) => {
   }
 
   res.status(httpStatus.OK).json({ success: true });
-});
+};
 
-export const resetPassword = catchAsync(async (req, res, next) => {
+export const resetPassword = async (req, res, next) => {
   const resetPasswordToken = crypto
     .createHash('sha256')
     .update(req.params.resettoken)
@@ -166,4 +165,4 @@ export const resetPassword = catchAsync(async (req, res, next) => {
   await user.save();
 
   sendTokenResponse(user, httpStatus.OK, res);
-});
+};

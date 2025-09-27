@@ -4,12 +4,10 @@ import express from 'express';
 import fileupload from 'express-fileupload';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
-import mongoSanitize from 'express-mongo-sanitize';
 import hpp from 'hpp';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import cors from 'cors';
-import xss from 'xss-clean';
 import auth from '../routes/auth.js';
 import bootcamps from '../routes/bootcamps.js';
 import courses from '../routes/courses.js';
@@ -32,9 +30,7 @@ export default function startApp(app) {
   app.use(fileupload());
   app.use(cookieParser());
 
-  // mongo-sanitize, xss-clean and hpp must be included after the json parse middleware
-  app.use(mongoSanitize());
-  app.use(xss());
+  // hpp must be included after the json parse middleware
   app.use(hpp());
   app.use(helmet());
   app.use(limiter);
@@ -47,7 +43,7 @@ export default function startApp(app) {
   app.use('/api/v1/users', users);
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = dirname(__filename);
-  app.use(express.static(path.join(__dirname, '..', 'public')));
+  app.use(express.static(path.join(__dirname, '..', '..', 'public')));
   // globalError has to be the last route
   app.use(globalError);
 }

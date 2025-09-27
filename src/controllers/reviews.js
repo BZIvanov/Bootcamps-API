@@ -3,10 +3,9 @@ import Review from '../models/review.js';
 import Bootcamp from '../models/bootcamp.js';
 import Filters from '../utils/filters.js';
 import AppError from '../utils/appError.js';
-import catchAsync from '../middlewares/catch-async.js';
 import { userTypes } from '../constants/index.js';
 
-export const getReviews = catchAsync(async (req, res) => {
+export const getReviews = async (req, res) => {
   let query;
 
   if (req.params.bootcampId) {
@@ -32,9 +31,9 @@ export const getReviews = catchAsync(async (req, res) => {
   res
     .status(httpStatus.OK)
     .json({ success: true, results: reviews.length, data: reviews });
-});
+};
 
-export const getReview = catchAsync(async (req, res, next) => {
+export const getReview = async (req, res, next) => {
   const review = await Review.findById(req.params.id).populate({
     path: 'bootcamp',
     select: 'name description',
@@ -50,9 +49,9 @@ export const getReview = catchAsync(async (req, res, next) => {
   }
 
   res.status(httpStatus.OK).json({ success: true, data: review });
-});
+};
 
-export const createReview = catchAsync(async (req, res, next) => {
+export const createReview = async (req, res, next) => {
   req.body.bootcamp = req.params.bootcampId;
   req.body.user = req.user.id;
 
@@ -70,9 +69,9 @@ export const createReview = catchAsync(async (req, res, next) => {
   const review = await Review.create(req.body);
 
   res.status(httpStatus.CREATED).json({ success: true, data: review });
-});
+};
 
-export const updateReview = catchAsync(async (req, res, next) => {
+export const updateReview = async (req, res, next) => {
   let review = await Review.findById(req.params.id);
 
   if (!review) {
@@ -99,9 +98,9 @@ export const updateReview = catchAsync(async (req, res, next) => {
   });
 
   res.status(httpStatus.OK).json({ success: true, data: review });
-});
+};
 
-export const deleteReview = catchAsync(async (req, res, next) => {
+export const deleteReview = async (req, res, next) => {
   const review = await Review.findById(req.params.id);
 
   if (!review) {
@@ -125,4 +124,4 @@ export const deleteReview = catchAsync(async (req, res, next) => {
   await review.remove();
 
   res.status(httpStatus.OK).json({ success: true });
-});
+};

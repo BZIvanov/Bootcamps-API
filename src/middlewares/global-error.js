@@ -3,8 +3,7 @@ import AppError from '../utils/appError.js';
 
 // always keep all 4 parameters for this function or it will not fire
 export default (err, req, res, next) => {
-  let error = { ...err };
-  error.message = err.message;
+  let error = { ...err, message: err.message, statusCode: err.statusCode };
 
   if (err.name === 'CastError') {
     error = new AppError('Resource not found', httpStatus.NOT_FOUND);

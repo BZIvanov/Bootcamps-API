@@ -3,10 +3,9 @@ import httpStatus from 'http-status';
 import Bootcamp from '../models/bootcamp.js';
 import Filters from '../utils/filters.js';
 import AppError from '../utils/appError.js';
-import catchAsync from '../middlewares/catch-async.js';
 import { userTypes } from '../constants/index.js';
 
-export const getBootcamps = catchAsync(async (req, res) => {
+export const getBootcamps = async (req, res) => {
   const filtered = new Filters(Bootcamp.find().populate('courses'), req.query)
     .filter()
     .select()
@@ -19,9 +18,9 @@ export const getBootcamps = catchAsync(async (req, res) => {
     results: bootcamps.length,
     data: bootcamps,
   });
-});
+};
 
-export const getBootcamp = catchAsync(async (req, res, next) => {
+export const getBootcamp = async (req, res, next) => {
   const bootcamp = await Bootcamp.findById(req.params.id);
 
   if (!bootcamp) {
@@ -34,9 +33,9 @@ export const getBootcamp = catchAsync(async (req, res, next) => {
   }
 
   res.status(httpStatus.OK).json({ success: true, data: bootcamp });
-});
+};
 
-export const createBootcamp = catchAsync(async (req, res, next) => {
+export const createBootcamp = async (req, res, next) => {
   req.body.user = req.user.id;
 
   const publishedBootcamp = await Bootcamp.findOne({ user: req.user.id });
@@ -52,9 +51,9 @@ export const createBootcamp = catchAsync(async (req, res, next) => {
 
   const bootcamp = await Bootcamp.create(req.body);
   res.status(httpStatus.CREATED).json({ success: true, data: bootcamp });
-});
+};
 
-export const updateBootcamp = catchAsync(async (req, res, next) => {
+export const updateBootcamp = async (req, res, next) => {
   let bootcamp = await Bootcamp.findById(req.params.id);
 
   if (!bootcamp) {
@@ -84,9 +83,9 @@ export const updateBootcamp = catchAsync(async (req, res, next) => {
   });
 
   res.status(httpStatus.OK).json({ success: true, data: bootcamp });
-});
+};
 
-export const deleteBootcamp = catchAsync(async (req, res, next) => {
+export const deleteBootcamp = async (req, res, next) => {
   // findByIdAndDelete will not trigger schema middlewares, so here later remove method is used.
   const bootcamp = await Bootcamp.findById(req.params.id);
 
@@ -115,9 +114,9 @@ export const deleteBootcamp = catchAsync(async (req, res, next) => {
   bootcamp.remove();
 
   res.status(httpStatus.OK).json({ success: true });
-});
+};
 
-export const bootcampPhotoUpload = catchAsync(async (req, res, next) => {
+export const bootcampPhotoUpload = async (req, res, next) => {
   const bootcamp = await Bootcamp.findById(req.params.id);
 
   if (!bootcamp) {
@@ -171,4 +170,4 @@ export const bootcampPhotoUpload = catchAsync(async (req, res, next) => {
 
     res.status(httpStatus.OK).json({ success: true, data: file.name });
   });
-});
+};

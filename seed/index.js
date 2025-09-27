@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { fileURLToPath } from 'url';
 import path from 'path';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
@@ -15,6 +16,9 @@ mongoose.connect(process.env.DB_URI);
 const seedData = async () => {
   try {
     console.log('Seeding data...'.blue.bgBlack.bold);
+
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
 
     const bootcamps = JSON.parse(
       fs.readFileSync(path.join(__dirname, 'bootcamps.json'), 'utf-8')

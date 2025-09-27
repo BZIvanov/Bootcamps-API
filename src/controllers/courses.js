@@ -3,10 +3,9 @@ import Course from '../models/course.js';
 import Bootcamp from '../models/bootcamp.js';
 import Filters from '../utils/filters.js';
 import AppError from '../utils/appError.js';
-import catchAsync from '../middlewares/catch-async.js';
 import { userTypes } from '../constants/index.js';
 
-export const getCourses = catchAsync(async (req, res) => {
+export const getCourses = async (req, res) => {
   let query;
 
   if (req.params.bootcampId) {
@@ -32,9 +31,9 @@ export const getCourses = catchAsync(async (req, res) => {
   res
     .status(httpStatus.OK)
     .json({ success: true, results: courses.length, data: courses });
-});
+};
 
-export const getCourse = catchAsync(async (req, res, next) => {
+export const getCourse = async (req, res, next) => {
   const course = await Course.findById(req.params.id).populate({
     path: 'bootcamp',
     select: 'name description',
@@ -50,9 +49,9 @@ export const getCourse = catchAsync(async (req, res, next) => {
   }
 
   res.status(httpStatus.OK).json({ success: true, data: course });
-});
+};
 
-export const createCourse = catchAsync(async (req, res, next) => {
+export const createCourse = async (req, res, next) => {
   req.body.bootcamp = req.params.bootcampId;
   req.body.user = req.user.id;
 
@@ -82,9 +81,9 @@ export const createCourse = catchAsync(async (req, res, next) => {
   const course = await Course.create(req.body);
 
   res.status(httpStatus.CREATED).json({ success: true, data: course });
-});
+};
 
-export const updateCourse = catchAsync(async (req, res, next) => {
+export const updateCourse = async (req, res, next) => {
   let course = await Course.findById(req.params.id);
 
   if (!course) {
@@ -114,9 +113,9 @@ export const updateCourse = catchAsync(async (req, res, next) => {
   });
 
   res.status(httpStatus.OK).json({ success: true, data: course });
-});
+};
 
-export const deleteCourse = catchAsync(async (req, res, next) => {
+export const deleteCourse = async (req, res, next) => {
   const course = await Course.findById(req.params.id);
 
   if (!course) {
@@ -144,4 +143,4 @@ export const deleteCourse = catchAsync(async (req, res, next) => {
   await course.remove();
 
   res.status(httpStatus.OK).json({ success: true });
-});
+};
