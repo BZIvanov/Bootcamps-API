@@ -1,51 +1,57 @@
-export default class {
-  constructor(docs, query) {
-    this.docs = docs;
+export default class Filters {
+  constructor(query, queryString) {
     this.query = query;
+    this.queryString = queryString;
   }
 
   filter() {
-    const copy = { ...this.query };
+    const queryObj = { ...this.queryString };
     const excludeFields = ['select', 'sort', 'page', 'limit'];
-    excludeFields.forEach((el) => delete copy[el]);
+    excludeFields.forEach((field) => delete queryObj[field]);
 
-    let queryStr = JSON.stringify(copy);
-    queryStr = queryStr.replace(
-      /\b(gte|gt|lte|lt|in)\b/g,
-      (match) => `$${match}`
-    );
+    Object.keys(queryObj).forEach((key) => {
+      if (typeof queryObj[key] === 'object') {
+        Object.keys(queryObj[key]).forEach((op) => {
+          queryObj[key][`$${op}`] = queryObj[key][op];
+          delete queryObj[key][op];
+        });
+      } else if (/^(gte|gt|lte|lt|in)$/.test(key)) {
+        queryObj[`$${key}`] = queryObj[key];
+        delete queryObj[key];
+      }
+    });
 
-    this.docs = this.docs.find(JSON.parse(queryStr));
-
+    this.query = this.query.find(queryObj);
     return this;
   }
 
   select() {
-    if (this.query.select) {
-      const fields = this.query.select.split(',').join(' ');
-      this.docs = this.docs.select(fields);
+    if (this.queryString.select) {
+      const fields = this.queryString.select.split(',').join(' ');
+      this.query = this.query.select(fields);
     }
-
     return this;
   }
 
   sort() {
-    if (this.query.sort) {
-      const sortBy = this.query.sort.split(',').join(' ');
-      this.docs = this.docs.sort(sortBy);
+    if (this.queryString.sort) {
+      const sortBy = this.queryString.sort.split(',').join(' ');
+      this.query = this.query.sort(sortBy);
     } else {
-      this.docs = this.docs.sort('-createdAt');
+      this.query = this.query.sort('-createdAt');
     }
-
     return this;
   }
 
   paginate() {
-    const page = parseInt(this.query.page, 10) || 1;
-    const limit = parseInt(this.query.limit, 10) || 10;
+    const page = parseInt(this.queryString.page, 10) || 1;
+    const limit = parseInt(this.queryString.limit, 10) || 10;
     const skip = (page - 1) * limit;
-    this.docs = this.docs.skip(skip).limit(limit);
-
+    this.query = this.query.skip(skip).limit(limit);
     return this;
+  }
+
+  exec() {
+    return this.query;
   }
 }

@@ -1,6 +1,6 @@
 import httpStatus from 'http-status';
 import jwt from 'jsonwebtoken';
-import AppError from '../utils/appError.js';
+import { HttpError } from '../utils/httpError.js';
 import User from '../models/user.js';
 
 const { jwtVerify } = jwt;
@@ -18,9 +18,9 @@ export default async (req, res, next) => {
 
   if (!token) {
     return next(
-      new AppError(
-        'You are not logged in! Please log in to get access.',
-        httpStatus.UNAUTHORIZED
+      new HttpError(
+        httpStatus.UNAUTHORIZED,
+        'You are not logged in! Please log in to get access.'
       )
     );
   }
@@ -29,7 +29,7 @@ export default async (req, res, next) => {
 
   const currentUser = await User.findById(decoded.id);
   if (!currentUser) {
-    return next(new AppError('User not found', httpStatus.UNAUTHORIZED));
+    return next(new HttpError(httpStatus.UNAUTHORIZED, 'User not found'));
   }
 
   req.user = currentUser;

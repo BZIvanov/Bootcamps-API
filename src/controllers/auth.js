@@ -2,7 +2,7 @@ import crypto from 'crypto';
 import httpStatus from 'http-status';
 import User from '../models/user.js';
 import sendEmail from '../providers/mailer.js';
-import AppError from '../utils/appError.js';
+import { HttpError } from '../utils/httpError.js';
 import { isProd } from '../config/env.js';
 
 const sendTokenResponse = (user, statusCode, res) => {
@@ -34,18 +34,18 @@ export const login = async (req, res, next) => {
 
   if (!email || !password) {
     return next(
-      new AppError('Please provide email and password', httpStatus.BAD_REQUEST)
+      new HttpError(httpStatus.BAD_REQUEST, 'Please provide email and password')
     );
   }
 
   const user = await User.findOne({ email }).select('+password');
   if (!user) {
-    return next(new AppError('Invalid credentials', httpStatus.UNAUTHORIZED));
+    return next(new HttpError(httpStatus.UNAUTHORIZED, 'Invalid credentials'));
   }
 
   const isMatch = await user.matchPassword(password);
   if (!isMatch) {
-    return next(new AppError('Invalid credentials', httpStatus.UNAUTHORIZED));
+    return next(new HttpError(httpStatus.UNAUTHORIZED, 'Invalid credentials'));
   }
 
   sendTokenResponse(user, httpStatus.OK, res);
@@ -90,15 +90,15 @@ export const updatePassword = async (req, res, next) => {
 
   if (!currentPassword || !newPassword) {
     return next(
-      new AppError(
-        'Both current and new passwords are required',
-        httpStatus.BAD_REQUEST
+      new HttpError(
+        httpStatus.BAD_REQUEST,
+        'Both current and new passwords are required'
       )
     );
   }
 
   if (!(await user.matchPassword(currentPassword))) {
-    return next(new AppError('Incorrect password', httpStatus.UNAUTHORIZED));
+    return next(new HttpError(httpStatus.UNAUTHORIZED, 'Incorrect password'));
   }
 
   user.password = newPassword;
@@ -111,7 +111,7 @@ export const forgotPassword = async (req, res, next) => {
 
   if (!user) {
     return next(
-      new AppError('There is no user with that e-mail', httpStatus.NOT_FOUND)
+      new HttpError(httpStatus.NOT_FOUND, 'There is no user with that e-mail')
     );
   }
 
@@ -137,7 +137,7 @@ export const forgotPassword = async (req, res, next) => {
     user.resetPasswordExpire = undefined;
     await user.save({ validateBeforeSave: false });
     return next(
-      new AppError('Email was not sent!', httpStatus.INTERNAL_SERVER_ERROR)
+      new HttpError(httpStatus.INTERNAL_SERVER_ERROR, 'Email was not sent!')
     );
   }
 
@@ -156,7 +156,7 @@ export const resetPassword = async (req, res, next) => {
   });
 
   if (!user) {
-    return next(new AppError('Invalid token', httpStatus.BAD_REQUEST));
+    return next(new HttpError(httpStatus.BAD_REQUEST, 'Invalid token'));
   }
 
   user.password = req.body.password;

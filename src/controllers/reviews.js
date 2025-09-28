@@ -2,7 +2,7 @@ import httpStatus from 'http-status';
 import Review from '../models/review.js';
 import Bootcamp from '../models/bootcamp.js';
 import Filters from '../utils/filters.js';
-import AppError from '../utils/appError.js';
+import { HttpError } from '../utils/httpError.js';
 import { userTypes } from '../constants/user.js';
 
 export const getReviews = async (req, res) => {
@@ -21,7 +21,8 @@ export const getReviews = async (req, res) => {
       .filter()
       .select()
       .sort()
-      .paginate();
+      .paginate()
+      .exec();
 
     query = filtered.docs;
   }
@@ -41,9 +42,9 @@ export const getReview = async (req, res, next) => {
 
   if (!review) {
     return next(
-      new AppError(
-        `Review with id ${req.params.id} not found`,
-        httpStatus.NOT_FOUND
+      new HttpError(
+        httpStatus.NOT_FOUND,
+        `Review with id ${req.params.id} not found`
       )
     );
   }
@@ -59,9 +60,9 @@ export const createReview = async (req, res, next) => {
 
   if (!bootcamp) {
     return next(
-      new AppError(
-        `Bootcamp with id ${req.params.bootcampId} not found`,
-        httpStatus.NOT_FOUND
+      new HttpError(
+        httpStatus.NOT_FOUND,
+        `Bootcamp with id ${req.params.bootcampId} not found`
       )
     );
   }
@@ -76,9 +77,9 @@ export const updateReview = async (req, res, next) => {
 
   if (!review) {
     return next(
-      new AppError(
-        `Review with id ${req.params.id} not found`,
-        httpStatus.NOT_FOUND
+      new HttpError(
+        httpStatus.NOT_FOUND,
+        `Review with id ${req.params.id} not found`
       )
     );
   }
@@ -88,7 +89,7 @@ export const updateReview = async (req, res, next) => {
     req.user.role !== userTypes.ADMIN
   ) {
     return next(
-      new AppError('Not authorized to update review', httpStatus.UNAUTHORIZED)
+      new HttpError(httpStatus.UNAUTHORIZED, 'Not authorized to update review')
     );
   }
 
@@ -105,9 +106,9 @@ export const deleteReview = async (req, res, next) => {
 
   if (!review) {
     return next(
-      new AppError(
-        `Review with id ${req.params.id} not found`,
-        httpStatus.NOT_FOUND
+      new HttpError(
+        httpStatus.NOT_FOUND,
+        `Review with id ${req.params.id} not found`
       )
     );
   }
@@ -117,7 +118,7 @@ export const deleteReview = async (req, res, next) => {
     req.user.role !== userTypes.ADMIN
   ) {
     return next(
-      new AppError('Not authorized to delete review', httpStatus.UNAUTHORIZED)
+      new HttpError(httpStatus.UNAUTHORIZED, 'Not authorized to delete review')
     );
   }
 

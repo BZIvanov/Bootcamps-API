@@ -1,14 +1,15 @@
 import httpStatus from 'http-status';
 import User from '../models/user.js';
 import Filters from '../utils/filters.js';
-import AppError from '../utils/appError.js';
+import { HttpError } from '../utils/httpError.js';
 
 export const getUsers = async (req, res) => {
   const filtered = new Filters(User.find(), req.query)
     .filter()
     .select()
     .sort()
-    .paginate();
+    .paginate()
+    .exec();
   const users = await filtered.docs;
 
   res
@@ -21,9 +22,9 @@ export const getUser = async (req, res, next) => {
 
   if (!user) {
     return next(
-      new AppError(
-        `User with id ${req.params.id} not found`,
-        httpStatus.NOT_FOUND
+      new HttpError(
+        httpStatus.NOT_FOUND,
+        `User with id ${req.params.id} not found`
       )
     );
   }
@@ -59,9 +60,9 @@ export const deleteUser = async (req, res, next) => {
 
   if (!user) {
     return next(
-      new AppError(
-        `User with id: ${req.params.id} not found.`,
-        httpStatus.NOT_FOUND
+      new HttpError(
+        httpStatus.NOT_FOUND,
+        `User with id: ${req.params.id} not found.`
       )
     );
   }

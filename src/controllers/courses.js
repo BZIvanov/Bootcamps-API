@@ -2,7 +2,7 @@ import httpStatus from 'http-status';
 import Course from '../models/course.js';
 import Bootcamp from '../models/bootcamp.js';
 import Filters from '../utils/filters.js';
-import AppError from '../utils/appError.js';
+import { HttpError } from '../utils/httpError.js';
 import { userTypes } from '../constants/user.js';
 
 export const getCourses = async (req, res) => {
@@ -21,7 +21,8 @@ export const getCourses = async (req, res) => {
       .filter()
       .select()
       .sort()
-      .paginate();
+      .paginate()
+      .exec();
 
     query = filtered.docs;
   }
@@ -41,9 +42,9 @@ export const getCourse = async (req, res, next) => {
 
   if (!course) {
     return next(
-      new AppError(
-        `Course with id: ${req.params.id} not found.`,
-        httpStatus.NOT_FOUND
+      new HttpError(
+        httpStatus.NOT_FOUND,
+        `Course with id: ${req.params.id} not found.`
       )
     );
   }
@@ -59,9 +60,9 @@ export const createCourse = async (req, res, next) => {
 
   if (!bootcamp) {
     return next(
-      new AppError(
-        `Bootcamp with id: ${req.params.bootcampId} not found.`,
-        httpStatus.NOT_FOUND
+      new HttpError(
+        httpStatus.NOT_FOUND,
+        `Bootcamp with id: ${req.params.bootcampId} not found.`
       )
     );
   }
@@ -71,9 +72,9 @@ export const createCourse = async (req, res, next) => {
     req.user.role !== userTypes.ADMIN
   ) {
     return next(
-      new AppError(
-        `User with id: ${req.user.id} is not allowed to add course to bootcamp with id ${bootcamp._id}`,
-        httpStatus.UNAUTHORIZED
+      new HttpError(
+        httpStatus.UNAUTHORIZED,
+        `User with id: ${req.user.id} is not allowed to add course to bootcamp with id ${bootcamp._id}`
       )
     );
   }
@@ -88,9 +89,9 @@ export const updateCourse = async (req, res, next) => {
 
   if (!course) {
     return next(
-      new AppError(
-        `Course with id: ${req.params.id} not found.`,
-        httpStatus.NOT_FOUND
+      new HttpError(
+        httpStatus.NOT_FOUND,
+        `Course with id: ${req.params.id} not found.`
       )
     );
   }
@@ -100,9 +101,9 @@ export const updateCourse = async (req, res, next) => {
     req.user.role !== userTypes.ADMIN
   ) {
     return next(
-      new AppError(
-        `User with id: ${req.user.id} is not allowed to update course with id ${course._id}`,
-        httpStatus.UNAUTHORIZED
+      new HttpError(
+        httpStatus.UNAUTHORIZED,
+        `User with id: ${req.user.id} is not allowed to update course with id ${course._id}`
       )
     );
   }
@@ -120,9 +121,9 @@ export const deleteCourse = async (req, res, next) => {
 
   if (!course) {
     return next(
-      new AppError(
-        `Course with id: ${req.params.id} not found.`,
-        httpStatus.NOT_FOUND
+      new HttpError(
+        httpStatus.NOT_FOUND,
+        `Course with id: ${req.params.id} not found.`
       )
     );
   }
@@ -132,9 +133,9 @@ export const deleteCourse = async (req, res, next) => {
     req.user.role !== userTypes.ADMIN
   ) {
     return next(
-      new AppError(
-        `User with id: ${req.user.id} is not allowed to delete course with id ${course._id}`,
-        httpStatus.UNAUTHORIZED
+      new HttpError(
+        httpStatus.UNAUTHORIZED,
+        `User with id: ${req.user.id} is not allowed to delete course with id ${course._id}`
       )
     );
   }

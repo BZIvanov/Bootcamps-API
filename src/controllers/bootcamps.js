@@ -2,7 +2,7 @@ import path from 'path';
 import httpStatus from 'http-status';
 import Bootcamp from '../models/bootcamp.js';
 import Filters from '../utils/filters.js';
-import AppError from '../utils/appError.js';
+import { HttpError } from '../utils/httpError.js';
 import { userTypes } from '../constants/user.js';
 
 export const getBootcamps = async (req, res) => {
@@ -10,7 +10,8 @@ export const getBootcamps = async (req, res) => {
     .filter()
     .select()
     .sort()
-    .paginate();
+    .paginate()
+    .exec();
   const bootcamps = await filtered.docs;
 
   res.status(httpStatus.OK).json({
@@ -25,9 +26,9 @@ export const getBootcamp = async (req, res, next) => {
 
   if (!bootcamp) {
     return next(
-      new AppError(
-        `Bootcamp with id: ${req.params.id} not found`,
-        httpStatus.NOT_FOUND
+      new HttpError(
+        httpStatus.NOT_FOUND,
+        `Bootcamp with id: ${req.params.id} not found`
       )
     );
   }
@@ -42,9 +43,9 @@ export const createBootcamp = async (req, res, next) => {
 
   if (publishedBootcamp && req.user.role !== userTypes.ADMIN) {
     return next(
-      new AppError(
-        `User with id ${req.user.id} has already published a bootcamp`,
-        httpStatus.BAD_REQUEST
+      new HttpError(
+        httpStatus.BAD_REQUEST,
+        `User with id ${req.user.id} has already published a bootcamp`
       )
     );
   }
@@ -58,9 +59,9 @@ export const updateBootcamp = async (req, res, next) => {
 
   if (!bootcamp) {
     return next(
-      new AppError(
-        `Bootcamp with id: ${req.params.id} not found`,
-        httpStatus.NOT_FOUND
+      new HttpError(
+        httpStatus.NOT_FOUND,
+        `Bootcamp with id: ${req.params.id} not found`
       )
     );
   }
@@ -70,9 +71,9 @@ export const updateBootcamp = async (req, res, next) => {
     req.user.role !== userTypes.ADMIN
   ) {
     return next(
-      new AppError(
-        `User with id: ${req.user.id} is not allowed to update this resource`,
-        httpStatus.UNAUTHORIZED
+      new HttpError(
+        httpStatus.UNAUTHORIZED,
+        `User with id: ${req.user.id} is not allowed to update this resource`
       )
     );
   }
@@ -91,9 +92,9 @@ export const deleteBootcamp = async (req, res, next) => {
 
   if (!bootcamp) {
     return next(
-      new AppError(
-        `Bootcamp with id: ${req.params.id} not found`,
-        httpStatus.NOT_FOUND
+      new HttpError(
+        httpStatus.NOT_FOUND,
+        `Bootcamp with id: ${req.params.id} not found`
       )
     );
   }
@@ -103,9 +104,9 @@ export const deleteBootcamp = async (req, res, next) => {
     req.user.role !== userTypes.ADMIN
   ) {
     return next(
-      new AppError(
-        `User with id: ${req.user.id} is not allowed to delete this resource`,
-        httpStatus.UNAUTHORIZED
+      new HttpError(
+        httpStatus.UNAUTHORIZED,
+        `User with id: ${req.user.id} is not allowed to delete this resource`
       )
     );
   }
@@ -121,9 +122,9 @@ export const bootcampPhotoUpload = async (req, res, next) => {
 
   if (!bootcamp) {
     return next(
-      new AppError(
-        `Bootcamp with id: ${req.params.id} not found`,
-        httpStatus.NOT_FOUND
+      new HttpError(
+        httpStatus.NOT_FOUND,
+        `Bootcamp with id: ${req.params.id} not found`
       )
     );
   }
@@ -133,27 +134,32 @@ export const bootcampPhotoUpload = async (req, res, next) => {
     req.user.role !== userTypes.ADMIN
   ) {
     return next(
-      new AppError(
-        `User with id: ${req.user.id} is not allowed to update this resource`,
-        httpStatus.UNAUTHORIZED
+      new HttpError(
+        httpStatus.UNAUTHORIZED,
+        `User with id: ${req.user.id} is not allowed to update this resource`
       )
     );
   }
 
   if (!req.files) {
-    return next(new AppError('Please upload a photo.', httpStatus.BAD_REQUEST));
+    return next(
+      new HttpError(httpStatus.BAD_REQUEST, 'Please upload a photo.')
+    );
   }
 
   const file = req.files.imageFile;
 
   if (!file.mimetype.startsWith('image')) {
     return next(
-      new AppError('Please upload an image file.', httpStatus.BAD_REQUEST)
+      new HttpError(httpStatus.BAD_REQUEST, 'Please upload an image file.')
     );
   }
   if (file.size > 1000000) {
     return next(
-      new AppError('File size should be less than 1MB.', httpStatus.BAD_REQUEST)
+      new HttpError(
+        httpStatus.BAD_REQUEST,
+        'File size should be less than 1MB.'
+      )
     );
   }
 
@@ -162,7 +168,7 @@ export const bootcampPhotoUpload = async (req, res, next) => {
   file.mv(`./public/uploads/${file.name}`, async (err) => {
     if (err) {
       return next(
-        new AppError('Upload failed', httpStatus.INTERNAL_SERVER_ERROR)
+        new HttpError(httpStatus.INTERNAL_SERVER_ERROR, 'Upload failed')
       );
     }
 
