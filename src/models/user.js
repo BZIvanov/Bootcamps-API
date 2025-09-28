@@ -3,7 +3,8 @@ import { Schema, model } from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { User, userTypes } from '../constants/index.js';
+import { userTypes } from '../constants/user.js';
+import { Models } from '../constants/models.js';
 
 const schema = new Schema(
   {
@@ -28,9 +29,9 @@ const schema = new Schema(
       type: String,
       // admin should be modified manually in the database
       enum: Object.values(userTypes).filter(
-        (userType) => userType !== userTypes.admin
+        (userType) => userType !== userTypes.ADMIN
       ),
-      default: userTypes.user,
+      default: userTypes.USER,
     },
     resetPasswordToken: String,
     resetPasswordExpire: Date,
@@ -71,4 +72,4 @@ schema.methods.getResetPasswordToken = function generateResetPasswordToken() {
   return resetToken;
 };
 
-export default model(User, schema);
+export default model(Models.USER, schema);

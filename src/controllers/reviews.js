@@ -3,7 +3,7 @@ import Review from '../models/review.js';
 import Bootcamp from '../models/bootcamp.js';
 import Filters from '../utils/filters.js';
 import AppError from '../utils/appError.js';
-import { userTypes } from '../constants/index.js';
+import { userTypes } from '../constants/user.js';
 
 export const getReviews = async (req, res) => {
   let query;
@@ -85,7 +85,7 @@ export const updateReview = async (req, res, next) => {
 
   if (
     review.user.toString() !== req.user.id &&
-    req.user.role !== userTypes.admin
+    req.user.role !== userTypes.ADMIN
   ) {
     return next(
       new AppError('Not authorized to update review', httpStatus.UNAUTHORIZED)
@@ -114,7 +114,7 @@ export const deleteReview = async (req, res, next) => {
 
   if (
     review.user.toString() !== req.user.id &&
-    req.user.role !== userTypes.admin
+    req.user.role !== userTypes.ADMIN
   ) {
     return next(
       new AppError('Not authorized to delete review', httpStatus.UNAUTHORIZED)

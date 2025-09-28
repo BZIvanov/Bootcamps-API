@@ -8,13 +8,13 @@ import {
 } from '../controllers/users.js';
 import authenticate from '../middlewares/authenticate.js';
 import authorize from '../middlewares/authorize.js';
-import { userTypes } from '../constants/index.js';
+import { userTypes } from '../constants/user.js';
 
 const router = Router({ mergeParams: true });
 
 // these two will aplly to all our users routes
 router.use(authenticate);
-router.use(authorize(userTypes.admin));
+router.use(authorize(userTypes.ADMIN));
 
 router.route('/').get(getUsers).post(createUser);
 router.route('/:id').get(getUser).put(updateUser).delete(deleteUser);

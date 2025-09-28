@@ -8,21 +8,21 @@ import {
 } from '../controllers/reviews.js';
 import authenticate from '../middlewares/authenticate.js';
 import authorize from '../middlewares/authorize.js';
-import { userTypes } from '../constants/index.js';
+import { userTypes } from '../constants/user.js';
 
 const router = Router({ mergeParams: true });
 
 router
   .route('/')
   .get(getReviews)
-  .post(authenticate, authorize(userTypes.user, userTypes.admin), createReview);
+  .post(authenticate, authorize(userTypes.USER, userTypes.ADMIN), createReview);
 router
   .route('/:id')
   .get(getReview)
-  .put(authenticate, authorize(userTypes.user, userTypes.admin), updateReview)
+  .put(authenticate, authorize(userTypes.USER, userTypes.ADMIN), updateReview)
   .delete(
     authenticate,
-    authorize(userTypes.user, userTypes.admin),
+    authorize(userTypes.USER, userTypes.ADMIN),
     deleteReview
   );
 

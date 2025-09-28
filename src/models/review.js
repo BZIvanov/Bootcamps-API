@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { Bootcamp, Review, User } from '../constants/index.js';
+import { Models } from '../constants/models.js';
 
 const schema = new Schema(
   {
@@ -21,12 +21,12 @@ const schema = new Schema(
     },
     bootcamp: {
       type: Schema.Types.ObjectId,
-      ref: Bootcamp,
+      ref: Models.BOOTCAMP,
       required: true,
     },
     user: {
       type: Schema.Types.ObjectId,
-      ref: User,
+      ref: Models.USER,
       required: true,
     },
   },
@@ -52,7 +52,7 @@ schema.statics.getAverageRating = async function averageRatingAggregation(
   ]);
 
   try {
-    await this.model(Bootcamp).findByIdAndUpdate(bootcampId, {
+    await this.model(Models.BOOTCAMP).findByIdAndUpdate(bootcampId, {
       averageRating: agg[0].averageRating,
     });
   } catch (err) {
@@ -68,4 +68,4 @@ schema.pre('remove', function averageRatingBeforeRemove() {
   this.constructor.getAverageRating(this.bootcamp);
 });
 
-export default model(Review, schema);
+export default model(Models.REVIEW, schema);

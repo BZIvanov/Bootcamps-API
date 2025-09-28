@@ -16,6 +16,7 @@
     "no-underscore-dangle": "off", // Allow dangling underscore in variable names. Added during refactoring, consider removing
     "import/no-extraneous-dependencies": "off",
     "no-unused-vars": ["error", { "argsIgnorePattern": "next" }],
-    "import/extensions": "off" // Don't show error for specifying file extension while importing .js files. Added during refactoring, consider removing
+    "import/extensions": "off", // Don't show error for specifying file extension while importing .js files. Added during refactoring, consider removing
+    "import/prefer-default-export": "off" // Allow single named export. Added during refactoring, consider removing
   }
 }

@@ -8,7 +8,7 @@ import {
 } from '../controllers/courses.js';
 import authenticate from '../middlewares/authenticate.js';
 import authorize from '../middlewares/authorize.js';
-import { userTypes } from '../constants/index.js';
+import { userTypes } from '../constants/user.js';
 
 const router = Router({ mergeParams: true });
 
@@ -17,7 +17,7 @@ router
   .get(getCourses)
   .post(
     authenticate,
-    authorize(userTypes.publisher, userTypes.admin),
+    authorize(userTypes.PUBLISHER, userTypes.ADMIN),
     createCourse
   );
 router
@@ -25,12 +25,12 @@ router
   .get(getCourse)
   .put(
     authenticate,
-    authorize(userTypes.publisher, userTypes.admin),
+    authorize(userTypes.PUBLISHER, userTypes.ADMIN),
     updateCourse
   )
   .delete(
     authenticate,
-    authorize(userTypes.publisher, userTypes.admin),
+    authorize(userTypes.PUBLISHER, userTypes.ADMIN),
     deleteCourse
   );
 

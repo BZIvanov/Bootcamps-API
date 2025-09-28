@@ -3,7 +3,7 @@ import httpStatus from 'http-status';
 import Bootcamp from '../models/bootcamp.js';
 import Filters from '../utils/filters.js';
 import AppError from '../utils/appError.js';
-import { userTypes } from '../constants/index.js';
+import { userTypes } from '../constants/user.js';
 
 export const getBootcamps = async (req, res) => {
   const filtered = new Filters(Bootcamp.find().populate('courses'), req.query)
@@ -40,7 +40,7 @@ export const createBootcamp = async (req, res, next) => {
 
   const publishedBootcamp = await Bootcamp.findOne({ user: req.user.id });
 
-  if (publishedBootcamp && req.user.role !== userTypes.admin) {
+  if (publishedBootcamp && req.user.role !== userTypes.ADMIN) {
     return next(
       new AppError(
         `User with id ${req.user.id} has already published a bootcamp`,
@@ -67,7 +67,7 @@ export const updateBootcamp = async (req, res, next) => {
 
   if (
     bootcamp.user.toString() !== req.user.id &&
-    req.user.role !== userTypes.admin
+    req.user.role !== userTypes.ADMIN
   ) {
     return next(
       new AppError(
@@ -100,7 +100,7 @@ export const deleteBootcamp = async (req, res, next) => {
 
   if (
     bootcamp.user.toString() !== req.user.id &&
-    req.user.role !== userTypes.admin
+    req.user.role !== userTypes.ADMIN
   ) {
     return next(
       new AppError(
@@ -130,7 +130,7 @@ export const bootcampPhotoUpload = async (req, res, next) => {
 
   if (
     bootcamp.user.toString() !== req.user.id &&
-    req.user.role !== userTypes.admin
+    req.user.role !== userTypes.ADMIN
   ) {
     return next(
       new AppError(

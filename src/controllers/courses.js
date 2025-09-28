@@ -3,7 +3,7 @@ import Course from '../models/course.js';
 import Bootcamp from '../models/bootcamp.js';
 import Filters from '../utils/filters.js';
 import AppError from '../utils/appError.js';
-import { userTypes } from '../constants/index.js';
+import { userTypes } from '../constants/user.js';
 
 export const getCourses = async (req, res) => {
   let query;
@@ -68,7 +68,7 @@ export const createCourse = async (req, res, next) => {
 
   if (
     bootcamp.user.toString() !== req.user.id &&
-    req.user.role !== userTypes.admin
+    req.user.role !== userTypes.ADMIN
   ) {
     return next(
       new AppError(
@@ -97,7 +97,7 @@ export const updateCourse = async (req, res, next) => {
 
   if (
     course.user.toString() !== req.user.id &&
-    req.user.role !== userTypes.admin
+    req.user.role !== userTypes.ADMIN
   ) {
     return next(
       new AppError(
@@ -129,7 +129,7 @@ export const deleteCourse = async (req, res, next) => {
 
   if (
     course.user.toString() !== req.user.id &&
-    req.user.role !== userTypes.admin
+    req.user.role !== userTypes.ADMIN
   ) {
     return next(
       new AppError(

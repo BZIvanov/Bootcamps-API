@@ -1,8 +1,6 @@
 import dotenv from 'dotenv';
-import express from 'express';
-import mongoose from 'mongoose';
-import startDb from './startup/db.js';
-import configureApp from './startup/express.js';
+import { connectDb, disconnectDb } from './config/db.js';
+import app from './app.js';
 import logger from './config/logger.js';
 
 process.on('uncaughtException', (err) => {
@@ -12,15 +10,9 @@ process.on('uncaughtException', (err) => {
 
 dotenv.config();
 
-const app = express();
-
-app.get('/health', (req, res) => res.status(200).json({ status: 'ok' }));
-
-configureApp(app);
-
 async function startServer() {
   try {
-    await startDb();
+    await connectDb();
 
     const PORT = process.env.PORT || 3100;
     const server = app.listen(PORT, () => {
@@ -32,7 +24,7 @@ async function startServer() {
     process.on('unhandledRejection', (err) => {
       logger.fatal({ err }, 'Unhandled rejection! Shutting down...');
       server.close(async () => {
-        await mongoose.connection.close(false);
+        await disconnectDb();
         process.exit(1);
       });
     });

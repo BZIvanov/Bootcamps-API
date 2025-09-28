@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { Bootcamp, Course, User } from '../constants/index.js';
+import { Models } from '../constants/models.js';
 
 const schema = new Schema(
   {
@@ -27,12 +27,12 @@ const schema = new Schema(
     },
     bootcamp: {
       type: Schema.Types.ObjectId,
-      ref: Bootcamp,
+      ref: Models.BOOTCAMP,
       required: true,
     },
     user: {
       type: Schema.Types.ObjectId,
-      ref: User,
+      ref: Models.USER,
       required: true,
     },
   },
@@ -55,7 +55,7 @@ schema.statics.getAverageCost = async function averageCostAggregation(
   ]);
 
   try {
-    await this.model(Bootcamp).findByIdAndUpdate(bootcampId, {
+    await this.model(Models.BOOTCAMP).findByIdAndUpdate(bootcampId, {
       averageCost: Math.ceil(agg[0].averageCost / 10) * 10,
     });
   } catch (err) {
@@ -71,4 +71,4 @@ schema.pre('remove', function averageCostBeforeRemove() {
   this.constructor.getAverageCost(this.bootcamp);
 });
 
-export default model(Course, schema);
+export default model(Models.COURSE, schema);

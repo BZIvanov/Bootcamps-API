@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
 import validator from 'validator';
 import slugify from 'slugify';
-import { Bootcamp, Course, User } from '../constants/index.js';
+import { Models } from '../constants/models.js';
 
 const schema = new Schema(
   {
@@ -63,7 +63,7 @@ const schema = new Schema(
     },
     user: {
       type: Schema.Types.ObjectId,
-      ref: User,
+      ref: Models.USER,
       required: true,
     },
   },
@@ -80,16 +80,16 @@ schema.pre('save', function generateSlug(next) {
 });
 
 schema.pre('remove', async function deleteBootcampCourses(next) {
-  await this.model(Course).deleteMany({ bootcamp: this._id });
+  await this.model(Models.COURSE).deleteMany({ bootcamp: this._id });
   next();
 });
 
 // this is to get the courses for the bootcamp, when we request the bootcamp
 schema.virtual('courses', {
-  ref: Course,
+  ref: Models.COURSE,
   localField: '_id',
   foreignField: 'bootcamp',
   justOne: false,
 });
 
-export default model(Bootcamp, schema);
+export default model(Models.BOOTCAMP, schema);

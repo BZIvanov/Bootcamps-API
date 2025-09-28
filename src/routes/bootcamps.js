@@ -11,7 +11,7 @@ import authenticate from '../middlewares/authenticate.js';
 import authorize from '../middlewares/authorize.js';
 import coursesRouter from './courses.js';
 import reviewsRouter from './reviews.js';
-import { userTypes } from '../constants/index.js';
+import { userTypes } from '../constants/user.js';
 
 const router = Router();
 
@@ -24,7 +24,7 @@ router
   .get(getBootcamps)
   .post(
     authenticate,
-    authorize(userTypes.publisher, userTypes.admin),
+    authorize(userTypes.PUBLISHER, userTypes.ADMIN),
     createBootcamp
   );
 router
@@ -32,19 +32,19 @@ router
   .get(getBootcamp)
   .put(
     authenticate,
-    authorize(userTypes.publisher, userTypes.admin),
+    authorize(userTypes.PUBLISHER, userTypes.ADMIN),
     updateBootcamp
   )
   .delete(
     authenticate,
-    authorize(userTypes.publisher, userTypes.admin),
+    authorize(userTypes.PUBLISHER, userTypes.ADMIN),
     deleteBootcamp
   );
 router
   .route('/:id/photo')
   .put(
     authenticate,
-    authorize(userTypes.publisher, userTypes.admin),
+    authorize(userTypes.PUBLISHER, userTypes.ADMIN),
     bootcampPhotoUpload
   );
 
