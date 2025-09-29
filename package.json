@@ -9,13 +9,16 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "debug": "node --inspect src/server.js",
-    "seed-data": "node seed -i",
-    "delete-data": "node seed -d",
-    "format": "prettier --write ."
+    "seed": "tsx seed/seed.ts -i",
+    "seed:delete": "tsx seed/seed.ts -d",
+    "format": "prettier --write .",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix"
   },
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@eslint/js": "^9.36.0",
     "@types/cookie-parser": "^1.4.9",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
@@ -23,10 +26,16 @@
     "@types/hpp": "^0.2.6",
     "@types/node": "^24.5.2",
     "eslint": "^9.36.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "globals": "^16.4.0",
+    "jiti": "^2.6.0",
     "nodemon": "^3.1.10",
+    "pino-pretty": "^13.1.1",
     "prettier": "^3.6.2",
     "tsx": "^4.20.6",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.44.1"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
@@ -44,7 +53,6 @@
     "nodemailer": "^7.0.6",
     "pino": "^9.11.0",
     "pino-http": "^10.5.0",
-    "pino-pretty": "^13.1.1",
     "slugify": "^1.6.6",
     "validator": "^13.15.15"
   }

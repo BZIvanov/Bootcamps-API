@@ -21,12 +21,12 @@ But before that you need to create your **.env** file. You can copy-paste the co
 
 | Script        | Description                                                                                                                                     |
 | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `dev`         | Runs `src/server.ts` in watch mode using tsx for hot reload during development.                                                                 |
+| `dev`         | Runs `src/server.ts` in watch mode using `tsx` for hot reload during development.                                                               |
 | `build`       | Compiles the TypeScript project to `dist/` using `tsc`, producing reliable ESM output.                                                          |
 | `start`       | Runs the compiled production build from `dist/server.js` with plain Node.                                                                       |
 | `debug`       | Start the app in the debugging mode. Checkout the `Debugging` section in this repo `https://github.com/BZIvanov/Learning-Node.js` for more info |
-| `seed-data`   | Seed data in the database                                                                                                                       |
-| `delete-data` | Delete seeded data in the database                                                                                                              |
+| `seed`        | Seed data in the database                                                                                                                       |
+| `seed:delete` | Delete seeded data in the database                                                                                                              |
 
 ## Registrations required
 
@@ -50,10 +50,10 @@ Supported authentication methods are jwt token in the header and cookies. Commen
 
 Install eslint and prettier as VS Code extensions.
 
-## Architecture decisions
+## Architectural Decisions
 
 ### TypeScript Execution Tools
 
-**Decision**: Prefer compiling with `tsc` over using `ts-node` or `ts-node-dev` for running TypeScript code.
+**Decision**: Use `tsx` for development instead of `ts-node-dev` or `ts-node`.
 
-**Reason**: Compiling with `tsc` produces reliable ESM output compatible with Node’s `"type": "module"` and avoids runtime quirks. `ts-node-dev` has unreliable ESM support, and `ts-node` is slower for larger projects.
+**Reason**: `tsx` provides reliable hot-reload support for modern ESM projects, works with `import.meta.url`, and supports CJS interop (createRequire). It avoids the runtime issues seen with `ts-node-dev`.
