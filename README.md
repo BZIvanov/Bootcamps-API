@@ -19,26 +19,14 @@ But before that you need to create your **.env** file. You can copy-paste the co
 
 ## Available Scripts
 
-| Script                | Description                                                                                                                                     |
-| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `npm start`           | Start the app in production mode                                                                                                                |
-| `npm run dev`         | Start the app in development mode                                                                                                               |
-| `npm run debug`       | Start the app in the debugging mode. Checkout the `Debugging` section in this repo `https://github.com/BZIvanov/Learning-Node.js` for more info |
-| `npm run seed-data`   | Seed data in the database                                                                                                                       |
-| `npm run delete-data` | Delete seeded data in the database                                                                                                              |
-
-## Environment variables
-
-- NODE_ENV - environment, development by default
-- PORT - port
-- DB_PATH - connection string for MongoDB
-- JWT_SECRET - jsonwebtoken secret
-- SMTP_HOST - mail host (read below how to use)
-- SMTP_PORT - mail port, default 2525
-- SMTP_USERNAME - mail username
-- SMTP_PASSWORD - mail password
-- FROM_EMAIL - email sender email (free text)
-- FROM_NAME - email sender name (free text)
+| Script        | Description                                                                                                                                     |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `dev`         | Runs `src/server.ts` in watch mode using tsx for hot reload during development.                                                                 |
+| `build`       | Compiles the TypeScript project to `dist/` using `tsc`, producing reliable ESM output.                                                          |
+| `start`       | Runs the compiled production build from `dist/server.js` with plain Node.                                                                       |
+| `debug`       | Start the app in the debugging mode. Checkout the `Debugging` section in this repo `https://github.com/BZIvanov/Learning-Node.js` for more info |
+| `seed-data`   | Seed data in the database                                                                                                                       |
+| `delete-data` | Delete seeded data in the database                                                                                                              |
 
 ## Registrations required
 
@@ -61,3 +49,11 @@ Supported authentication methods are jwt token in the header and cookies. Commen
 ### TODO: Setup eslint
 
 Install eslint and prettier as VS Code extensions.
+
+## Architecture decisions
+
+### TypeScript Execution Tools
+
+**Decision**: Prefer compiling with `tsc` over using `ts-node` or `ts-node-dev` for running TypeScript code.
+
+**Reason**: Compiling with `tsc` produces reliable ESM output compatible with Node’s `"type": "module"` and avoids runtime quirks. `ts-node-dev` has unreliable ESM support, and `ts-node` is slower for larger projects.

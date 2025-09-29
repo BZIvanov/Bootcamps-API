@@ -10,7 +10,8 @@
     "start": "node dist/server.js",
     "debug": "node --inspect src/server.js",
     "seed-data": "node seed -i",
-    "delete-data": "node seed -d"
+    "delete-data": "node seed -d",
+    "format": "prettier --write ."
   },
   "author": "",
   "license": "MIT",
