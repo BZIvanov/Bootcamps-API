@@ -58,4 +58,6 @@ Supported authentication methods are jwt token in the header and cookies. Commen
 
 ## ESLint and Prettier
 
+### TODO: Setup eslint
+
 Install eslint and prettier as VS Code extensions.
