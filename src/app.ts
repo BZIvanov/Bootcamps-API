@@ -7,13 +7,13 @@ import hpp from 'hpp';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import cors from 'cors';
-import auth from './routes/auth.js';
-import bootcamps from './routes/bootcamps.js';
-import courses from './routes/courses.js';
-import reviews from './routes/reviews.js';
-import users from './routes/users.js';
-import globalError from './middlewares/global-error.js';
-import httpLogger from './middlewares/httpLogger.js';
+// import auth from './routes/auth.js';
+// import bootcamps from './routes/bootcamps.js';
+// import courses from './routes/courses.js';
+// import reviews from './routes/reviews.js';
+// import users from './routes/users.js';
+import httpLogger from '@/middlewares/httpLogger.js';
+// import globalError from './middlewares/global-error.js';
 
 const app = express();
 
@@ -37,17 +37,17 @@ app.use(cookieParser());
 app.use(httpLogger);
 
 app.get('/health', (req, res) => res.status(200).json({ status: 'ok' }));
-app.use('/api/v1/auth', auth);
-app.use('/api/v1/bootcamps', bootcamps);
-app.use('/api/v1/courses', courses);
-app.use('/api/v1/reviews', reviews);
-app.use('/api/v1/users', users);
+// app.use('/api/v1/auth', auth);
+// app.use('/api/v1/bootcamps', bootcamps);
+// app.use('/api/v1/courses', courses);
+// app.use('/api/v1/reviews', reviews);
+// app.use('/api/v1/users', users);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 app.use(express.static(path.join(__dirname, '..', '..', 'public')));
 
 // Global error handler last
-app.use(globalError);
+// app.use(globalError);
 
 export default app;

@@ -2,11 +2,12 @@
   "name": "node-api",
   "version": "1.0.0",
   "description": "",
-  "main": "src/server.js",
+  "main": "dist/server.js",
   "type": "module",
   "scripts": {
-    "start": "set NODE_ENV=production&& node src/server.js",
-    "dev": "nodemon src/server.js",
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
     "debug": "node --inspect src/server.js",
     "seed-data": "node seed -i",
     "delete-data": "node seed -d"
@@ -14,9 +15,17 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@types/cookie-parser": "^1.4.9",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/express-fileupload": "^1.5.1",
+    "@types/hpp": "^0.2.6",
+    "@types/node": "^24.5.2",
     "eslint": "^9.36.0",
     "nodemon": "^3.1.10",
-    "prettier": "^3.6.2"
+    "prettier": "^3.6.2",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.2"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",

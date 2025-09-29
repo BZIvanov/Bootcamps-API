@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
-import { connectDb, disconnectDb } from './config/db.js';
-import app from './app.js';
-import logger from './config/logger.js';
+import { connectDb, disconnectDb } from '@/config/db.js';
+import app from '@/app.js';
+import logger from '@/config/logger.js';
 
 process.on('uncaughtException', (err) => {
   logger.fatal({ err }, 'Uncaught exception! Shutting down...');
