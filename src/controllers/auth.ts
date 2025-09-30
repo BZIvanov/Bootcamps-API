@@ -42,37 +42,41 @@ export const register = async (
   sendTokenResponse(user, httpStatus.CREATED, res);
 };
 
-// export const login = async (req, res, next) => {
-//   const { email, password } = req.body;
+export const login = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { email, password } = req.body;
 
-//   if (!email || !password) {
-//     return next(
-//       new HttpError(httpStatus.BAD_REQUEST, 'Please provide email and password')
-//     );
-//   }
+  if (!email || !password) {
+    return next(
+      new HttpError(httpStatus.BAD_REQUEST, 'Please provide email and password')
+    );
+  }
 
-//   const user = await User.findOne({ email }).select('+password');
-//   if (!user) {
-//     return next(new HttpError(httpStatus.UNAUTHORIZED, 'Invalid credentials'));
-//   }
+  const user = await User.findOne({ email }).select('+password');
+  if (!user) {
+    return next(new HttpError(httpStatus.UNAUTHORIZED, 'Invalid credentials'));
+  }
 
-//   const isMatch = await user.matchPassword(password);
-//   if (!isMatch) {
-//     return next(new HttpError(httpStatus.UNAUTHORIZED, 'Invalid credentials'));
-//   }
+  const isMatch = await user.matchPassword(password);
+  if (!isMatch) {
+    return next(new HttpError(httpStatus.UNAUTHORIZED, 'Invalid credentials'));
+  }
 
-//   sendTokenResponse(user, httpStatus.OK, res);
-// };
+  sendTokenResponse(user, httpStatus.OK, res);
+};
 
-// export const logout = async (req, res) => {
-//   res.cookie('token', 'none', {
-//     expires: new Date(Date.now() + 5 * 1000),
-//     httpOnly: true,
-//     secure: isProd,
-//   });
+export const logout = async (_req: Request, res: Response) => {
+  res.cookie('token', 'none', {
+    expires: new Date(Date.now() + 5 * 1000),
+    httpOnly: true,
+    secure: isProd,
+  });
 
-//   res.status(httpStatus.OK).json({ success: true });
-// };
+  res.status(httpStatus.OK).json({ success: true });
+};
 
 // export const getMe = async (req, res) => {
 //   const user = await User.findById(req.user.id);
