@@ -78,11 +78,17 @@ export const logout = async (_req: Request, res: Response) => {
   res.status(httpStatus.OK).json({ success: true });
 };
 
-// export const getMe = async (req, res) => {
-//   const user = await User.findById(req.user.id);
+export const getMe = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  if (!req.user) {
+    return next(new HttpError(httpStatus.NOT_FOUND, 'User not found'));
+  }
 
-//   res.status(httpStatus.OK).json({ success: true, data: user });
-// };
+  res.status(httpStatus.OK).json({ success: true, data: req.user });
+};
 
 // export const updateDetails = async (req, res) => {
 //   const { name, email } = req.body;
