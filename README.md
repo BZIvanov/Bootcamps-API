@@ -27,10 +27,17 @@ But before that you need to create your **.env** file. You can copy-paste the co
 | `debug`       | Start the app in the debugging mode. Checkout the `Debugging` section in this repo `https://github.com/BZIvanov/Learning-Node.js` for more info |
 | `seed`        | Seed data in the database                                                                                                                       |
 | `seed:delete` | Delete seeded data in the database                                                                                                              |
+| `format`      | Format the codebase with Prettier                                                                                                               |
+| `lint`        | Run ESLint to check the codebase for issues                                                                                                     |
+| `lint:fix`    | Run ESLint with `--fix` to automatically fix problems where possible                                                                            |
 
-## Registrations required
+## 3rd Party Integrations
+
+List with 3rd party integrations for which you will have to create an account to get the required credentials.
 
 ### MailTrap
+
+To get your MailTrap credentials you will have to register an account.
 
 MailTrap can be replaced with any other mail provider, but it is a good choice for this example API.
 
@@ -45,8 +52,6 @@ For the supported routes you can use, simply open the api.html file in the brows
 Supported authentication methods are jwt token in the header and cookies. Comment out the one you don't need.
 
 ## ESLint and Prettier
-
-### TODO: Setup eslint
 
 Install eslint and prettier as VS Code extensions.
 
