@@ -1,11 +1,11 @@
-// import crypto from 'crypto';
+import crypto from 'crypto';
 import { Request, Response, NextFunction } from 'express';
 import httpStatus from 'http-status';
 import User, { IUser } from '@/models/user.js';
-// import sendEmail from '../providers/mailer.js';
+import { sendEmail } from '@/providers/mailer.js';
 import { HttpError } from '@/utils/httpError.js';
 import { isProd } from '@/config/env.js';
-import { generateJwtToken } from '@/services/tokenService.js';
+import { generateJwtToken, comparePassword } from '@/services/authService.js';
 
 const sendTokenResponse = (user: IUser, statusCode: number, res: Response) => {
   const token = generateJwtToken(user);
@@ -60,7 +60,7 @@ export const login = async (
     return next(new HttpError(httpStatus.UNAUTHORIZED, 'Invalid credentials'));
   }
 
-  const isMatch = await user.matchPassword(password);
+  const isMatch = await comparePassword(password, user.password);
   if (!isMatch) {
     return next(new HttpError(httpStatus.UNAUTHORIZED, 'Invalid credentials'));
   }
@@ -90,102 +90,132 @@ export const getMe = async (
   res.status(httpStatus.OK).json({ success: true, data: req.user });
 };
 
-// export const updateDetails = async (req, res) => {
-//   const { name, email } = req.body;
+export const updateUserDetails = async (req: Request, res: Response) => {
+  const { name, email } = req.body;
 
-//   const fields = {
-//     ...(name && { name }),
-//     ...(email && { email }),
-//   };
+  const fields = {
+    ...(name && { name }),
+    ...(email && { email }),
+  };
 
-//   const user = await User.findByIdAndUpdate(req.user.id, fields, {
-//     new: true,
-//     runValidators: true,
-//   });
+  const user = await User.findByIdAndUpdate(req.user.id, fields, {
+    new: true,
+    runValidators: true,
+  });
 
-//   res.status(httpStatus.OK).json({ success: true, data: user });
-// };
+  res.status(httpStatus.OK).json({ success: true, data: user });
+};
 
-// export const updatePassword = async (req, res, next) => {
-//   const user = await User.findById(req.user.id).select('+password');
+export const updatePassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const user = await User.findById(req.user.id).select('+password');
 
-//   const { currentPassword, newPassword } = req.body;
+  if (!user) {
+    throw new HttpError(httpStatus.NOT_FOUND, 'User not found');
+  }
 
-//   if (!currentPassword || !newPassword) {
-//     return next(
-//       new HttpError(
-//         httpStatus.BAD_REQUEST,
-//         'Both current and new passwords are required'
-//       )
-//     );
-//   }
+  const { currentPassword, newPassword } = req.body;
 
-//   if (!(await user.matchPassword(currentPassword))) {
-//     return next(new HttpError(httpStatus.UNAUTHORIZED, 'Incorrect password'));
-//   }
+  if (!currentPassword || !newPassword) {
+    return next(
+      new HttpError(
+        httpStatus.BAD_REQUEST,
+        'Both current and new passwords are required'
+      )
+    );
+  }
 
-//   user.password = newPassword;
-//   await user.save();
-//   sendTokenResponse(user, httpStatus.OK, res);
-// };
+  const isMatch = await comparePassword(currentPassword, user.password);
+  if (!isMatch) {
+    return next(new HttpError(httpStatus.UNAUTHORIZED, 'Incorrect password'));
+  }
 
-// export const forgotPassword = async (req, res, next) => {
-//   const user = await User.findOne({ email: req.body.email });
+  user.password = newPassword;
+  await user.save();
 
-//   if (!user) {
-//     return next(
-//       new HttpError(httpStatus.NOT_FOUND, 'There is no user with that e-mail')
-//     );
-//   }
+  sendTokenResponse(user, httpStatus.OK, res);
+};
 
-//   const resetToken = user.getResetPasswordToken();
+export const forgotPassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { email } = req.body;
 
-//   await user.save({ validateBeforeSave: false });
+  const user = await User.findOne({ email });
 
-//   const resetUrl = `${req.protocol}://${req.get(
-//     'host'
-//   )}/api/v1/auth/reset-password/${resetToken}`;
+  if (!user) {
+    return res.status(httpStatus.OK).json({
+      success: true,
+      message:
+        'If an account with that email exists, a reset email has been sent.',
+    });
+  }
 
-//   const text = `Here is your password reset URL:\n\n${resetUrl}`;
+  const resetToken = user.getResetPasswordToken();
+  await user.save({ validateBeforeSave: false });
 
-//   try {
-//     await sendEmail({
-//       email: user.email,
-//       subject: 'Password reset token',
-//       text,
-//     });
-//   } catch (err) {
-//     req.log.error({ err }, 'Error sending forgot password email');
-//     user.resetPasswordToken = undefined;
-//     user.resetPasswordExpire = undefined;
-//     await user.save({ validateBeforeSave: false });
-//     return next(
-//       new HttpError(httpStatus.INTERNAL_SERVER_ERROR, 'Email was not sent!')
-//     );
-//   }
+  const resetUrl = `${req.protocol}://${req.get(
+    'host'
+  )}/api/v1/auth/reset-password/${resetToken}`;
+  const text = `Here is your password reset URL:\n\n${resetUrl}`;
 
-//   res.status(httpStatus.OK).json({ success: true });
-// };
+  try {
+    await sendEmail({
+      email: user.email,
+      subject: 'Password reset token',
+      text,
+    });
 
-// export const resetPassword = async (req, res, next) => {
-//   const resetPasswordToken = crypto
-//     .createHash('sha256')
-//     .update(req.params.resettoken)
-//     .digest('hex');
+    res.status(httpStatus.OK).json({ success: true });
+  } catch (err) {
+    req.log.error({ err }, 'Error sending forgot password email');
 
-//   const user = await User.findOne({
-//     resetPasswordToken,
-//     resetPasswordExpire: { $gt: Date.now() },
-//   });
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save({ validateBeforeSave: false });
 
-//   if (!user) {
-//     return next(new HttpError(httpStatus.BAD_REQUEST, 'Invalid token'));
-//   }
+    return next(
+      new HttpError(httpStatus.INTERNAL_SERVER_ERROR, 'Email was not sent!')
+    );
+  }
+};
 
-//   user.password = req.body.password;
-//   user.resetPasswordToken = undefined;
-//   user.resetPasswordExpire = undefined;
-//   await user.save();
+interface ResetPasswordParams {
+  resettoken: string;
+}
 
-//   sendTokenResponse(user, httpStatus.OK, res);
-// };
+interface ResetPasswordBody {
+  password: string;
+}
+
+export const resetPassword = async (
+  req: Request<ResetPasswordParams, unknown, ResetPasswordBody>,
+  res: Response,
+  next: NextFunction
+) => {
+  const resetPasswordToken = crypto
+    .createHash('sha256')
+    .update(req.params.resettoken)
+    .digest('hex');
+
+  const user = await User.findOne({
+    resetPasswordToken,
+    resetPasswordExpire: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    return next(new HttpError(httpStatus.BAD_REQUEST, 'Invalid token'));
+  }
+
+  user.password = req.body.password;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpire = undefined;
+  await user.save();
+
+  sendTokenResponse(user, httpStatus.OK, res);
+};

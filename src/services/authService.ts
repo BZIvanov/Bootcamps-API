@@ -1,4 +1,5 @@
 import jwt, { Secret, SignOptions } from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 import { IUser } from '@/models/user.js';
 
 export const generateJwtToken = (
@@ -14,4 +15,11 @@ export const generateJwtToken = (
   const options: SignOptions = { expiresIn };
 
   return jwt.sign(payload, secret, options);
+};
+
+export const comparePassword = async (
+  incomingPassword: string,
+  hashedPassword: string
+): Promise<boolean> => {
+  return bcrypt.compare(incomingPassword, hashedPassword);
 };

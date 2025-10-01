@@ -62,3 +62,18 @@ Install eslint and prettier as VS Code extensions.
 **Decision**: Use `tsx` for development instead of `ts-node-dev` or `ts-node`.
 
 **Reason**: `tsx` provides reliable hot-reload support for modern ESM projects, works with `import.meta.url`, and supports CJS interop (createRequire). It avoids the runtime issues seen with `ts-node-dev`.
+
+### User Authentication Responsibilities
+
+**Decision**: Split responsibilities between the schema and the auth service.
+
+- **Schema (persistence-level responsibilities)**
+  - `userSchema.pre('save')`: ensures passwords are always hashed before being persisted.
+  - `getResetPasswordToken`: mutates the user document with reset token and expiry values.
+
+- **Auth Service (business logic responsibilities)**
+  - `generateJwtToken`: issues JWT tokens for authenticated users.
+  - `comparePassword`: validates a provided password against the stored hash.
+
+**Reason**:  
+Persistence-related logic stays on the schema to enforce data integrity at the model layer, while business logic (token generation and password comparison) is placed in the service for better separation of concerns, testability, and maintainability.

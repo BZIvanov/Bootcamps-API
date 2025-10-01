@@ -10,9 +10,8 @@ export interface IUser extends Document {
   email: string;
   password: string;
   role: string;
-  resetPasswordToken?: string;
-  resetPasswordExpire?: Date;
-  matchPassword(incomingPassword: string): Promise<boolean>;
+  resetPasswordToken?: string | undefined;
+  resetPasswordExpire?: Date | undefined;
   getResetPasswordToken(): string;
 }
 
@@ -61,12 +60,6 @@ userSchema.pre<IUser>('save', async function (next) {
   this.password = await bcrypt.hash(this.password, 12);
   next();
 });
-
-userSchema.methods.matchPassword = function (
-  incomingPassword: string
-): Promise<boolean> {
-  return bcrypt.compare(incomingPassword, this.password);
-};
 
 userSchema.methods.getResetPasswordToken = function (): string {
   const resetToken = crypto.randomBytes(20).toString('hex');
