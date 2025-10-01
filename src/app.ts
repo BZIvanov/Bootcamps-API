@@ -8,7 +8,7 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import cors from 'cors';
 import { setupSwagger } from '@/config/swagger.js';
-import auth from '@/routes/auth.js';
+import apiRoutes from '@/routes/index.js';
 // import bootcamps from './routes/bootcamps.js';
 // import courses from './routes/courses.js';
 // import reviews from './routes/reviews.js';
@@ -38,7 +38,7 @@ app.use(cookieParser());
 app.use(httpLogger);
 
 app.get('/health', (req, res) => res.status(200).json({ status: 'ok' }));
-app.use('/api/v1/auth', auth);
+app.use('/api', apiRoutes);
 // app.use('/api/v1/bootcamps', bootcamps);
 // app.use('/api/v1/courses', courses);
 // app.use('/api/v1/reviews', reviews);

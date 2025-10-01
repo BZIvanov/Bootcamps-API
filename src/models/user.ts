@@ -2,14 +2,14 @@ import crypto from 'crypto';
 import { Schema, model, Document } from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
-import { userTypes } from '@/constants/user.js';
+import { userTypes, UserRole } from '@/constants/user.js';
 import { Models } from '@/constants/models.js';
 
 export interface IUser extends Document {
   name: string;
   email: string;
   password: string;
-  role: string;
+  role: UserRole;
   resetPasswordToken?: string | undefined;
   resetPasswordExpire?: Date | undefined;
   getResetPasswordToken(): string;
