@@ -45,15 +45,13 @@ MailTrap can be replaced with any other mail provider, but it is a good choice f
 - Click **My Inbox** under **Sandbox**. Under the tab **SMTP** you can see **Credentials** section where you can find the credentials you need for the `.env` file.
 - If sending mail with Postman, you can use any mail in the body and you will receive the mail in mailtrap.
 
-## Supported routes
+## API Documentation
 
-For the supported routes you can use, simply open the api.html file in the browser.
+We provide interactive API documentation using Swagger/OpenAPI. You can explore all available endpoints, view request and response schemas, and test the API directly from your browser.
 
-Supported authentication methods are jwt token in the header and cookies. Comment out the one you don't need.
+**Accessing the docs**
 
-## ESLint and Prettier
-
-Install eslint and prettier as VS Code extensions.
+Once the server is running, open the following URL in your browser: `http://localhost:3100/api-docs`
 
 ## Architectural Decisions
 

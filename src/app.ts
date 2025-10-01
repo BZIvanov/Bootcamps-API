@@ -7,6 +7,7 @@ import hpp from 'hpp';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import cors from 'cors';
+import { setupSwagger } from '@/config/swagger.js';
 import auth from '@/routes/auth.js';
 // import bootcamps from './routes/bootcamps.js';
 // import courses from './routes/courses.js';
@@ -49,5 +50,7 @@ app.use(express.static(path.join(__dirname, '..', '..', 'public')));
 
 // Global error handler last
 app.use(errorHandler);
+
+setupSwagger(app);
 
 export default app;

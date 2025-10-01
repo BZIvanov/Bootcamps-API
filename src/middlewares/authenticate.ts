@@ -16,6 +16,7 @@ export default async function authenticate(
   try {
     let token: string | undefined;
 
+    // We have two authentication types jwt token in a header or a cookie, you can comment out the one you don't need
     if (req.headers.authorization?.startsWith('Bearer')) {
       token = req.headers.authorization.split(' ')[1];
     } else if (req.cookies?.token) {

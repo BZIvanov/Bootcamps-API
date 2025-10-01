@@ -7,6 +7,13 @@ import { HttpError } from '@/utils/httpError.js';
 import { isProd } from '@/config/env.js';
 import { generateJwtToken, comparePassword } from '@/services/authService.js';
 
+/**
+ * @swagger
+ * tags:
+ *   name: Auth
+ *   description: Authentication endpoints
+ */
+
 const sendTokenResponse = (user: IUser, statusCode: number, res: Response) => {
   const token = generateJwtToken(user);
 
@@ -23,6 +30,38 @@ const sendTokenResponse = (user: IUser, statusCode: number, res: Response) => {
     .json({ success: true });
 };
 
+/**
+ * @swagger
+ * /auth/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - email
+ *               - password
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               role:
+ *                 type: string
+ *                 enum: [user, publisher]
+ *     responses:
+ *       201:
+ *         description: User created successfully
+ *       400:
+ *         description: Email is already registered
+ */
 export const register = async (
   req: Request,
   res: Response,
@@ -42,6 +81,34 @@ export const register = async (
   sendTokenResponse(user, httpStatus.CREATED, res);
 };
 
+/**
+ * @swagger
+ * /auth/login:
+ *   post:
+ *     summary: Login a user
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Login successful
+ *       400:
+ *         description: Missing email or password
+ *       401:
+ *         description: Invalid credentials
+ */
 export const login = async (
   req: Request,
   res: Response,
@@ -68,6 +135,16 @@ export const login = async (
   sendTokenResponse(user, httpStatus.OK, res);
 };
 
+/**
+ * @swagger
+ * /auth/logout:
+ *   post:
+ *     summary: Logout the user
+ *     tags: [Auth]
+ *     responses:
+ *       200:
+ *         description: Successfully logged out
+ */
 export const logout = async (_req: Request, res: Response) => {
   res.cookie('token', 'none', {
     expires: new Date(Date.now() + 5 * 1000),
@@ -78,6 +155,20 @@ export const logout = async (_req: Request, res: Response) => {
   res.status(httpStatus.OK).json({ success: true });
 };
 
+/**
+ * @swagger
+ * /auth/me:
+ *   get:
+ *     summary: Get current logged in user
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Returns user info
+ *       404:
+ *         description: User not found
+ */
 export const getMe = async (
   req: Request,
   res: Response,
@@ -90,6 +181,28 @@ export const getMe = async (
   res.status(httpStatus.OK).json({ success: true, data: req.user });
 };
 
+/**
+ * @swagger
+ * /auth/update-details:
+ *   put:
+ *     summary: Update current user details
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: User updated successfully
+ */
 export const updateUserDetails = async (req: Request, res: Response) => {
   const { name, email } = req.body;
 
@@ -106,6 +219,32 @@ export const updateUserDetails = async (req: Request, res: Response) => {
   res.status(httpStatus.OK).json({ success: true, data: user });
 };
 
+/**
+ * @swagger
+ * /auth/update-password:
+ *   put:
+ *     summary: Update current user password
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - currentPassword
+ *               - newPassword
+ *             properties:
+ *               currentPassword:
+ *                 type: string
+ *               newPassword:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Password updated successfully
+ */
 export const updatePassword = async (
   req: Request,
   res: Response,
@@ -139,6 +278,27 @@ export const updatePassword = async (
   sendTokenResponse(user, httpStatus.OK, res);
 };
 
+/**
+ * @swagger
+ * /auth/forgot-password:
+ *   post:
+ *     summary: Send password reset email
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *             properties:
+ *               email:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Email sent if account exists
+ */
 export const forgotPassword = async (
   req: Request,
   res: Response,
@@ -185,6 +345,34 @@ export const forgotPassword = async (
   }
 };
 
+/**
+ * @swagger
+ * /auth/reset-password/{resettoken}:
+ *   put:
+ *     summary: Reset user password
+ *     tags: [Auth]
+ *     parameters:
+ *       - in: path
+ *         name: resettoken
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Password reset token
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - password
+ *             properties:
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Password reset successfully
+ */
 interface ResetPasswordParams {
   resettoken: string;
 }
