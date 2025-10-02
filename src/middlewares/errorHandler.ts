@@ -1,8 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import httpStatus from 'http-status';
 import { HttpError } from '@/utils/httpError.js';
+import { isProd } from '@/config/env.js';
+import logger from '@/config/logger.js';
 
 interface MongooseValidationError extends Error {
+  name: 'ValidationError';
   errors: Record<string, { message: string }>;
 }
 
@@ -13,7 +16,7 @@ interface MongooseCastError extends Error {
 }
 
 interface MongooseDuplicateKeyError extends Error {
-  code: number;
+  code: 11000;
   keyValue?: Record<string, unknown>;
 }
 
@@ -24,7 +27,7 @@ type CustomError =
   | MongooseDuplicateKeyError
   | Error;
 
-// ⚠️ Always keep 4 args or Express won’t recognize this as error middleware
+// ⚠️ Must have 4 args or Express won’t treat this as error middleware
 export default function errorHandler(
   err: CustomError,
   _req: Request,
@@ -51,5 +54,13 @@ export default function errorHandler(
     );
   }
 
-  res.status(error.statusCode).json({ success: false, error: error.message });
+  if (!isProd) {
+    logger.error({ msg: err.message, stack: err.stack, err });
+  }
+
+  res.status(error.statusCode).json({
+    success: false,
+    message: error.message,
+    details: error.details ?? undefined,
+  });
 }

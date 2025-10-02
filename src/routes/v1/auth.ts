@@ -10,10 +10,12 @@ import {
   resetPassword,
 } from '@/controllers/auth.js';
 import authenticate from '@/middlewares/authenticate.js';
+import { validateRequest } from '@/middlewares/validateRequest.js';
+import { createUserSchema } from '@/validation/user.js';
 
 const router = Router();
 
-router.route('/register').post(register);
+router.route('/register').post(validateRequest(createUserSchema), register);
 router.route('/login').post(login);
 router.route('/logout').post(logout);
 router.route('/me').get(authenticate, getMe);

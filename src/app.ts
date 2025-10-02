@@ -9,10 +9,6 @@ import rateLimit from 'express-rate-limit';
 import cors from 'cors';
 import { setupSwagger } from '@/config/swagger.js';
 import apiRoutes from '@/routes/index.js';
-// import bootcamps from './routes/bootcamps.js';
-// import courses from './routes/courses.js';
-// import reviews from './routes/reviews.js';
-// import users from './routes/users.js';
 import httpLogger from '@/middlewares/httpLogger.js';
 import errorHandler from '@/middlewares/errorHandler.js';
 
@@ -39,10 +35,6 @@ app.use(httpLogger);
 
 app.get('/health', (req, res) => res.status(200).json({ status: 'ok' }));
 app.use('/api', apiRoutes);
-// app.use('/api/v1/bootcamps', bootcamps);
-// app.use('/api/v1/courses', courses);
-// app.use('/api/v1/reviews', reviews);
-// app.use('/api/v1/users', users);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

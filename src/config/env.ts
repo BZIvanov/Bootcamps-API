@@ -1,8 +1,8 @@
-export const ENVIRONMENTS = {
+export const ENVIRONMENTS = Object.freeze({
   DEVELOPMENT: 'development',
   PRODUCTION: 'production',
   TEST: 'test',
-};
+});
 
 export const NODE_ENV = (
   process.env.NODE_ENV || ENVIRONMENTS.DEVELOPMENT
