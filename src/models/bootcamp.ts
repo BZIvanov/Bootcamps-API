@@ -1,9 +1,28 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Document } from 'mongoose';
 import validator from 'validator';
-import slugify from 'slugify';
-import { Models } from '../constants/models.js';
+import { requireCJS } from '@/utils/cjsRequire.js';
+import { Models } from '@/constants/models.js';
+import Course from './course.js';
 
-const schema = new Schema(
+const slugify = requireCJS('slugify');
+
+export interface IBootcamp extends Document {
+  name: string;
+  slug: string;
+  description: string;
+  website?: string;
+  phone?: string;
+  address: string;
+  careers: string[];
+  averageRating?: number;
+  averageCost?: number;
+  photo: string;
+  user: Schema.Types.ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const bootcampSchema = new Schema(
   {
     name: {
       type: String,
@@ -12,7 +31,9 @@ const schema = new Schema(
       trim: true,
       maxlength: [50, 'Name should be at most 50 characters'],
     },
-    slug: String,
+    slug: {
+      type: String,
+    },
     description: {
       type: String,
       required: [true, 'Description is required'],
@@ -22,7 +43,7 @@ const schema = new Schema(
     website: {
       type: String,
       validate: {
-        validator: (value) =>
+        validator: (value: string) =>
           validator.isURL(value, {
             protocols: ['http', 'https'],
             require_tld: true,
@@ -56,7 +77,9 @@ const schema = new Schema(
       min: [1, 'Rating must be at least 1'],
       max: [10, 'Rating must be 10 or less'],
     },
-    averageCost: Number,
+    averageCost: {
+      type: Number,
+    },
     photo: {
       type: String,
       default: 'no-photo.jpg',
@@ -74,22 +97,34 @@ const schema = new Schema(
   }
 );
 
-schema.pre('save', function generateSlug(next) {
-  this.slug = slugify(this.name, { lower: true });
+bootcampSchema.pre<IBootcamp>('save', function (next) {
+  if (this.isModified('name')) {
+    this.slug = slugify(this.name, { lower: true });
+  }
   next();
 });
 
-schema.pre('remove', async function deleteBootcampCourses(next) {
-  await this.model(Models.COURSE).deleteMany({ bootcamp: this._id });
-  next();
-});
+bootcampSchema.pre<IBootcamp>(
+  'deleteOne',
+  { document: true, query: false },
+  async function (next) {
+    try {
+      await Course.deleteMany({ bootcamp: this._id });
+      next();
+    } catch (err) {
+      next(err as Error);
+    }
+  }
+);
 
 // this is to get the courses for the bootcamp, when we request the bootcamp
-schema.virtual('courses', {
+bootcampSchema.virtual('courses', {
   ref: Models.COURSE,
   localField: '_id',
   foreignField: 'bootcamp',
   justOne: false,
 });
 
-export default model(Models.BOOTCAMP, schema);
+const Bootcamp = model<IBootcamp>(Models.BOOTCAMP, bootcampSchema);
+
+export default Bootcamp;

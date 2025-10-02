@@ -1,4 +1,5 @@
 import type { Logger } from 'pino';
+import { FileArray } from 'express-fileupload';
 import { IUser } from '@/models/user';
 
 declare global {
@@ -6,6 +7,7 @@ declare global {
     interface Request {
       user?: IUser;
       log: Logger;
+      files?: FileArray;
     }
   }
 }

@@ -21,7 +21,6 @@ export const getUsers = async (req: Request, res: Response) => {
 
   res.status(httpStatus.OK).json({
     success: true,
-    count: users.length,
     total,
     page,
     totalPages: Math.ceil(total / limit),

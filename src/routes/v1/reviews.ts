@@ -5,10 +5,10 @@ import {
   createReview,
   updateReview,
   deleteReview,
-} from '../controllers/reviews.js';
-import authenticate from '../middlewares/authenticate.js';
-import authorize from '../middlewares/authorize.js';
-import { userTypes } from '../constants/user.js';
+} from '@/controllers/reviews.js';
+import authenticate from '@/middlewares/authenticate.js';
+import authorize from '@/middlewares/authorize.js';
+import { userTypes } from '@/constants/user.js';
 
 const router = Router({ mergeParams: true });
 

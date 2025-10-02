@@ -1,40 +1,57 @@
+import { Request, Response, NextFunction } from 'express';
 import httpStatus from 'http-status';
-import Course from '../models/course.js';
-import Bootcamp from '../models/bootcamp.js';
-import Filters from '../utils/filters.js';
-import { HttpError } from '../utils/httpError.js';
-import { userTypes } from '../constants/user.js';
+import Course from '@/models/course.js';
+import Bootcamp from '@/models/bootcamp.js';
+import Filters from '@/utils/filters.js';
+import { HttpError } from '@/utils/httpError.js';
+import { userTypes } from '@/constants/user.js';
+import { parseQuery } from '@/utils/parseQuery.js';
 
-export const getCourses = async (req, res) => {
-  let query;
+export const getCourses = async (req: Request, res: Response) => {
+  const { bootcampId } = req.params;
 
-  if (req.params.bootcampId) {
-    query = Course.find({ bootcamp: req.params.bootcampId });
+  const query = parseQuery(req.query);
+
+  let coursesQuery;
+
+  if (bootcampId) {
+    coursesQuery = Course.find({ bootcamp: bootcampId });
   } else {
-    const filtered = new Filters(
+    const filters = new Filters(
       Course.find().populate({
         path: 'bootcamp',
         select: 'name description',
       }),
-      req.query
+      query
     )
       .filter()
       .select()
       .sort()
-      .paginate()
-      .exec();
+      .paginate();
 
-    query = filtered.docs;
+    coursesQuery = filters.exec();
   }
 
-  const courses = await query;
+  const courses = await coursesQuery;
 
-  res
-    .status(httpStatus.OK)
-    .json({ success: true, results: courses.length, data: courses });
+  const total = courses.length;
+  const page = parseInt((req.query.page as string) || '1', 10);
+  const limit = parseInt((req.query.limit as string) || '10', 10);
+
+  res.status(httpStatus.OK).json({
+    success: true,
+    total,
+    page,
+    totalPages: Math.ceil(total / limit),
+    data: courses,
+  });
 };
 
-export const getCourse = async (req, res, next) => {
+export const getCourse = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const course = await Course.findById(req.params.id).populate({
     path: 'bootcamp',
     select: 'name description',
@@ -52,7 +69,11 @@ export const getCourse = async (req, res, next) => {
   res.status(httpStatus.OK).json({ success: true, data: course });
 };
 
-export const createCourse = async (req, res, next) => {
+export const createCourse = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   req.body.bootcamp = req.params.bootcampId;
   req.body.user = req.user.id;
 
@@ -84,7 +105,11 @@ export const createCourse = async (req, res, next) => {
   res.status(httpStatus.CREATED).json({ success: true, data: course });
 };
 
-export const updateCourse = async (req, res, next) => {
+export const updateCourse = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   let course = await Course.findById(req.params.id);
 
   if (!course) {
@@ -116,7 +141,11 @@ export const updateCourse = async (req, res, next) => {
   res.status(httpStatus.OK).json({ success: true, data: course });
 };
 
-export const deleteCourse = async (req, res, next) => {
+export const deleteCourse = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const course = await Course.findById(req.params.id);
 
   if (!course) {
@@ -141,7 +170,7 @@ export const deleteCourse = async (req, res, next) => {
   }
 
   // here is important to use remove method to trigger remove hook in the model
-  await course.remove();
+  await course.deleteOne();
 
   res.status(httpStatus.OK).json({ success: true });
 };

@@ -1,0 +1,98 @@
+import { Schema, model, Document, Model } from 'mongoose';
+import { Models } from '@/constants/models.js';
+import Bootcamp from './bootcamp.js';
+
+export interface ICourse extends Document {
+  title: string;
+  description: string;
+  weeks: number;
+  tuition: number;
+  minimumSkill: 'beginner' | 'intermediate' | 'advanced';
+  bootcamp: Schema.Types.ObjectId;
+  user: Schema.Types.ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ICourseModel extends Model<ICourse> {
+  getAverageCost(bootcampId: Schema.Types.ObjectId): Promise<void>;
+}
+
+const courseSchema = new Schema<ICourse, ICourseModel>(
+  {
+    title: {
+      type: String,
+      trim: true,
+      required: [true, 'Please provide a course title'],
+    },
+    description: {
+      type: String,
+      required: [true, 'Please provide a description'],
+    },
+    weeks: {
+      type: Number,
+      required: [true, 'Please provide number of weeks'],
+    },
+    tuition: {
+      type: Number,
+      required: [true, 'Please provide tuition cost'],
+    },
+    minimumSkill: {
+      type: String,
+      required: [true, 'Please provide minimum skill'],
+      enum: ['beginner', 'intermediate', 'advanced'],
+    },
+    bootcamp: {
+      type: Schema.Types.ObjectId,
+      ref: Models.BOOTCAMP,
+      required: true,
+    },
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: Models.USER,
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
+
+courseSchema.statics.getAverageCost = async function (
+  bootcampId: Schema.Types.ObjectId | string
+) {
+  const agg = await this.aggregate([
+    { $match: { bootcamp: bootcampId } },
+    {
+      $group: {
+        _id: '$bootcamp',
+        averageCost: { $avg: '$tuition' },
+      },
+    },
+  ]);
+
+  try {
+    if (agg.length > 0) {
+      await Bootcamp.findByIdAndUpdate(bootcampId, {
+        averageCost: Math.ceil(agg[0].averageCost / 10) * 10,
+      });
+    }
+  } catch (err) {
+    console.log('Course schema error: ', err);
+  }
+};
+
+// with the below 2 hooks we want to recalculate the average bootcamp price everytime we add or remove a course
+courseSchema.post('save', function (this: ICourse) {
+  (this.constructor as ICourseModel).getAverageCost(this.bootcamp);
+});
+courseSchema.pre(
+  'deleteOne',
+  { document: true, query: false },
+  function (this: ICourse, next) {
+    (this.constructor as ICourseModel).getAverageCost(this.bootcamp);
+    next();
+  }
+);
+
+const Course = model<ICourse, ICourseModel>(Models.COURSE, courseSchema);
+
+export default Course;

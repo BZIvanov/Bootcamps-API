@@ -6,12 +6,12 @@ import {
   updateBootcamp,
   deleteBootcamp,
   bootcampPhotoUpload,
-} from '../controllers/bootcamps.js';
-import authenticate from '../middlewares/authenticate.js';
-import authorize from '../middlewares/authorize.js';
+} from '@/controllers/bootcamps.js';
+import authenticate from '@/middlewares/authenticate.js';
+import authorize from '@/middlewares/authorize.js';
+import { userTypes } from '@/constants/user.js';
 import coursesRouter from './courses.js';
 import reviewsRouter from './reviews.js';
-import { userTypes } from '../constants/user.js';
 
 const router = Router();
 
