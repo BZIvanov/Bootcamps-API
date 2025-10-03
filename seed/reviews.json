@@ -1,40 +1,40 @@
 [
   {
     "_id": "60435618d873df65bc6cc979",
-    "title": "Very nice",
-    "text": "I have enjoyed the course very much!",
+    "title": "Excellent Course",
+    "text": "I really enjoyed this course and found it very informative.",
     "rating": 8,
     "bootcamp": "604144854e2a656528f63a45",
     "user": "60435a8087a35f61683a380b"
   },
   {
     "_id": "60435618d873df65bc6cc97a",
-    "title": "Very helpful",
-    "text": "The study materials were very interesting.",
+    "title": "Very Helpful",
+    "text": "The study materials were clear and engaging.",
     "rating": 9,
     "bootcamp": "604144854e2a656528f63a45",
     "user": "60435a8087a35f61683a380a"
   },
   {
     "_id": "60435618d873df65bc6cc97b",
-    "title": "Kind of good",
-    "text": "Not bad, could be better, maybe next time, will see.",
+    "title": "Good, but room for improvement",
+    "text": "Overall a good experience, though some parts could be improved.",
     "rating": 5,
     "bootcamp": "604144854e2a656528f63a45",
     "user": "604257f63edd1d6418585e1b"
   },
   {
     "_id": "60435618d873df65bc6cc97c",
-    "title": "Can't wait for another one",
-    "text": "Please one more like this. It was incredibly good, best in da world yo.",
+    "title": "Looking forward to more",
+    "text": "This course was very helpful and I’m excited to take another one.",
     "rating": 7,
     "bootcamp": "6041edc7d34b6a547cd7b1cb",
     "user": "604090aceceafa43d02f7856"
   },
   {
     "_id": "60435618d873df65bc6cc97d",
-    "title": "Wow!!! Awesome!",
-    "text": "The teacher was very clear in explaining the course material and I have learned so much.",
+    "title": "Outstanding!",
+    "text": "The instructor explained everything clearly and I learned a lot.",
     "rating": 10,
     "bootcamp": "6041edc7d34b6a547cd7b1cb",
     "user": "604257f63edd1d6418585e1b"
