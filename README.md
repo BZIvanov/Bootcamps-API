@@ -61,6 +61,13 @@ Once the server is running, open the following URL in your browser: `http://loca
 
 **Reason**: `tsx` provides reliable hot-reload support for modern ESM projects, works with `import.meta.url`, and supports CJS interop (createRequire). It avoids the runtime issues seen with `ts-node-dev`.
 
+### ODM Choice
+
+**Decision**: Use `Mongoose` instead of `Prisma` for MongoDB integration.
+
+**Reason**:
+Mongoose provides a mature, battle-tested ODM specifically built for MongoDB, with robust schema enforcement, middleware support, population (relation-like features), and a rich ecosystem of plugins. Compared to Prisma’s still-evolving MongoDB support, Mongoose offers greater stability and deeper MongoDB-specific features, making it a stronger fit for production in a MongoDB-first architecture.
+
 ### User Authentication Responsibilities
 
 **Decision**: Split responsibilities between the schema and the auth service.

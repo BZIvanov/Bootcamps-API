@@ -5,6 +5,41 @@ import Filters from '@/utils/filters.js';
 import { HttpError } from '@/utils/httpError.js';
 import { parseQuery } from '@/utils/parseQuery.js';
 
+/**
+ * @swagger
+ * tags:
+ *   name: Users
+ *   description: User management endpoints
+ */
+
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     summary: Get all users
+ *     tags: [Users]
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Number of results per page
+ *       - in: query
+ *         name: sort
+ *         schema:
+ *           type: string
+ *         description: Sort order, e.g. "-createdAt"
+ *     responses:
+ *       200:
+ *         description: List of users
+ */
 export const getUsers = async (req: Request, res: Response) => {
   const query = parseQuery(req.query);
   const filters = new Filters<IUser>(User.find(), query)
@@ -28,6 +63,24 @@ export const getUsers = async (req: Request, res: Response) => {
   });
 };
 
+/**
+ * @swagger
+ * /users/{id}:
+ *   get:
+ *     summary: Get a single user by ID
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: User found
+ *       404:
+ *         description: User not found
+ */
 export const getUser = async (
   req: Request,
   res: Response,
@@ -46,6 +99,38 @@ export const getUser = async (
   res.status(httpStatus.OK).json({ success: true, data: user });
 };
 
+/**
+ * @swagger
+ * /users:
+ *   post:
+ *     summary: Create a new user
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - email
+ *               - password
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               role:
+ *                 type: string
+ *                 enum: [user, publisher, admin]
+ *     responses:
+ *       201:
+ *         description: User created successfully
+ *       400:
+ *         description: Email already exists
+ */
 export const createUser = async (
   req: Request,
   res: Response,
@@ -67,6 +152,34 @@ export const createUser = async (
     .json({ success: true, data: { ...userResponse, password: undefined } });
 };
 
+/**
+ * @swagger
+ * /users/{id}:
+ *   put:
+ *     summary: Update an existing user
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: User updated successfully
+ *       404:
+ *         description: User not found
+ */
 export const updateUser = async (
   req: Request,
   res: Response,
@@ -98,6 +211,24 @@ export const updateUser = async (
   res.status(httpStatus.OK).json({ success: true, data: user });
 };
 
+/**
+ * @swagger
+ * /users/{id}:
+ *   delete:
+ *     summary: Delete a user
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: User deleted successfully
+ *       404:
+ *         description: User not found
+ */
 export const deleteUser = async (
   req: Request,
   res: Response,

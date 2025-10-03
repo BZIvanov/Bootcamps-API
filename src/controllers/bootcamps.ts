@@ -8,6 +8,34 @@ import { HttpError } from '@/utils/httpError.js';
 import { userTypes } from '@/constants/user.js';
 import { parseQuery } from '@/utils/parseQuery.js';
 
+/**
+ * @swagger
+ * tags:
+ *   name: Bootcamps
+ *   description: Bootcamp management endpoints
+ */
+
+/**
+ * @swagger
+ * /bootcamps:
+ *   get:
+ *     summary: Get all bootcamps
+ *     tags: [Bootcamps]
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: Page number for pagination
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: Number of results per page
+ *     responses:
+ *       200:
+ *         description: List of bootcamps
+ */
 export const getBootcamps = async (req: Request, res: Response) => {
   const query = parseQuery(req.query);
   const filters = new Filters<IBootcamp>(
@@ -34,6 +62,24 @@ export const getBootcamps = async (req: Request, res: Response) => {
   });
 };
 
+/**
+ * @swagger
+ * /bootcamps/{id}:
+ *   get:
+ *     summary: Get a single bootcamp by ID
+ *     tags: [Bootcamps]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Bootcamp found
+ *       404:
+ *         description: Bootcamp not found
+ */
 export const getBootcamp = async (
   req: Request,
   res: Response,
@@ -52,6 +98,28 @@ export const getBootcamp = async (
   res.status(httpStatus.OK).json({ success: true, data: bootcamp });
 };
 
+/**
+ * @swagger
+ * /bootcamps:
+ *   post:
+ *     summary: Create a new bootcamp
+ *     tags: [Bootcamps]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Bootcamp'
+ *     responses:
+ *       201:
+ *         description: Bootcamp created successfully
+ *       400:
+ *         description: User already has a published bootcamp
+ *       401:
+ *         description: Unauthorized
+ */
 export const createBootcamp = async (
   req: Request,
   res: Response,
@@ -75,6 +143,34 @@ export const createBootcamp = async (
   res.status(httpStatus.CREATED).json({ success: true, data: bootcamp });
 };
 
+/**
+ * @swagger
+ * /bootcamps/{id}:
+ *   put:
+ *     summary: Update a bootcamp
+ *     tags: [Bootcamps]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Bootcamp'
+ *     responses:
+ *       200:
+ *         description: Bootcamp updated successfully
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Bootcamp not found
+ */
 export const updateBootcamp = async (
   req: Request,
   res: Response,
@@ -111,6 +207,28 @@ export const updateBootcamp = async (
   res.status(httpStatus.OK).json({ success: true, data: bootcamp });
 };
 
+/**
+ * @swagger
+ * /bootcamps/{id}:
+ *   delete:
+ *     summary: Delete a bootcamp
+ *     tags: [Bootcamps]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Bootcamp deleted successfully
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Bootcamp not found
+ */
 export const deleteBootcamp = async (
   req: Request,
   res: Response,
@@ -146,6 +264,46 @@ export const deleteBootcamp = async (
   res.status(httpStatus.OK).json({ success: true });
 };
 
+/**
+ * @swagger
+ * /bootcamps/{id}/photo:
+ *   put:
+ *     summary: Upload photo for a bootcamp
+ *     tags: [Bootcamps]
+ *     security:
+ *       - bearerAuth: []
+ *     consumes:
+ *       - multipart/form-data
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - imageFile
+ *             properties:
+ *               imageFile:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Photo uploaded successfully
+ *       400:
+ *         description: Invalid file or file too large
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Bootcamp not found
+ *       500:
+ *         description: Upload failed
+ */
 export const bootcampPhotoUpload = async (
   req: Request,
   res: Response,
