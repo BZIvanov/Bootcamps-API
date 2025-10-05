@@ -43,7 +43,7 @@ setupSwagger(app);
 // --- Serve static files ---
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-app.use(express.static(path.join(__dirname, '..', '..', 'public')));
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // --- Global error handler (last) ---
 app.use(errorHandler);

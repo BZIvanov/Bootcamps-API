@@ -5,7 +5,8 @@ import User, { IUser } from '@/models/user.js';
 import { sendEmail } from '@/providers/mailer.js';
 import { HttpError } from '@/utils/httpError.js';
 import { isProd } from '@/config/env.js';
-import { generateJwtToken, comparePassword } from '@/services/authService.js';
+import { comparePassword } from '@/services/authUtils.js';
+import { issueAuthToken, registerUser } from '@/services/authService.js';
 
 /**
  * @swagger
@@ -15,7 +16,7 @@ import { generateJwtToken, comparePassword } from '@/services/authService.js';
  */
 
 const sendTokenResponse = (user: IUser, statusCode: number, res: Response) => {
-  const token = generateJwtToken(user);
+  const token = issueAuthToken(user);
 
   const options = {
     expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 1 day
@@ -62,21 +63,10 @@ const sendTokenResponse = (user: IUser, statusCode: number, res: Response) => {
  *       400:
  *         description: Email is already registered
  */
-export const register = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const register = async (req: Request, res: Response) => {
   const { name, email, password, role } = req.body;
 
-  const existingUser = await User.findOne({ email });
-  if (existingUser) {
-    return next(
-      new HttpError(httpStatus.BAD_REQUEST, 'Email is already registered')
-    );
-  }
-
-  const user = await User.create({ name, email, password, role });
+  const user = await registerUser({ name, email, password, role });
 
   sendTokenResponse(user, httpStatus.CREATED, res);
 };

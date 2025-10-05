@@ -1,25 +1,21 @@
-import jwt, { Secret, SignOptions } from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
-import { IUser } from '@/models/user.js';
+import httpStatus from 'http-status';
+import User, { IUser } from '@/models/user.js';
+import { HttpError } from '@/utils/httpError.js';
+import { RegisterInput } from '@/types/auth.js';
+import { generateJwtToken } from './authUtils.js';
 
-export const generateJwtToken = (
-  user: IUser,
-  expiresIn: SignOptions['expiresIn'] = '1d'
-): string => {
-  if (!process.env.JWT_SECRET) {
-    throw new Error('JWT_SECRET is not defined in environment');
+export const registerUser = async (input: RegisterInput): Promise<IUser> => {
+  const { name, email, password, role } = input;
+
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    throw new HttpError(httpStatus.BAD_REQUEST, 'Email is already registered');
   }
 
-  const payload = { id: user._id };
-  const secret: Secret = process.env.JWT_SECRET;
-  const options: SignOptions = { expiresIn };
-
-  return jwt.sign(payload, secret, options);
+  const user = await User.create({ name, email, password, role });
+  return user;
 };
 
-export const comparePassword = async (
-  incomingPassword: string,
-  hashedPassword: string
-): Promise<boolean> => {
-  return bcrypt.compare(incomingPassword, hashedPassword);
+export const issueAuthToken = (user: IUser): string => {
+  return generateJwtToken(user);
 };
