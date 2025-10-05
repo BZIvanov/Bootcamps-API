@@ -6,7 +6,12 @@ import { sendEmail } from '@/providers/mailer.js';
 import { HttpError } from '@/utils/httpError.js';
 import { isProd } from '@/config/env.js';
 import { comparePassword } from '@/services/authUtils.js';
-import { issueAuthToken, registerUser } from '@/services/authService.js';
+import {
+  issueAuthToken,
+  loginUser,
+  registerUser,
+  updateUserDetails,
+} from '@/services/authService.js';
 
 /**
  * @swagger
@@ -99,28 +104,10 @@ export const register = async (req: Request, res: Response) => {
  *       401:
  *         description: Invalid credentials
  */
-export const login = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
-  if (!email || !password) {
-    return next(
-      new HttpError(httpStatus.BAD_REQUEST, 'Please provide email and password')
-    );
-  }
-
-  const user = await User.findOne({ email }).select('+password');
-  if (!user) {
-    return next(new HttpError(httpStatus.UNAUTHORIZED, 'Invalid credentials'));
-  }
-
-  const isMatch = await comparePassword(password, user.password);
-  if (!isMatch) {
-    return next(new HttpError(httpStatus.UNAUTHORIZED, 'Invalid credentials'));
-  }
+  const user = await loginUser({ email, password });
 
   sendTokenResponse(user, httpStatus.OK, res);
 };
@@ -159,15 +146,7 @@ export const logout = async (_req: Request, res: Response) => {
  *       404:
  *         description: User not found
  */
-export const getMe = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  if (!req.user) {
-    return next(new HttpError(httpStatus.NOT_FOUND, 'User not found'));
-  }
-
+export const me = async (req: Request, res: Response) => {
   res.status(httpStatus.OK).json({ success: true, data: req.user });
 };
 
@@ -193,18 +172,10 @@ export const getMe = async (
  *       200:
  *         description: User updated successfully
  */
-export const updateUserDetails = async (req: Request, res: Response) => {
+export const updateUser = async (req: Request, res: Response) => {
   const { name, email } = req.body;
 
-  const fields = {
-    ...(name && { name }),
-    ...(email && { email }),
-  };
-
-  const user = await User.findByIdAndUpdate(req.user.id, fields, {
-    new: true,
-    runValidators: true,
-  });
+  const user = await updateUserDetails(req.user.id, { name, email });
 
   res.status(httpStatus.OK).json({ success: true, data: user });
 };
