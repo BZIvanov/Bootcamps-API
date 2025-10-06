@@ -1,4 +1,4 @@
-import { Document, Query } from 'mongoose';
+import type { Document, Query } from 'mongoose';
 
 export type QueryString = {
   [key: string]: string | string[] | undefined;

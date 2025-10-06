@@ -1,9 +1,10 @@
 import crypto from 'crypto';
 import httpStatus from 'http-status';
 import type { Logger } from 'pino';
-import User, { IUser } from '@/models/user.model.js';
+import type { IUser } from '@/models/user.model.js';
+import User from '@/models/user.model.js';
 import { HttpError } from '@/utils/httpError.util.js';
-import {
+import type {
   CreateUserInput,
   LoginUserInput,
   UpdateUserInput,

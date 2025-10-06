@@ -17,12 +17,16 @@ export default defineConfig([
       },
     },
     rules: {
-      'prettier/prettier': 'error',
+      'prettier/prettier': 'error', // enforce Prettier formatting as ESLint errors
       '@typescript-eslint/no-unused-vars': [
         'error',
         {
-          argsIgnorePattern: '^_?next$',
+          argsIgnorePattern: '^_?next$', // allow unused vars starting with `_next` or `next`
         },
+      ],
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        { prefer: 'type-imports', disallowTypeAnnotations: false }, // enforce using `import type` for type-only imports, but allow type annotations in code
       ],
     },
   },

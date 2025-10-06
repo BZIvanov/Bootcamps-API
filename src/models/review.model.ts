@@ -1,4 +1,5 @@
-import { Schema, model, Document, Model } from 'mongoose';
+import type { Document, Model } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import { Models } from '@/constants/model.constants.js';
 import Bootcamp from './bootcamp.model.js';
 

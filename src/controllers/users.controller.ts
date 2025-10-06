@@ -1,6 +1,7 @@
-import { NextFunction, Request, Response } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
-import User, { IUser } from '@/models/user.model.js';
+import type { IUser } from '@/models/user.model.js';
+import User from '@/models/user.model.js';
 import Filters from '@/utils/filters.util.js';
 import { HttpError } from '@/utils/httpError.util.js';
 import { parseQuery } from '@/utils/parseQuery.util.js';

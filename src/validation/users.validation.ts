@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { userTypes, UserRole } from '@/constants/user.constants.js';
+import type { UserRole } from '@/constants/user.constants.js';
+import { userTypes } from '@/constants/user.constants.js';
 
 const userRoles = Object.values(userTypes) as UserRole[];
 

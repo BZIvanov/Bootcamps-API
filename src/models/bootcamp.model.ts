@@ -1,4 +1,5 @@
-import { Schema, model, Document } from 'mongoose';
+import type { Document } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import validator from 'validator';
 import { requireCJS } from '@/utils/cjsRequire.util.js';
 import { Models } from '@/constants/model.constants.js';

@@ -1,6 +1,6 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import httpStatus from 'http-status';
-import { IUser } from '@/models/user.model.js';
+import type { IUser } from '@/models/user.model.js';
 import { isProd } from '@/config/env.config.js';
 import {
   handleForgotPassword,
@@ -11,7 +11,7 @@ import {
   updateUserDetails,
   updateUserPassword,
 } from '@/services/auth.service.js';
-import {
+import type {
   ResetPasswordBody,
   ResetPasswordParams,
 } from '@/validation/users.validation.js';

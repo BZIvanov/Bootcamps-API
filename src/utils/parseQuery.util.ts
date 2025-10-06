@@ -1,5 +1,5 @@
-import { ParsedQs } from 'qs';
-import { QueryString } from '@/utils/filters.util.js';
+import type { ParsedQs } from 'qs';
+import type { QueryString } from '@/utils/filters.util.js';
 
 /**
  * Converts ParsedQs -> QueryString (string | string[])

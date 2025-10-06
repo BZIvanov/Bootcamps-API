@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import httpStatus from 'http-status';
 import Bootcamp from '@/models/bootcamp.model.js';
 import Course from '@/models/course.model.js';

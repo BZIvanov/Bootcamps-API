@@ -1,8 +1,10 @@
 import crypto from 'crypto';
-import { Schema, model, Document } from 'mongoose';
+import type { Document } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
-import { userTypes, UserRole } from '@/constants/user.constants.js';
+import type { UserRole } from '@/constants/user.constants.js';
+import { userTypes } from '@/constants/user.constants.js';
 import { Models } from '@/constants/model.constants.js';
 
 export interface IUser extends Document {

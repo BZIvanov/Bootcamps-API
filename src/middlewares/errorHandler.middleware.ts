@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import httpStatus from 'http-status';
 import { HttpError } from '@/utils/httpError.util.js';
 import { isProd } from '@/config/env.config.js';

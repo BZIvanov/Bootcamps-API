@@ -1,5 +1,5 @@
-import { IncomingMessage, ServerResponse } from 'http';
-import { Options as PinoHttpOptions } from 'pino-http';
+import type { IncomingMessage, ServerResponse } from 'http';
+import type { Options as PinoHttpOptions } from 'pino-http';
 import { requireCJS } from '@/utils/cjsRequire.util.js';
 import logger from '@/config/logger.config.js';
 

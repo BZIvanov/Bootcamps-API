@@ -1,4 +1,5 @@
-import pino, { LoggerOptions } from 'pino';
+import type { LoggerOptions } from 'pino';
+import pino from 'pino';
 import { isProd } from '@/config/env.config.js';
 
 const baseConfig: LoggerOptions = {

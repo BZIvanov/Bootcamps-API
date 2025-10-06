@@ -1,5 +1,6 @@
-import { ZodObject, ZodError, ZodRawShape } from 'zod';
-import { Request, Response, NextFunction } from 'express';
+import type { ZodObject, ZodRawShape } from 'zod';
+import { ZodError } from 'zod';
+import type { Request, Response, NextFunction } from 'express';
 import httpStatus from 'http-status';
 import { HttpError } from '@/utils/httpError.util.js';
 

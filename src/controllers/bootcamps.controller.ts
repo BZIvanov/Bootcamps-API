@@ -1,7 +1,7 @@
 import path from 'path';
-import { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import httpStatus from 'http-status';
-import { UploadedFile } from 'express-fileupload';
+import type { UploadedFile } from 'express-fileupload';
 import Bootcamp from '@/models/bootcamp.model.js';
 import { HttpError } from '@/utils/httpError.util.js';
 import { userTypes } from '@/constants/user.constants.js';
@@ -11,7 +11,7 @@ import {
   getBootcampByIdService,
   getBootcampsService,
 } from '@/services/bootcamps.service.js';
-import { IdParam } from '@/types/http.types.js';
+import type { IdParam } from '@/types/http.types.js';
 
 /**
  * @swagger
