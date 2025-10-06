@@ -9,7 +9,9 @@ import {
 } from '@/controllers/bootcamps.js';
 import authenticate from '@/middlewares/authenticate.js';
 import authorize from '@/middlewares/authorize.js';
+import { validateRequest } from '@/middlewares/validateRequest.js';
 import { userTypes } from '@/constants/user.js';
+import { createBootcampSchema } from '@/validation/bootcamp.js';
 import coursesRouter from './courses.js';
 import reviewsRouter from './reviews.js';
 
@@ -25,6 +27,7 @@ router
   .post(
     authenticate,
     authorize(userTypes.PUBLISHER, userTypes.ADMIN),
+    validateRequest(createBootcampSchema),
     createBootcamp
   );
 router

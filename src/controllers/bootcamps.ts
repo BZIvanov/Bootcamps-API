@@ -2,11 +2,16 @@ import path from 'path';
 import { Request, Response, NextFunction } from 'express';
 import httpStatus from 'http-status';
 import { UploadedFile } from 'express-fileupload';
-import Bootcamp, { IBootcamp } from '@/models/bootcamp.js';
-import Filters from '@/utils/filters.js';
+import Bootcamp from '@/models/bootcamp.js';
 import { HttpError } from '@/utils/httpError.js';
 import { userTypes } from '@/constants/user.js';
 import { parseQuery } from '@/utils/parseQuery.js';
+import {
+  createBootcampService,
+  getBootcampByIdService,
+  getBootcampsService,
+} from '@/services/bootcamp.service.js';
+import { IdParam } from '@/types/http.js';
 
 /**
  * @swagger
@@ -27,38 +32,25 @@ import { parseQuery } from '@/utils/parseQuery.js';
  *         schema:
  *           type: integer
  *         description: Page number for pagination
+ *         example: 1
  *       - in: query
  *         name: limit
  *         schema:
  *           type: integer
  *         description: Number of results per page
+ *         example: 10
  *     responses:
  *       200:
  *         description: List of bootcamps
  */
 export const getBootcamps = async (req: Request, res: Response) => {
   const query = parseQuery(req.query);
-  const filters = new Filters<IBootcamp>(
-    Bootcamp.find().populate('courses'),
-    query
-  )
-    .filter()
-    .select()
-    .sort()
-    .paginate();
 
-  const bootcamps = await filters.exec();
-
-  const total = await Bootcamp.countDocuments();
-  const page = parseInt((req.query.page as string) || '1', 10);
-  const limit = parseInt((req.query.limit as string) || '10', 10);
+  const result = await getBootcampsService(query);
 
   res.status(httpStatus.OK).json({
     success: true,
-    total,
-    page,
-    totalPages: Math.ceil(total / limit),
-    data: bootcamps,
+    ...result,
   });
 };
 
@@ -80,20 +72,8 @@ export const getBootcamps = async (req: Request, res: Response) => {
  *       404:
  *         description: Bootcamp not found
  */
-export const getBootcamp = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const { id } = req.params;
-
-  const bootcamp = await Bootcamp.findById(id);
-
-  if (!bootcamp) {
-    return next(
-      new HttpError(httpStatus.NOT_FOUND, `Bootcamp with id: ${id} not found`)
-    );
-  }
+export const getBootcamp = async (req: Request<IdParam>, res: Response) => {
+  const bootcamp = await getBootcampByIdService(req.params.id);
 
   res.status(httpStatus.OK).json({ success: true, data: bootcamp });
 };
@@ -110,8 +90,17 @@ export const getBootcamp = async (
  *       required: true
  *       content:
  *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Bootcamp'
+ *           example:
+ *             name: "Dev Bootcamp"
+ *             description: "Learn full-stack web development in 12 weeks"
+ *             website: "https://devbootcamp.com"
+ *             phone: "(123) 456-7890"
+ *             address: "123 Main St, San Francisco, CA"
+ *             careers: ["Web Development", "UI/UX"]
+ *             averageRating: 8.5
+ *             averageCost: 12000
+ *             photo: "bootcamp.jpg"
+ *             user: "64f3a1b7e5a1f1b2c3d4e5f6"
  *     responses:
  *       201:
  *         description: Bootcamp created successfully
@@ -120,25 +109,8 @@ export const getBootcamp = async (
  *       401:
  *         description: Unauthorized
  */
-export const createBootcamp = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  req.body.user = req.user.id;
-
-  const publishedBootcamp = await Bootcamp.findOne({ user: req.user.id });
-
-  if (publishedBootcamp && req.user.role !== userTypes.ADMIN) {
-    return next(
-      new HttpError(
-        httpStatus.BAD_REQUEST,
-        `User with id ${req.user.id} has already published a bootcamp`
-      )
-    );
-  }
-
-  const bootcamp = await Bootcamp.create(req.body);
+export const createBootcamp = async (req: Request, res: Response) => {
+  const bootcamp = await createBootcampService(req.user, req.body);
 
   res.status(httpStatus.CREATED).json({ success: true, data: bootcamp });
 };
@@ -161,8 +133,17 @@ export const createBootcamp = async (
  *       required: true
  *       content:
  *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Bootcamp'
+ *           example:
+ *             name: "Dev Bootcamp"
+ *             description: "Learn full-stack web development in 12 weeks"
+ *             website: "https://devbootcamp.com"
+ *             phone: "(123) 456-7890"
+ *             address: "123 Main St, San Francisco, CA"
+ *             careers: ["Web Development", "UI/UX"]
+ *             averageRating: 8.5
+ *             averageCost: 12000
+ *             photo: "bootcamp.jpg"
+ *             user: "64f3a1b7e5a1f1b2c3d4e5f6"
  *     responses:
  *       200:
  *         description: Bootcamp updated successfully
