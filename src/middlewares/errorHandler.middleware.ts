@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import httpStatus from 'http-status';
-import { HttpError } from '@/utils/httpError.js';
-import { isProd } from '@/config/env.js';
-import logger from '@/config/logger.js';
+import { HttpError } from '@/utils/httpError.util.js';
+import { isProd } from '@/config/env.config.js';
+import logger from '@/config/logger.config.js';
 
 interface MongooseValidationError extends Error {
   name: 'ValidationError';

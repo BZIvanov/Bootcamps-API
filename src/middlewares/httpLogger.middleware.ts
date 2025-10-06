@@ -1,7 +1,7 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import { Options as PinoHttpOptions } from 'pino-http';
-import { requireCJS } from '@/utils/cjsRequire.js';
-import logger from '@/config/logger.js';
+import { requireCJS } from '@/utils/cjsRequire.util.js';
+import logger from '@/config/logger.config.js';
 
 const pinoHttp = requireCJS('pino-http');
 

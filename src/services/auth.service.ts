@@ -1,8 +1,8 @@
 import crypto from 'crypto';
 import httpStatus from 'http-status';
 import type { Logger } from 'pino';
-import User, { IUser } from '@/models/user.js';
-import { HttpError } from '@/utils/httpError.js';
+import User, { IUser } from '@/models/user.model.js';
+import { HttpError } from '@/utils/httpError.util.js';
 import {
   CreateUserInput,
   LoginUserInput,
@@ -11,9 +11,9 @@ import {
   ForgotPasswordInput,
   ResetPasswordParams,
   ResetPasswordBody,
-} from '@/validation/user.js';
-import { sendEmail } from '@/providers/mailer.js';
-import { generateJwtToken, comparePassword } from './authUtils.js';
+} from '@/validation/users.validation.js';
+import { sendEmail } from '@/providers/mailer.provider.js';
+import { generateJwtToken, comparePassword } from './authUtils.service.js';
 
 export const registerUser = async (input: CreateUserInput): Promise<IUser> => {
   const { username, email, password, role } = input;

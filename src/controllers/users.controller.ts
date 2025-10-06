@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
-import User, { IUser } from '@/models/user.js';
-import Filters from '@/utils/filters.js';
-import { HttpError } from '@/utils/httpError.js';
-import { parseQuery } from '@/utils/parseQuery.js';
+import User, { IUser } from '@/models/user.model.js';
+import Filters from '@/utils/filters.util.js';
+import { HttpError } from '@/utils/httpError.util.js';
+import { parseQuery } from '@/utils/parseQuery.util.js';
 
 /**
  * @swagger

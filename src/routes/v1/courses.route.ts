@@ -5,10 +5,10 @@ import {
   createCourse,
   updateCourse,
   deleteCourse,
-} from '@/controllers/courses.js';
-import authenticate from '@/middlewares/authenticate.js';
-import authorize from '@/middlewares/authorize.js';
-import { userTypes } from '@/constants/user.js';
+} from '@/controllers/courses.controller.js';
+import authenticate from '@/middlewares/authenticate.middleware.js';
+import authorize from '@/middlewares/authorize.middleware.js';
+import { userTypes } from '@/constants/user.constants.js';
 
 const router = Router({ mergeParams: true });
 

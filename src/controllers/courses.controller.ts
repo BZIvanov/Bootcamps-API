@@ -1,25 +1,25 @@
 import { Request, Response, NextFunction } from 'express';
 import httpStatus from 'http-status';
-import Review from '@/models/review.js';
-import Bootcamp from '@/models/bootcamp.js';
-import Filters from '@/utils/filters.js';
-import { HttpError } from '@/utils/httpError.js';
-import { userTypes } from '@/constants/user.js';
-import { parseQuery } from '@/utils/parseQuery.js';
+import Bootcamp from '@/models/bootcamp.model.js';
+import Course from '@/models/course.model.js';
+import Filters from '@/utils/filters.util.js';
+import { HttpError } from '@/utils/httpError.util.js';
+import { userTypes } from '@/constants/user.constants.js';
+import { parseQuery } from '@/utils/parseQuery.util.js';
 
 /**
  * @swagger
  * tags:
- *   name: Reviews
- *   description: Review management endpoints
+ *   name: Courses
+ *   description: Course management endpoints
  */
 
 /**
  * @swagger
- * /reviews:
+ * /courses:
  *   get:
- *     summary: Get all reviews
- *     tags: [Reviews]
+ *     summary: Get all courses
+ *     tags: [Courses]
  *     parameters:
  *       - in: query
  *         name: page
@@ -33,12 +33,12 @@ import { parseQuery } from '@/utils/parseQuery.js';
  *         description: Number of results per page
  *     responses:
  *       200:
- *         description: List of reviews
+ *         description: List of courses
  *
- * /bootcamps/{bootcampId}/reviews:
+ * /bootcamps/{bootcampId}/courses:
  *   get:
- *     summary: Get all reviews for a bootcamp
- *     tags: [Reviews]
+ *     summary: Get all courses for a bootcamp
+ *     tags: [Courses]
  *     parameters:
  *       - in: path
  *         name: bootcampId
@@ -48,20 +48,20 @@ import { parseQuery } from '@/utils/parseQuery.js';
  *         description: Bootcamp ID
  *     responses:
  *       200:
- *         description: List of reviews for a specific bootcamp
+ *         description: List of courses for a specific bootcamp
  */
-export const getReviews = async (req: Request, res: Response) => {
+export const getCourses = async (req: Request, res: Response) => {
   const { bootcampId } = req.params;
 
   const query = parseQuery(req.query);
 
-  let reviewsQuery;
+  let coursesQuery;
 
   if (bootcampId) {
-    reviewsQuery = Review.find({ bootcamp: bootcampId });
+    coursesQuery = Course.find({ bootcamp: bootcampId });
   } else {
     const filters = new Filters(
-      Review.find().populate({
+      Course.find().populate({
         path: 'bootcamp',
         select: 'name description',
       }),
@@ -72,12 +72,12 @@ export const getReviews = async (req: Request, res: Response) => {
       .sort()
       .paginate();
 
-    reviewsQuery = filters.exec();
+    coursesQuery = filters.exec();
   }
 
-  const reviews = await reviewsQuery;
+  const courses = await coursesQuery;
 
-  const total = reviews.length;
+  const total = courses.length;
   const page = parseInt((req.query.page as string) || '1', 10);
   const limit = parseInt((req.query.limit as string) || '10', 10);
 
@@ -86,16 +86,16 @@ export const getReviews = async (req: Request, res: Response) => {
     total,
     page,
     totalPages: Math.ceil(total / limit),
-    data: reviews,
+    data: courses,
   });
 };
 
 /**
  * @swagger
- * /reviews/{id}:
+ * /courses/{id}:
  *   get:
- *     summary: Get a single review by ID
- *     tags: [Reviews]
+ *     summary: Get a single course by ID
+ *     tags: [Courses]
  *     parameters:
  *       - in: path
  *         name: id
@@ -104,38 +104,38 @@ export const getReviews = async (req: Request, res: Response) => {
  *           type: string
  *     responses:
  *       200:
- *         description: Review found
+ *         description: Course found
  *       404:
- *         description: Review not found
+ *         description: Course not found
  */
-export const getReview = async (
+export const getCourse = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const review = await Review.findById(req.params.id).populate({
+  const course = await Course.findById(req.params.id).populate({
     path: 'bootcamp',
     select: 'name description',
   });
 
-  if (!review) {
+  if (!course) {
     return next(
       new HttpError(
         httpStatus.NOT_FOUND,
-        `Review with id ${req.params.id} not found`
+        `Course with id: ${req.params.id} not found.`
       )
     );
   }
 
-  res.status(httpStatus.OK).json({ success: true, data: review });
+  res.status(httpStatus.OK).json({ success: true, data: course });
 };
 
 /**
  * @swagger
- * /bootcamps/{bootcampId}/reviews:
+ * /bootcamps/{bootcampId}/courses:
  *   post:
- *     summary: Create a review for a bootcamp
- *     tags: [Reviews]
+ *     summary: Create a new course for a bootcamp
+ *     tags: [Courses]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -153,26 +153,30 @@ export const getReview = async (
  *             type: object
  *             required:
  *               - title
- *               - text
- *               - rating
+ *               - description
+ *               - weeks
+ *               - tuition
  *             properties:
  *               title:
  *                 type: string
- *               text:
+ *               description:
  *                 type: string
- *               rating:
+ *               weeks:
  *                 type: number
- *                 minimum: 1
- *                 maximum: 10
+ *               tuition:
+ *                 type: number
+ *               minimumSkill:
+ *                 type: string
+ *                 enum: [beginner, intermediate, advanced]
  *     responses:
  *       201:
- *         description: Review created successfully
+ *         description: Course created successfully
  *       401:
  *         description: Unauthorized
  *       404:
  *         description: Bootcamp not found
  */
-export const createReview = async (
+export const createCourse = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -186,22 +190,34 @@ export const createReview = async (
     return next(
       new HttpError(
         httpStatus.NOT_FOUND,
-        `Bootcamp with id ${req.params.bootcampId} not found`
+        `Bootcamp with id: ${req.params.bootcampId} not found.`
       )
     );
   }
 
-  const review = await Review.create(req.body);
+  if (
+    bootcamp.user.toString() !== req.user.id &&
+    req.user.role !== userTypes.ADMIN
+  ) {
+    return next(
+      new HttpError(
+        httpStatus.UNAUTHORIZED,
+        `User with id: ${req.user.id} is not allowed to add course to bootcamp with id ${bootcamp._id}`
+      )
+    );
+  }
 
-  res.status(httpStatus.CREATED).json({ success: true, data: review });
+  const course = await Course.create(req.body);
+
+  res.status(httpStatus.CREATED).json({ success: true, data: course });
 };
 
 /**
  * @swagger
- * /reviews/{id}:
+ * /courses/{id}:
  *   put:
- *     summary: Update a review
- *     tags: [Reviews]
+ *     summary: Update a course
+ *     tags: [Courses]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -219,59 +235,65 @@ export const createReview = async (
  *             properties:
  *               title:
  *                 type: string
- *               text:
+ *               description:
  *                 type: string
- *               rating:
+ *               weeks:
  *                 type: number
- *                 minimum: 1
- *                 maximum: 10
+ *               tuition:
+ *                 type: number
+ *               minimumSkill:
+ *                 type: string
+ *                 enum: [beginner, intermediate, advanced]
  *     responses:
  *       200:
- *         description: Review updated successfully
+ *         description: Course updated successfully
  *       401:
  *         description: Unauthorized
  *       404:
- *         description: Review not found
+ *         description: Course not found
  */
-export const updateReview = async (
+export const updateCourse = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  let review = await Review.findById(req.params.id);
+  let course = await Course.findById(req.params.id);
 
-  if (!review) {
+  if (!course) {
     return next(
       new HttpError(
         httpStatus.NOT_FOUND,
-        `Review with id ${req.params.id} not found`
+        `Course with id: ${req.params.id} not found.`
       )
     );
   }
 
   if (
-    review.user.toString() !== req.user.id &&
+    course.user.toString() !== req.user.id &&
     req.user.role !== userTypes.ADMIN
   ) {
     return next(
-      new HttpError(httpStatus.UNAUTHORIZED, 'Not authorized to update review')
+      new HttpError(
+        httpStatus.UNAUTHORIZED,
+        `User with id: ${req.user.id} is not allowed to update course with id ${course._id}`
+      )
     );
   }
 
-  review = await Review.findByIdAndUpdate(req.params.id, req.body, {
+  course = await Course.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true,
   });
 
-  res.status(httpStatus.OK).json({ success: true, data: review });
+  res.status(httpStatus.OK).json({ success: true, data: course });
 };
 
 /**
  * @swagger
- * /reviews/{id}:
+ * /courses/{id}:
  *   delete:
- *     summary: Delete a review
- *     tags: [Reviews]
+ *     summary: Delete a course
+ *     tags: [Courses]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -282,38 +304,42 @@ export const updateReview = async (
  *           type: string
  *     responses:
  *       200:
- *         description: Review deleted successfully
+ *         description: Course deleted successfully
  *       401:
  *         description: Unauthorized
  *       404:
- *         description: Review not found
+ *         description: Course not found
  */
-export const deleteReview = async (
+export const deleteCourse = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const review = await Review.findById(req.params.id);
+  const course = await Course.findById(req.params.id);
 
-  if (!review) {
+  if (!course) {
     return next(
       new HttpError(
         httpStatus.NOT_FOUND,
-        `Review with id ${req.params.id} not found`
+        `Course with id: ${req.params.id} not found.`
       )
     );
   }
 
   if (
-    review.user.toString() !== req.user.id &&
+    course.user.toString() !== req.user.id &&
     req.user.role !== userTypes.ADMIN
   ) {
     return next(
-      new HttpError(httpStatus.UNAUTHORIZED, 'Not authorized to delete review')
+      new HttpError(
+        httpStatus.UNAUTHORIZED,
+        `User with id: ${req.user.id} is not allowed to delete course with id ${course._id}`
+      )
     );
   }
 
-  await review.deleteOne();
+  // here is important to use remove method to trigger remove hook in the model
+  await course.deleteOne();
 
   res.status(httpStatus.OK).json({ success: true });
 };

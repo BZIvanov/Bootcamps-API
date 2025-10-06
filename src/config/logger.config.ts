@@ -1,5 +1,5 @@
 import pino, { LoggerOptions } from 'pino';
-import { isProd } from '@/config/env.js';
+import { isProd } from '@/config/env.config.js';
 
 const baseConfig: LoggerOptions = {
   level: process.env.LOG_LEVEL || (isProd ? 'info' : 'debug'),

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
-import { IUser } from '@/models/user.js';
-import { isProd } from '@/config/env.js';
+import { IUser } from '@/models/user.model.js';
+import { isProd } from '@/config/env.config.js';
 import {
   handleForgotPassword,
   handleResetPassword,
@@ -10,8 +10,11 @@ import {
   registerUser,
   updateUserDetails,
   updateUserPassword,
-} from '@/services/authService.js';
-import { ResetPasswordBody, ResetPasswordParams } from '@/validation/user.js';
+} from '@/services/auth.service.js';
+import {
+  ResetPasswordBody,
+  ResetPasswordParams,
+} from '@/validation/users.validation.js';
 
 /**
  * @swagger

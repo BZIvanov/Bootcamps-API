@@ -6,11 +6,11 @@ import cookieParser from 'cookie-parser';
 import hpp from 'hpp';
 import helmet from 'helmet';
 import cors from 'cors';
-import { setupSwagger } from '@/config/swagger.js';
+import { setupSwagger } from '@/config/swagger.config.js';
 import apiRoutes from '@/routes/index.js';
-import rateLimiter from '@/middlewares/rateLimiter.js';
-import httpLogger from '@/middlewares/httpLogger.js';
-import errorHandler from '@/middlewares/errorHandler.js';
+import rateLimiter from '@/middlewares/rateLimiter.middleware.js';
+import httpLogger from '@/middlewares/httpLogger.middleware.js';
+import errorHandler from '@/middlewares/errorHandler.middleware.js';
 
 const app = express();
 

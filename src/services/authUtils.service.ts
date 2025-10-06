@@ -1,6 +1,6 @@
 import jwt, { Secret, SignOptions } from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import { IUser } from '@/models/user.js';
+import { IUser } from '@/models/user.model.js';
 
 export const generateJwtToken = (
   user: IUser,

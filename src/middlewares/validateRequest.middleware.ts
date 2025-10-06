@@ -1,7 +1,7 @@
 import { ZodObject, ZodError, ZodRawShape } from 'zod';
 import { Request, Response, NextFunction } from 'express';
 import httpStatus from 'http-status';
-import { HttpError } from '@/utils/httpError.js';
+import { HttpError } from '@/utils/httpError.util.js';
 
 export const validateRequest =
   (schema: ZodObject<ZodRawShape>) =>

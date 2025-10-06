@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import httpStatus from 'http-status';
 import jwt, { Secret } from 'jsonwebtoken';
-import { HttpError } from '@/utils/httpError.js';
-import User, { IUser } from '@/models/user.js';
+import { HttpError } from '@/utils/httpError.util.js';
+import User, { IUser } from '@/models/user.model.js';
 
 interface JwtPayload {
   id: string;

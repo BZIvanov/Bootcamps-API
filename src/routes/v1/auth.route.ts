@@ -8,9 +8,9 @@ import {
   updatePassword,
   forgotPassword,
   resetPassword,
-} from '@/controllers/auth.js';
-import authenticate from '@/middlewares/authenticate.js';
-import { validateRequest } from '@/middlewares/validateRequest.js';
+} from '@/controllers/auth.controller.js';
+import authenticate from '@/middlewares/authenticate.middleware.js';
+import { validateRequest } from '@/middlewares/validateRequest.middleware.js';
 import {
   registerUserSchema,
   loginUserSchema,
@@ -18,7 +18,7 @@ import {
   updatePasswordSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
-} from '@/validation/user.js';
+} from '@/validation/users.validation.js';
 
 const router = Router();
 

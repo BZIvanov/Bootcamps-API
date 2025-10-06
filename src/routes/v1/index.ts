@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import authRoutes from './auth.js';
-import userRoutes from './user.js';
-import bootcampRoutes from './bootcamps.js';
-import courseRoutes from './courses.js';
-import reviewRoutes from './reviews.js';
+import authRoutes from './auth.route.js';
+import userRoutes from './users.route.js';
+import bootcampRoutes from './bootcamps.route.js';
+import courseRoutes from './courses.route.js';
+import reviewRoutes from './reviews.route.js';
 
 const router = Router();
 

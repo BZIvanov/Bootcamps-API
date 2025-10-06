@@ -1,8 +1,8 @@
 import { Schema, model, Document } from 'mongoose';
 import validator from 'validator';
-import { requireCJS } from '@/utils/cjsRequire.js';
-import { Models } from '@/constants/models.js';
-import Course from './course.js';
+import { requireCJS } from '@/utils/cjsRequire.util.js';
+import { Models } from '@/constants/model.constants.js';
+import Course from './course.model.js';
 
 const slugify = requireCJS('slugify');
 

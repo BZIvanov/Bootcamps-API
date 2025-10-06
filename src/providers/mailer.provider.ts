@@ -1,5 +1,5 @@
 import nodemailer, { Transporter, SendMailOptions } from 'nodemailer';
-import logger from '@/config/logger.js';
+import logger from '@/config/logger.config.js';
 
 interface MailOptions {
   email: string;

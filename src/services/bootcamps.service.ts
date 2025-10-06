@@ -1,13 +1,12 @@
 import httpStatus from 'http-status';
-import Bootcamp, { IBootcamp } from '@/models/bootcamp.js';
-import Filters from '@/utils/filters.js';
-import { HttpError } from '@/utils/httpError.js';
-import { QueryString } from '@/utils/filters.js';
-import { PaginatedResult } from '@/types/common.js';
-import { getPaginationMeta } from '@/utils/pagination.js';
-import { IUser } from '@/models/user.js';
-import { CreateBootcampInput } from '@/validation/bootcamp.js';
-import { userTypes } from '@/constants/user.js';
+import { IUser } from '@/models/user.model.js';
+import Bootcamp, { IBootcamp } from '@/models/bootcamp.model.js';
+import Filters, { QueryString } from '@/utils/filters.util.js';
+import { HttpError } from '@/utils/httpError.util.js';
+import { PaginatedResult } from '@/types/common.types.js';
+import { getPaginationMeta } from '@/utils/pagination.util.js';
+import { CreateBootcampInput } from '@/validation/bootcamps.validation.js';
+import { userTypes } from '@/constants/user.constants.js';
 
 export const getBootcampsService = async (
   query: QueryString

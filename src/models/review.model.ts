@@ -1,6 +1,6 @@
 import { Schema, model, Document, Model } from 'mongoose';
-import { Models } from '@/constants/models.js';
-import Bootcamp from './bootcamp.js';
+import { Models } from '@/constants/model.constants.js';
+import Bootcamp from './bootcamp.model.js';
 
 export interface IReview extends Document {
   title: string;

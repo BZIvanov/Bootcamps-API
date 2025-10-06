@@ -5,10 +5,10 @@ import {
   createUser,
   updateUser,
   deleteUser,
-} from '@/controllers/users.js';
-import authenticate from '@/middlewares/authenticate.js';
-import authorize from '@/middlewares/authorize.js';
-import { userTypes } from '@/constants/user.js';
+} from '@/controllers/users.controller.js';
+import authenticate from '@/middlewares/authenticate.middleware.js';
+import authorize from '@/middlewares/authorize.middleware.js';
+import { userTypes } from '@/constants/user.constants.js';
 
 const router = Router({ mergeParams: true });
 

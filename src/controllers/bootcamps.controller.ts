@@ -2,16 +2,16 @@ import path from 'path';
 import { Request, Response, NextFunction } from 'express';
 import httpStatus from 'http-status';
 import { UploadedFile } from 'express-fileupload';
-import Bootcamp from '@/models/bootcamp.js';
-import { HttpError } from '@/utils/httpError.js';
-import { userTypes } from '@/constants/user.js';
-import { parseQuery } from '@/utils/parseQuery.js';
+import Bootcamp from '@/models/bootcamp.model.js';
+import { HttpError } from '@/utils/httpError.util.js';
+import { userTypes } from '@/constants/user.constants.js';
+import { parseQuery } from '@/utils/parseQuery.util.js';
 import {
   createBootcampService,
   getBootcampByIdService,
   getBootcampsService,
-} from '@/services/bootcamp.service.js';
-import { IdParam } from '@/types/http.js';
+} from '@/services/bootcamps.service.js';
+import { IdParam } from '@/types/http.types.js';
 
 /**
  * @swagger
