@@ -6,7 +6,7 @@ import { userTypes, UserRole } from '@/constants/user.js';
 import { Models } from '@/constants/models.js';
 
 export interface IUser extends Document {
-  name: string;
+  username: string;
   email: string;
   password: string;
   role: UserRole;
@@ -17,10 +17,10 @@ export interface IUser extends Document {
 
 const userSchema = new Schema<IUser>(
   {
-    name: {
+    username: {
       type: String,
       trim: true,
-      required: [true, 'Please provide a name'],
+      required: [true, 'Please provide a username'],
     },
     email: {
       type: String,

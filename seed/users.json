@@ -1,53 +1,53 @@
 [
   {
     "_id": "60400c1c148cf728f47ccff5",
-    "name": "Olivia",
+    "username": "Olivia",
     "email": "user1@mail.com",
     "password": "P@ssw0rd1",
     "role": "publisher"
   },
   {
     "_id": "60408b786ef3ae60d09fa995",
-    "name": "Liam",
+    "username": "Liam",
     "email": "user2@mail.com",
     "password": "S3cur3Key2",
     "role": "publisher"
   },
   {
     "_id": "60408fa85d070246b8ebc755",
-    "name": "Ava",
+    "username": "Ava",
     "email": "user3@mail.com",
     "password": "T3stP@ss3",
     "role": "publisher"
   },
   {
     "_id": "6161b71656f277401c47c0f5",
-    "name": "Noah",
+    "username": "Noah",
     "email": "user4@mail.com",
     "password": "R@nd0mPwd4",
     "role": "publisher"
   },
   {
     "_id": "604090aceceafa43d02f7856",
-    "name": "Emma",
+    "username": "Emma",
     "email": "user5@mail.com",
     "password": "Ex@mple56"
   },
   {
     "_id": "604257f63edd1d6418585e1b",
-    "name": "Ethan",
+    "username": "Ethan",
     "email": "user6@mail.com",
     "password": "D3moPass6"
   },
   {
     "_id": "60435a8087a35f61683a380a",
-    "name": "Sophia",
+    "username": "Sophia",
     "email": "user7@mail.com",
     "password": "Pwd@1237"
   },
   {
     "_id": "60435a8087a35f61683a380b",
-    "name": "Lucas",
+    "username": "Lucas",
     "email": "user8@mail.com",
     "password": "T3stKey88"
   }

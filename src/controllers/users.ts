@@ -112,11 +112,11 @@ export const getUser = async (
  *           schema:
  *             type: object
  *             required:
- *               - name
+ *               - username
  *               - email
  *               - password
  *             properties:
- *               name:
+ *               username:
  *                 type: string
  *               email:
  *                 type: string
@@ -136,14 +136,14 @@ export const createUser = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { name, email, password, role } = req.body;
+  const { username, email, password, role } = req.body;
 
   const existingUser = await User.findOne({ email });
   if (existingUser) {
     return next(new HttpError(httpStatus.BAD_REQUEST, 'Email already exists'));
   }
 
-  const user = await User.create({ name, email, password, role });
+  const user = await User.create({ username, email, password, role });
 
   const userResponse = user.toObject();
 
@@ -170,7 +170,7 @@ export const createUser = async (
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               username:
  *                 type: string
  *               email:
  *                 type: string
@@ -186,11 +186,11 @@ export const updateUser = async (
   next: NextFunction
 ) => {
   const { id } = req.params;
-  const { name, email } = req.body;
+  const { username, email } = req.body;
 
   const fieldsToUpdate: Partial<IUser> = {};
-  if (name) {
-    fieldsToUpdate.name = name;
+  if (username) {
+    fieldsToUpdate.username = username;
   }
   if (email) {
     fieldsToUpdate.email = email;

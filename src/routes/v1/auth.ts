@@ -15,6 +15,9 @@ import {
   registerUserSchema,
   loginUserSchema,
   updateUserSchema,
+  updatePasswordSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
 } from '@/validation/user.js';
 
 const router = Router();
@@ -26,8 +29,14 @@ router.route('/me').get(authenticate, me);
 router
   .route('/update-details')
   .put(authenticate, validateRequest(updateUserSchema), updateUser);
-router.route('/update-password').put(authenticate, updatePassword);
-router.route('/forgot-password').post(forgotPassword);
-router.route('/reset-password/:resettoken').put(resetPassword);
+router
+  .route('/update-password')
+  .put(authenticate, validateRequest(updatePasswordSchema), updatePassword);
+router
+  .route('/forgot-password')
+  .post(validateRequest(forgotPasswordSchema), forgotPassword);
+router
+  .route('/reset-password/:resettoken')
+  .put(validateRequest(resetPasswordSchema), resetPassword);
 
 export default router;
