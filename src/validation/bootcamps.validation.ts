@@ -1,4 +1,13 @@
 import { z } from 'zod';
+import { mongoId } from './common.validation.js';
+
+const bootcampIdParamSchema = z.object({
+  params: z.object({
+    bootcampId: mongoId,
+  }),
+});
+
+export type BootcampIdParams = z.infer<typeof bootcampIdParamSchema>['params'];
 
 export const createBootcampSchema = z.object({
   body: z.object({
@@ -20,9 +29,9 @@ export const createBootcampSchema = z.object({
   }),
 });
 
-export type CreateBootcampInput = z.infer<typeof createBootcampSchema>['body'];
+export type CreateBootcampBody = z.infer<typeof createBootcampSchema>['body'];
 
-export const updateBootcampSchema = z.object({
+export const updateBootcampSchema = bootcampIdParamSchema.extend({
   body: z.object({
     name: z.string().min(3).max(50).optional(),
     description: z.string().min(10).max(500).optional(),
@@ -44,4 +53,4 @@ export const updateBootcampSchema = z.object({
   }),
 });
 
-export type UpdateBootcampInput = z.infer<typeof updateBootcampSchema>['body'];
+export type UpdateBootcampBody = z.infer<typeof updateBootcampSchema>['body'];

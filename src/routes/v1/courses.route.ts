@@ -10,7 +10,10 @@ import authenticate from '@/middlewares/authenticate.middleware.js';
 import authorize from '@/middlewares/authorize.middleware.js';
 import { userTypes } from '@/constants/user.constants.js';
 import { validateRequest } from '@/middlewares/validateRequest.middleware.js';
-import { createCourseSchema } from '@/validation/courses.validation.js';
+import {
+  createCourseSchema,
+  updateCourseSchema,
+} from '@/validation/courses.validation.js';
 
 const router = Router({ mergeParams: true });
 
@@ -24,11 +27,12 @@ router
     createCourse
   );
 router
-  .route('/:id')
+  .route('/:courseId')
   .get(getCourse)
   .put(
     authenticate,
     authorize(userTypes.PUBLISHER, userTypes.ADMIN),
+    validateRequest(updateCourseSchema),
     updateCourse
   )
   .delete(

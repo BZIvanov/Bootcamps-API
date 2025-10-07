@@ -11,7 +11,10 @@ import authenticate from '@/middlewares/authenticate.middleware.js';
 import authorize from '@/middlewares/authorize.middleware.js';
 import { validateRequest } from '@/middlewares/validateRequest.middleware.js';
 import { userTypes } from '@/constants/user.constants.js';
-import { createBootcampSchema } from '@/validation/bootcamps.validation.js';
+import {
+  createBootcampSchema,
+  updateBootcampSchema,
+} from '@/validation/bootcamps.validation.js';
 import coursesRouter from './courses.route.js';
 import reviewsRouter from './reviews.route.js';
 
@@ -31,11 +34,12 @@ router
     createBootcamp
   );
 router
-  .route('/:id')
+  .route('/:bootcampId')
   .get(getBootcamp)
   .put(
     authenticate,
     authorize(userTypes.PUBLISHER, userTypes.ADMIN),
+    validateRequest(updateBootcampSchema),
     updateBootcamp
   )
   .delete(
@@ -44,7 +48,7 @@ router
     deleteBootcamp
   );
 router
-  .route('/:id/photo')
+  .route('/:bootcampId/photo')
   .put(
     authenticate,
     authorize(userTypes.PUBLISHER, userTypes.ADMIN),

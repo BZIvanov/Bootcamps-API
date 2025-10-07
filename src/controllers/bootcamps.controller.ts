@@ -11,7 +11,7 @@ import {
   updateBootcampService,
   uploadBootcampPhotoService,
 } from '@/services/bootcamps.service.js';
-import type { IdParam } from '@/types/http.types.js';
+import type { BootcampIdParams } from '@/validation/bootcamps.validation.js';
 
 /**
  * @swagger
@@ -72,8 +72,11 @@ export const getBootcamps = async (req: Request, res: Response) => {
  *       404:
  *         description: Bootcamp not found
  */
-export const getBootcamp = async (req: Request<IdParam>, res: Response) => {
-  const bootcamp = await getBootcampByIdService(req.params.id);
+export const getBootcamp = async (
+  req: Request<BootcampIdParams>,
+  res: Response
+) => {
+  const bootcamp = await getBootcampByIdService(req.params.bootcampId);
 
   res.status(httpStatus.OK).json({ success: true, data: bootcamp });
 };
@@ -100,7 +103,6 @@ export const getBootcamp = async (req: Request<IdParam>, res: Response) => {
  *             averageRating: 8.5
  *             averageCost: 12000
  *             photo: "bootcamp.jpg"
- *             user: "64f3a1b7e5a1f1b2c3d4e5f6"
  *     responses:
  *       201:
  *         description: Bootcamp created successfully
@@ -143,7 +145,6 @@ export const createBootcamp = async (req: Request, res: Response) => {
  *             averageRating: 8.5
  *             averageCost: 12000
  *             photo: "bootcamp.jpg"
- *             user: "64f3a1b7e5a1f1b2c3d4e5f6"
  *     responses:
  *       200:
  *         description: Bootcamp updated successfully
@@ -152,9 +153,13 @@ export const createBootcamp = async (req: Request, res: Response) => {
  *       404:
  *         description: Bootcamp not found
  */
-export const updateBootcamp = async (req: Request<IdParam>, res: Response) => {
+export const updateBootcamp = async (
+  req: Request<BootcampIdParams>,
+  res: Response
+) => {
+  console.log('BID', req.params.bootcampId);
   const bootcamp = await updateBootcampService(
-    req.params.id,
+    req.params.bootcampId,
     req.user,
     req.body
   );
@@ -184,8 +189,11 @@ export const updateBootcamp = async (req: Request<IdParam>, res: Response) => {
  *       404:
  *         description: Bootcamp not found
  */
-export const deleteBootcamp = async (req: Request<IdParam>, res: Response) => {
-  await deleteBootcampService(req.params.id, req.user!);
+export const deleteBootcamp = async (
+  req: Request<BootcampIdParams>,
+  res: Response
+) => {
+  await deleteBootcampService(req.params.bootcampId, req.user);
 
   res.status(httpStatus.OK).json({ success: true });
 };
@@ -231,7 +239,7 @@ export const deleteBootcamp = async (req: Request<IdParam>, res: Response) => {
  *         description: Upload failed
  */
 export const bootcampPhotoUpload = async (
-  req: Request<IdParam>,
+  req: Request<BootcampIdParams>,
   res: Response
 ) => {
   const file = req.files?.imageFile;
@@ -241,7 +249,7 @@ export const bootcampPhotoUpload = async (
   }
 
   const uploadedFileName = await uploadBootcampPhotoService(
-    req.params.id,
+    req.params.bootcampId,
     file as UploadedFile,
     req.user
   );

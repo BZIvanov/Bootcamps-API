@@ -10,8 +10,8 @@ import { HttpError } from '@/utils/httpError.util.js';
 import type { PaginatedResult } from '@/types/common.types.js';
 import { getPaginationMeta } from '@/utils/pagination.util.js';
 import type {
-  CreateBootcampInput,
-  UpdateBootcampInput,
+  CreateBootcampBody,
+  UpdateBootcampBody,
 } from '@/validation/bootcamps.validation.js';
 import { userTypes } from '@/constants/user.constants.js';
 
@@ -59,7 +59,7 @@ export const getBootcampByIdService = async (
 
 export const createBootcampService = async (
   user: IUser,
-  data: CreateBootcampInput
+  data: CreateBootcampBody
 ): Promise<IBootcamp> => {
   // Check if this user already published a bootcamp (unless admin)
   const existingBootcamp = await Bootcamp.findOne({ user: user.id });
@@ -78,7 +78,7 @@ export const createBootcampService = async (
 export const updateBootcampService = async (
   id: string,
   user: IUser,
-  data: UpdateBootcampInput
+  data: UpdateBootcampBody
 ): Promise<IBootcamp> => {
   const bootcamp = await Bootcamp.findById(id);
 

@@ -1,15 +1,14 @@
-import type { Request, Response, NextFunction } from 'express';
+import type { Request, Response } from 'express';
 import httpStatus from 'http-status';
-import Course from '@/models/course.model.js';
-import { HttpError } from '@/utils/httpError.util.js';
-import { userTypes } from '@/constants/user.constants.js';
 import { parseQuery } from '@/utils/parseQuery.util.js';
 import {
   createCourseService,
   getCourseByIdService,
   getCoursesService,
+  updateCourseService,
+  deleteCourseByIdService,
 } from '@/services/courses.service.js';
-import type { IdParam } from '@/types/http.types.js';
+import type { CourseIdParams } from '@/validation/courses.validation.js';
 
 /**
  * @swagger
@@ -86,8 +85,11 @@ export const getCourses = async (req: Request, res: Response) => {
  *       404:
  *         description: Course not found
  */
-export const getCourse = async (req: Request<IdParam>, res: Response) => {
-  const course = await getCourseByIdService(req.params.id);
+export const getCourse = async (
+  req: Request<CourseIdParams>,
+  res: Response
+) => {
+  const course = await getCourseByIdService(req.params.courseId);
 
   res.status(httpStatus.OK).json({ success: true, data: course });
 };
@@ -189,37 +191,14 @@ export const createCourse = async (req: Request, res: Response) => {
  *         description: Course not found
  */
 export const updateCourse = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
+  req: Request<CourseIdParams>,
+  res: Response
 ) => {
-  let course = await Course.findById(req.params.id);
-
-  if (!course) {
-    return next(
-      new HttpError(
-        httpStatus.NOT_FOUND,
-        `Course with id: ${req.params.id} not found.`
-      )
-    );
-  }
-
-  if (
-    course.user.toString() !== req.user.id &&
-    req.user.role !== userTypes.ADMIN
-  ) {
-    return next(
-      new HttpError(
-        httpStatus.UNAUTHORIZED,
-        `User with id: ${req.user.id} is not allowed to update course with id ${course._id}`
-      )
-    );
-  }
-
-  course = await Course.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
+  const course = await updateCourseService(
+    req.params.courseId,
+    req.body,
+    req.user
+  );
 
   res.status(httpStatus.OK).json({ success: true, data: course });
 };
@@ -247,35 +226,10 @@ export const updateCourse = async (
  *         description: Course not found
  */
 export const deleteCourse = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
+  req: Request<CourseIdParams>,
+  res: Response
 ) => {
-  const course = await Course.findById(req.params.id);
-
-  if (!course) {
-    return next(
-      new HttpError(
-        httpStatus.NOT_FOUND,
-        `Course with id: ${req.params.id} not found.`
-      )
-    );
-  }
-
-  if (
-    course.user.toString() !== req.user.id &&
-    req.user.role !== userTypes.ADMIN
-  ) {
-    return next(
-      new HttpError(
-        httpStatus.UNAUTHORIZED,
-        `User with id: ${req.user.id} is not allowed to delete course with id ${course._id}`
-      )
-    );
-  }
-
-  // here is important to use remove method to trigger remove hook in the model
-  await course.deleteOne();
+  await deleteCourseByIdService(req.params.courseId, req.user);
 
   res.status(httpStatus.OK).json({ success: true });
 };
