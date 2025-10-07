@@ -9,6 +9,8 @@ import {
 import authenticate from '@/middlewares/authenticate.middleware.js';
 import authorize from '@/middlewares/authorize.middleware.js';
 import { userTypes } from '@/constants/user.constants.js';
+import { validateRequest } from '@/middlewares/validateRequest.middleware.js';
+import { createCourseSchema } from '@/validation/courses.validation.js';
 
 const router = Router({ mergeParams: true });
 
@@ -18,6 +20,7 @@ router
   .post(
     authenticate,
     authorize(userTypes.PUBLISHER, userTypes.ADMIN),
+    validateRequest(createCourseSchema),
     createCourse
   );
 router

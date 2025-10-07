@@ -1,15 +1,15 @@
-import path from 'path';
-import type { Request, Response, NextFunction } from 'express';
+import type { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import type { UploadedFile } from 'express-fileupload';
-import Bootcamp from '@/models/bootcamp.model.js';
 import { HttpError } from '@/utils/httpError.util.js';
-import { userTypes } from '@/constants/user.constants.js';
 import { parseQuery } from '@/utils/parseQuery.util.js';
 import {
   createBootcampService,
+  deleteBootcampService,
   getBootcampByIdService,
   getBootcampsService,
+  updateBootcampService,
+  uploadBootcampPhotoService,
 } from '@/services/bootcamps.service.js';
 import type { IdParam } from '@/types/http.types.js';
 
@@ -152,38 +152,12 @@ export const createBootcamp = async (req: Request, res: Response) => {
  *       404:
  *         description: Bootcamp not found
  */
-export const updateBootcamp = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  let bootcamp = await Bootcamp.findById(req.params.id);
-
-  if (!bootcamp) {
-    return next(
-      new HttpError(
-        httpStatus.NOT_FOUND,
-        `Bootcamp with id: ${req.params.id} not found`
-      )
-    );
-  }
-
-  if (
-    bootcamp.user.toString() !== req.user.id &&
-    req.user.role !== userTypes.ADMIN
-  ) {
-    return next(
-      new HttpError(
-        httpStatus.UNAUTHORIZED,
-        `User with id: ${req.user.id} is not allowed to update this resource`
-      )
-    );
-  }
-
-  bootcamp = await Bootcamp.findOneAndUpdate({ _id: req.params.id }, req.body, {
-    new: true,
-    runValidators: true,
-  });
+export const updateBootcamp = async (req: Request<IdParam>, res: Response) => {
+  const bootcamp = await updateBootcampService(
+    req.params.id,
+    req.user,
+    req.body
+  );
 
   res.status(httpStatus.OK).json({ success: true, data: bootcamp });
 };
@@ -210,37 +184,8 @@ export const updateBootcamp = async (
  *       404:
  *         description: Bootcamp not found
  */
-export const deleteBootcamp = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  // findByIdAndDelete will not trigger schema middlewares, so here later remove method is used.
-  const bootcamp = await Bootcamp.findById(req.params.id);
-
-  if (!bootcamp) {
-    return next(
-      new HttpError(
-        httpStatus.NOT_FOUND,
-        `Bootcamp with id: ${req.params.id} not found`
-      )
-    );
-  }
-
-  if (
-    bootcamp.user.toString() !== req.user.id &&
-    req.user.role !== userTypes.ADMIN
-  ) {
-    return next(
-      new HttpError(
-        httpStatus.UNAUTHORIZED,
-        `User with id: ${req.user.id} is not allowed to delete this resource`
-      )
-    );
-  }
-
-  // deleteOne method is important to be used like this to trigger the pre method of the schema
-  await bootcamp.deleteOne();
+export const deleteBootcamp = async (req: Request<IdParam>, res: Response) => {
+  await deleteBootcampService(req.params.id, req.user!);
 
   res.status(httpStatus.OK).json({ success: true });
 };
@@ -286,67 +231,20 @@ export const deleteBootcamp = async (
  *         description: Upload failed
  */
 export const bootcampPhotoUpload = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
+  req: Request<IdParam>,
+  res: Response
 ) => {
-  const bootcamp = await Bootcamp.findById(req.params.id);
+  const file = req.files?.imageFile;
 
-  if (!bootcamp) {
-    return next(
-      new HttpError(
-        httpStatus.NOT_FOUND,
-        `Bootcamp with id: ${req.params.id} not found`
-      )
-    );
+  if (!file) {
+    throw new HttpError(httpStatus.BAD_REQUEST, 'Please upload a photo.');
   }
 
-  if (
-    bootcamp.user.toString() !== req.user.id &&
-    req.user.role !== userTypes.ADMIN
-  ) {
-    return next(
-      new HttpError(
-        httpStatus.UNAUTHORIZED,
-        `User with id: ${req.user.id} is not allowed to update this resource`
-      )
-    );
-  }
+  const uploadedFileName = await uploadBootcampPhotoService(
+    req.params.id,
+    file as UploadedFile,
+    req.user
+  );
 
-  if (!req.files?.imageFile) {
-    return next(
-      new HttpError(httpStatus.BAD_REQUEST, 'Please upload a photo.')
-    );
-  }
-
-  const file = req.files.imageFile as UploadedFile;
-
-  if (!file.mimetype.startsWith('image')) {
-    return next(
-      new HttpError(httpStatus.BAD_REQUEST, 'Please upload an image file.')
-    );
-  }
-  if (file.size > 1 * 1024 * 1024) {
-    return next(
-      new HttpError(
-        httpStatus.BAD_REQUEST,
-        'File size should be less than 1MB.'
-      )
-    );
-  }
-
-  const fileName = `photo_${bootcamp._id}${path.extname(file.name)}`;
-
-  file.mv(`./public/uploads/${fileName}`, async (err) => {
-    if (err) {
-      return next(
-        new HttpError(httpStatus.INTERNAL_SERVER_ERROR, 'Upload failed')
-      );
-    }
-
-    bootcamp.photo = fileName;
-    await bootcamp.save();
-
-    res.status(httpStatus.OK).json({ success: true, data: fileName });
-  });
+  res.status(httpStatus.OK).json({ success: true, data: uploadedFileName });
 };
