@@ -12,6 +12,7 @@ import authorize from '@/middlewares/authorize.middleware.js';
 import { validateRequest } from '@/middlewares/validateRequest.middleware.js';
 import { userTypes } from '@/constants/user.constants.js';
 import {
+  bootcampIdParamSchema,
   createBootcampSchema,
   updateBootcampSchema,
 } from '@/validation/bootcamps.validation.js';
@@ -45,6 +46,7 @@ router
   .delete(
     authenticate,
     authorize(userTypes.PUBLISHER, userTypes.ADMIN),
+    validateRequest(bootcampIdParamSchema),
     deleteBootcamp
   );
 router
@@ -52,6 +54,7 @@ router
   .put(
     authenticate,
     authorize(userTypes.PUBLISHER, userTypes.ADMIN),
+    validateRequest(bootcampIdParamSchema),
     bootcampPhotoUpload
   );
 

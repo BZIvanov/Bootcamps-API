@@ -11,7 +11,12 @@ import {
   updateBootcampService,
   uploadBootcampPhotoService,
 } from '@/services/bootcamps.service.js';
-import type { BootcampIdParams } from '@/validation/bootcamps.validation.js';
+import type {
+  BootcampIdParams,
+  CreateBootcampBody,
+  UpdateBootcampBody,
+  UpdateBootcampParams,
+} from '@/validation/bootcamps.validation.js';
 
 /**
  * @swagger
@@ -111,7 +116,10 @@ export const getBootcamp = async (
  *       401:
  *         description: Unauthorized
  */
-export const createBootcamp = async (req: Request, res: Response) => {
+export const createBootcamp = async (
+  req: Request<unknown, unknown, CreateBootcampBody>,
+  res: Response
+) => {
   const bootcamp = await createBootcampService(req.user, req.body);
 
   res.status(httpStatus.CREATED).json({ success: true, data: bootcamp });
@@ -154,10 +162,9 @@ export const createBootcamp = async (req: Request, res: Response) => {
  *         description: Bootcamp not found
  */
 export const updateBootcamp = async (
-  req: Request<BootcampIdParams>,
+  req: Request<UpdateBootcampParams, unknown, UpdateBootcampBody>,
   res: Response
 ) => {
-  console.log('BID', req.params.bootcampId);
   const bootcamp = await updateBootcampService(
     req.params.bootcampId,
     req.user,

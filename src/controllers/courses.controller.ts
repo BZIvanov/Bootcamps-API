@@ -8,7 +8,13 @@ import {
   updateCourseService,
   deleteCourseByIdService,
 } from '@/services/courses.service.js';
-import type { CourseIdParams } from '@/validation/courses.validation.js';
+import type {
+  CourseIdParams,
+  CreateCourseBody,
+  CreateCourseParams,
+  UpdateCourseBody,
+  UpdateCourseParams,
+} from '@/validation/courses.validation.js';
 
 /**
  * @swagger
@@ -54,11 +60,12 @@ import type { CourseIdParams } from '@/validation/courses.validation.js';
  *         description: List of courses for a specific bootcamp
  */
 export const getCourses = async (req: Request, res: Response) => {
-  const { bootcampId } = req.params;
-
   const query = parseQuery(req.query);
 
-  const { courses, meta } = await getCoursesService(query, bootcampId);
+  const { courses, meta } = await getCoursesService(
+    query,
+    req.params.bootcampId
+  );
 
   res.status(httpStatus.OK).json({
     success: true,
@@ -140,9 +147,12 @@ export const getCourse = async (
  *       404:
  *         description: Bootcamp not found
  */
-export const createCourse = async (req: Request, res: Response) => {
+export const createCourse = async (
+  req: Request<CreateCourseParams, unknown, CreateCourseBody>,
+  res: Response
+) => {
   const course = await createCourseService(
-    req.params.bootcampId!,
+    req.params.bootcampId,
     req.body,
     req.user
   );
@@ -191,7 +201,7 @@ export const createCourse = async (req: Request, res: Response) => {
  *         description: Course not found
  */
 export const updateCourse = async (
-  req: Request<CourseIdParams>,
+  req: Request<UpdateCourseParams, unknown, UpdateCourseBody>,
   res: Response
 ) => {
   const course = await updateCourseService(

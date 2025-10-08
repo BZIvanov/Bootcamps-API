@@ -11,6 +11,7 @@ import authorize from '@/middlewares/authorize.middleware.js';
 import { userTypes } from '@/constants/user.constants.js';
 import { validateRequest } from '@/middlewares/validateRequest.middleware.js';
 import {
+  courseIdParamSchema,
   createCourseSchema,
   updateCourseSchema,
 } from '@/validation/courses.validation.js';
@@ -38,6 +39,7 @@ router
   .delete(
     authenticate,
     authorize(userTypes.PUBLISHER, userTypes.ADMIN),
+    validateRequest(courseIdParamSchema),
     deleteCourse
   );
 

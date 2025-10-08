@@ -9,8 +9,10 @@ import {
   updateReviewService,
 } from '@/services/reviews.service.js';
 import type {
+  CreateReviewBody,
   CreateReviewParams,
   ReviewIdParams,
+  UpdateReviewBody,
   UpdateReviewParams,
 } from '@/validation/reviews.validation.js';
 
@@ -58,11 +60,12 @@ import type {
  *         description: List of reviews for a specific bootcamp
  */
 export const getReviews = async (req: Request, res: Response) => {
-  const { bootcampId } = req.params;
-
   const query = parseQuery(req.query);
 
-  const { reviews, meta } = await getReviewsService(query, bootcampId);
+  const { reviews, meta } = await getReviewsService(
+    query,
+    req.params.bootcampId
+  );
 
   res.status(httpStatus.OK).json({
     success: true,
@@ -141,7 +144,7 @@ export const getReview = async (
  *         description: Bootcamp not found
  */
 export const createReview = async (
-  req: Request<CreateReviewParams>,
+  req: Request<CreateReviewParams, unknown, CreateReviewBody>,
   res: Response
 ) => {
   const review = await createReviewService(
@@ -191,7 +194,7 @@ export const createReview = async (
  *         description: Review not found
  */
 export const updateReview = async (
-  req: Request<UpdateReviewParams>,
+  req: Request<UpdateReviewParams, unknown, UpdateReviewBody>,
   res: Response
 ) => {
   const review = await updateReviewService(

@@ -8,6 +8,10 @@ import { HttpError } from '@/utils/httpError.util.js';
 import type { IUser } from '@/models/user.model.js';
 import Bootcamp from '@/models/bootcamp.model.js';
 import { userTypes } from '@/constants/user.constants.js';
+import type {
+  CreateReviewBody,
+  UpdateReviewBody,
+} from '@/validation/reviews.validation.js';
 
 export const getReviewsService = async (
   query: QueryString,
@@ -58,7 +62,7 @@ export const getReviewByIdService = async (
 export const createReviewService = async (
   bootcampId: string,
   user: IUser,
-  data: Omit<IReview, 'user' | 'bootcamp'>
+  data: CreateReviewBody
 ): Promise<IReview> => {
   const bootcamp = await Bootcamp.findById(bootcampId);
 
@@ -81,7 +85,7 @@ export const createReviewService = async (
 export const updateReviewService = async (
   reviewId: string,
   user: IUser,
-  data: Partial<IReview>
+  data: UpdateReviewBody
 ): Promise<IReview> => {
   const review = await Review.findById(reviewId);
 

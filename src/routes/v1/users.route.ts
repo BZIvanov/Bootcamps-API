@@ -7,6 +7,8 @@ import {
 import authenticate from '@/middlewares/authenticate.middleware.js';
 import authorize from '@/middlewares/authorize.middleware.js';
 import { userTypes } from '@/constants/user.constants.js';
+import { validateRequest } from '@/middlewares/validateRequest.middleware.js';
+import { userIdParamSchema } from '@/validation/users.validation.js';
 
 const router = Router({ mergeParams: true });
 
@@ -15,6 +17,9 @@ router.use(authenticate);
 router.use(authorize(userTypes.ADMIN));
 
 router.route('/').get(getUsers);
-router.route('/:userId').get(getUser).delete(deleteUser);
+router
+  .route('/:userId')
+  .get(validateRequest(userIdParamSchema), getUser)
+  .delete(validateRequest(userIdParamSchema), deleteUser);
 
 export default router;

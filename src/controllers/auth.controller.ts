@@ -12,8 +12,13 @@ import {
   updateUserPassword,
 } from '@/services/auth.service.js';
 import type {
+  ForgotPasswordBody,
+  LoginUserBody,
+  RegisterUserBody,
   ResetPasswordBody,
   ResetPasswordParams,
+  UpdatePasswordBody,
+  UpdateUserBody,
 } from '@/validation/auth.validation.js';
 
 /**
@@ -76,7 +81,10 @@ const sendTokenResponse = (user: IUser, statusCode: number, res: Response) => {
  *       400:
  *         description: Email is already registered
  */
-export const register = async (req: Request, res: Response) => {
+export const register = async (
+  req: Request<unknown, unknown, RegisterUserBody>,
+  res: Response
+) => {
   const { username, email, password, role } = req.body;
 
   const user = await registerUser({ username, email, password, role });
@@ -115,7 +123,10 @@ export const register = async (req: Request, res: Response) => {
  *       401:
  *         description: Invalid credentials
  */
-export const login = async (req: Request, res: Response) => {
+export const login = async (
+  req: Request<unknown, unknown, LoginUserBody>,
+  res: Response
+) => {
   const { email, password } = req.body;
 
   const user = await loginUser({ email, password });
@@ -186,7 +197,10 @@ export const me = async (req: Request, res: Response) => {
  *       200:
  *         description: User updated successfully
  */
-export const updateUser = async (req: Request, res: Response) => {
+export const updateUser = async (
+  req: Request<unknown, unknown, UpdateUserBody>,
+  res: Response
+) => {
   const { username, email } = req.body;
 
   const user = await updateUserDetails(req.user.id, { username, email });
@@ -223,7 +237,10 @@ export const updateUser = async (req: Request, res: Response) => {
  *       200:
  *         description: Password updated successfully
  */
-export const updatePassword = async (req: Request, res: Response) => {
+export const updatePassword = async (
+  req: Request<unknown, unknown, UpdatePasswordBody>,
+  res: Response
+) => {
   const { currentPassword, newPassword } = req.body;
 
   const user = await updateUserPassword(req.user.id, {
@@ -257,12 +274,13 @@ export const updatePassword = async (req: Request, res: Response) => {
  *       200:
  *         description: Email sent if account exists
  */
-export const forgotPassword = async (req: Request, res: Response) => {
-  const { email } = req.body;
-
+export const forgotPassword = async (
+  req: Request<unknown, unknown, ForgotPasswordBody>,
+  res: Response
+) => {
   const baseUrl = `${req.protocol}://${req.get('host')}`;
 
-  await handleForgotPassword({ email }, baseUrl, req.log);
+  await handleForgotPassword({ email: req.body.email }, baseUrl, req.log);
 
   res.status(httpStatus.OK).json({
     success: true,

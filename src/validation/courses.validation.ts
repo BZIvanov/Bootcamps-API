@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { mongoId } from './common.validation.js';
 
-const courseIdParamSchema = z.object({
+export const courseIdParamSchema = z.object({
   params: z.object({
     courseId: mongoId,
   }),
@@ -10,6 +10,9 @@ const courseIdParamSchema = z.object({
 export type CourseIdParams = z.infer<typeof courseIdParamSchema>['params'];
 
 export const createCourseSchema = z.object({
+  params: z.object({
+    bootcampId: mongoId,
+  }),
   body: z.object({
     title: z.string().min(2),
     description: z.string().min(10),
@@ -19,9 +22,13 @@ export const createCourseSchema = z.object({
   }),
 });
 
+export type CreateCourseParams = z.infer<typeof createCourseSchema>['params'];
 export type CreateCourseBody = z.infer<typeof createCourseSchema>['body'];
 
-export const updateCourseSchema = courseIdParamSchema.extend({
+export const updateCourseSchema = z.object({
+  params: z.object({
+    courseId: mongoId,
+  }),
   body: z.object({
     title: z.string().min(2).optional(),
     description: z.string().min(10).optional(),
@@ -31,4 +38,5 @@ export const updateCourseSchema = courseIdParamSchema.extend({
   }),
 });
 
+export type UpdateCourseParams = z.infer<typeof updateCourseSchema>['params'];
 export type UpdateCourseBody = z.infer<typeof updateCourseSchema>['body'];
