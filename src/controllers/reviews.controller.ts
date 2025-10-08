@@ -70,13 +70,13 @@ export const getReviews = async (req: Request, res: Response) => {
 
 /**
  * @swagger
- * /reviews/{id}:
+ * /reviews/{reviewId}:
  *   get:
  *     summary: Get a single review by ID
  *     tags: [Reviews]
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: reviewId
  *         required: true
  *         schema:
  *           type: string
@@ -152,7 +152,7 @@ export const createReview = async (
 
 /**
  * @swagger
- * /reviews/{id}:
+ * /reviews/{reviewId}:
  *   put:
  *     summary: Update a review
  *     tags: [Reviews]
@@ -160,7 +160,7 @@ export const createReview = async (
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: reviewId
  *         required: true
  *         schema:
  *           type: string
@@ -202,7 +202,7 @@ export const updateReview = async (
 
 /**
  * @swagger
- * /reviews/{id}:
+ * /reviews/{reviewId}:
  *   delete:
  *     summary: Delete a review
  *     tags: [Reviews]
@@ -210,7 +210,7 @@ export const updateReview = async (
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: reviewId
  *         required: true
  *         schema:
  *           type: string

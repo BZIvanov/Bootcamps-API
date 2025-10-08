@@ -70,13 +70,13 @@ export const getCourses = async (req: Request, res: Response) => {
 
 /**
  * @swagger
- * /courses/{id}:
+ * /courses/{courseId}:
  *   get:
  *     summary: Get a single course by ID
  *     tags: [Courses]
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: courseId
  *         required: true
  *         schema:
  *           type: string
@@ -156,7 +156,7 @@ export const createCourse = async (
 
 /**
  * @swagger
- * /courses/{id}:
+ * /courses/{courseId}:
  *   put:
  *     summary: Update a course
  *     tags: [Courses]
@@ -164,7 +164,7 @@ export const createCourse = async (
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: courseId
  *         required: true
  *         schema:
  *           type: string
@@ -209,7 +209,7 @@ export const updateCourse = async (
 
 /**
  * @swagger
- * /courses/{id}:
+ * /courses/{courseId}:
  *   delete:
  *     summary: Delete a course
  *     tags: [Courses]
@@ -217,7 +217,7 @@ export const updateCourse = async (
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: courseId
  *         required: true
  *         schema:
  *           type: string

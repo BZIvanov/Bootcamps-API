@@ -17,7 +17,7 @@ export interface IBootcamp extends Document {
   careers: string[];
   averageRating?: number;
   averageCost?: number;
-  photo: string;
+  image: string;
   user: Schema.Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
@@ -81,9 +81,9 @@ const bootcampSchema = new Schema(
     averageCost: {
       type: Number,
     },
-    photo: {
+    image: {
       type: String,
-      default: 'no-photo.jpg',
+      default: 'no-image.jpg',
     },
     user: {
       type: Schema.Types.ObjectId,
@@ -124,6 +124,16 @@ bootcampSchema.virtual('courses', {
   localField: '_id',
   foreignField: 'bootcamp',
   justOne: false,
+});
+
+bootcampSchema.set('toJSON', {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  transform: (_doc: any, ret: Record<string, any>) => {
+    ret.id = ret._id?.toString();
+    delete ret._id;
+    delete ret.__v;
+    return ret;
+  },
 });
 
 const Bootcamp = model<IBootcamp>(Models.BOOTCAMP, bootcampSchema);

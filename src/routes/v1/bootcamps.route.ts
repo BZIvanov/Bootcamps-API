@@ -50,7 +50,7 @@ router
     deleteBootcamp
   );
 router
-  .route('/:bootcampId/photo')
+  .route('/:bootcampId/image')
   .put(
     authenticate,
     authorize(userTypes.PUBLISHER, userTypes.ADMIN),

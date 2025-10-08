@@ -76,6 +76,17 @@ userSchema.methods.getResetPasswordToken = function (): string {
   return resetToken;
 };
 
+userSchema.set('toJSON', {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  transform: (_doc: any, ret: Record<string, any>) => {
+    ret.id = ret._id?.toString();
+    delete ret._id;
+    delete ret.__v;
+    delete ret.password;
+    return ret;
+  },
+});
+
 const User = model<IUser>(Models.USER, userSchema);
 
 export default User;

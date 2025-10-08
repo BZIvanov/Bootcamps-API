@@ -33,7 +33,7 @@ const sendTokenResponse = (user: IUser, statusCode: number, res: Response) => {
     .header('Authorization', `Bearer ${token}`)
     .status(statusCode)
     .cookie('token', token, options)
-    .json({ success: true });
+    .json({ success: true, data: { user, token } });
 };
 
 /**
@@ -55,10 +55,13 @@ const sendTokenResponse = (user: IUser, statusCode: number, res: Response) => {
  *             properties:
  *               username:
  *                 type: string
+ *                 minLength: 2
  *               email:
  *                 type: string
+ *                 format: email
  *               password:
  *                 type: string
+ *                 minLength: 8
  *               role:
  *                 type: string
  *                 enum: [user, publisher]
@@ -71,7 +74,9 @@ const sendTokenResponse = (user: IUser, statusCode: number, res: Response) => {
  *       201:
  *         description: User created successfully
  *       400:
- *         description: Email is already registered
+ *         description: Bad request — validation or business logic error
+ *       500:
+ *         description: Internal server error
  */
 export const register = async (
   req: Request<unknown, unknown, RegisterUserBody>,
@@ -107,8 +112,10 @@ export const register = async (
  *             properties:
  *               email:
  *                 type: string
+ *                 format: email
  *               password:
  *                 type: string
+ *                 minLength: 8
  *           example:
  *             email: john@example.com
  *             password: P@ssw0rd!
@@ -116,7 +123,7 @@ export const register = async (
  *       200:
  *         description: Login successful
  *       400:
- *         description: Missing email or password
+ *         description: Bad request — validation or business logic error
  *       401:
  *         description: Invalid credentials
  */
@@ -162,6 +169,8 @@ export const logout = async (_req: Request, res: Response) => {
  *     responses:
  *       200:
  *         description: Returns user info
+ *       401:
+ *         description: You are not logged in
  *       404:
  *         description: User not found
  */
@@ -193,6 +202,10 @@ export const me = async (req: Request, res: Response) => {
  *     responses:
  *       200:
  *         description: User updated successfully
+ *       400:
+ *         description: Invalid request data
+ *       401:
+ *         description: You are not logged in
  */
 export const updateDetails = async (
   req: Request<unknown, unknown, UpdateUserBody>,
@@ -236,6 +249,10 @@ export const updateDetails = async (
  *     responses:
  *       200:
  *         description: Password updated successfully
+ *       400:
+ *         description Incorrect data
+ *       401:
+ *         description Authentication failed
  */
 export const updatePassword = async (
   req: Request<unknown, unknown, UpdatePasswordBody>,
@@ -325,18 +342,8 @@ export const forgotPassword = async (
  *     responses:
  *       200:
  *         description: Password reset successfully
- *         content:
- *           application/json:
- *             example:
- *               success: true
- *               message: "Password has been reset successfully"
  *       400:
- *         description: Invalid or expired reset token
- *         content:
- *           application/json:
- *             example:
- *               success: false
- *               message: "Invalid or expired reset token"
+ *         description: Invalid or expired reset token or bad data
  */
 export const resetPassword = async (
   req: Request<ResetPasswordParams, unknown, ResetPasswordBody>,

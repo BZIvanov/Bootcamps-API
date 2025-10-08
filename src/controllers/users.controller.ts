@@ -52,13 +52,13 @@ export const getUsers = async (req: Request, res: Response) => {
 
 /**
  * @swagger
- * /users/{id}:
+ * /users/{userId}:
  *   get:
  *     summary: Get a single user by ID
  *     tags: [Users]
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: userId
  *         required: true
  *         schema:
  *           type: string
@@ -76,13 +76,13 @@ export const getUser = async (req: Request<UserIdParams>, res: Response) => {
 
 /**
  * @swagger
- * /users/{id}:
+ * /users/{userId}:
  *   delete:
  *     summary: Delete a user
  *     tags: [Users]
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: userId
  *         required: true
  *         schema:
  *           type: string

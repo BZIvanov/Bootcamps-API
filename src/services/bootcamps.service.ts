@@ -1,3 +1,4 @@
+import fs from 'fs';
 import path from 'path';
 import httpStatus from 'http-status';
 import type { UploadedFile } from 'express-fileupload';
@@ -150,7 +151,7 @@ export const uploadBootcampImage = async (
   if (bootcamp.user.toString() !== user.id && user.role !== userTypes.ADMIN) {
     throw new HttpError(
       httpStatus.UNAUTHORIZED,
-      `User with id: ${user.id} is not allowed to upload a photo for this resource`
+      `User with id: ${user.id} is not allowed to upload an image for this resource`
     );
   }
 
@@ -166,12 +167,17 @@ export const uploadBootcampImage = async (
     );
   }
 
-  const fileName = `photo_${bootcamp._id}${path.extname(file.name)}`;
-  const uploadPath = path.join(process.cwd(), 'public', 'uploads', fileName);
+  const fileName = `image_${bootcamp._id}${path.extname(file.name)}`;
+  const uploadDir = path.join(process.cwd(), 'public', 'uploads');
+  const uploadPath = path.join(uploadDir, fileName);
+
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  }
 
   await file.mv(uploadPath);
 
-  bootcamp.photo = fileName;
+  bootcamp.image = fileName;
   await bootcamp.save();
 
   return fileName;

@@ -54,13 +54,13 @@ export const getBootcamps = async (req: Request, res: Response) => {
 
 /**
  * @swagger
- * /bootcamps/{id}:
+ * /bootcamps/{bootcampId}:
  *   get:
  *     summary: Get a single bootcamp by ID
  *     tags: [Bootcamps]
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: bootcampId
  *         required: true
  *         schema:
  *           type: string
@@ -100,9 +100,7 @@ export const getBootcamp = async (
  *             phone: "(123) 456-7890"
  *             address: "123 Main St, San Francisco, CA"
  *             careers: ["Web Development", "UI/UX"]
- *             averageRating: 8.5
- *             averageCost: 12000
- *             photo: "bootcamp.jpg"
+ *             image: "bootcamp.jpg"
  *     responses:
  *       201:
  *         description: Bootcamp created successfully
@@ -122,7 +120,7 @@ export const createBootcamp = async (
 
 /**
  * @swagger
- * /bootcamps/{id}:
+ * /bootcamps/{bootcampId}:
  *   put:
  *     summary: Update a bootcamp
  *     tags: [Bootcamps]
@@ -130,7 +128,7 @@ export const createBootcamp = async (
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: bootcampId
  *         required: true
  *         schema:
  *           type: string
@@ -145,9 +143,7 @@ export const createBootcamp = async (
  *             phone: "(123) 456-7890"
  *             address: "123 Main St, San Francisco, CA"
  *             careers: ["Web Development", "UI/UX"]
- *             averageRating: 8.5
- *             averageCost: 12000
- *             photo: "bootcamp.jpg"
+ *             image: "bootcamp.jpg"
  *     responses:
  *       200:
  *         description: Bootcamp updated successfully
@@ -171,7 +167,7 @@ export const updateBootcamp = async (
 
 /**
  * @swagger
- * /bootcamps/{id}:
+ * /bootcamps/{bootcampId}:
  *   delete:
  *     summary: Delete a bootcamp
  *     tags: [Bootcamps]
@@ -179,10 +175,11 @@ export const updateBootcamp = async (
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: bootcampId
  *         required: true
  *         schema:
  *           type: string
+ *         example: 68e6992de98c0eedb062ae8b
  *     responses:
  *       200:
  *         description: Bootcamp deleted successfully
@@ -202,9 +199,9 @@ export const deleteBootcamp = async (
 
 /**
  * @swagger
- * /bootcamps/{id}/photo:
+ * /bootcamps/{bootcampId}/image:
  *   put:
- *     summary: Upload photo for a bootcamp
+ *     summary: Upload image for a bootcamp
  *     tags: [Bootcamps]
  *     security:
  *       - bearerAuth: []
@@ -212,10 +209,11 @@ export const deleteBootcamp = async (
  *       - multipart/form-data
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: bootcampId
  *         required: true
  *         schema:
  *           type: string
+ *         example: 68e6992de98c0eedb062ae8b
  *     requestBody:
  *       required: true
  *       content:
@@ -247,7 +245,7 @@ export const uploadBootcampImage = async (
   const file = req.files?.imageFile;
 
   if (!file) {
-    throw new HttpError(httpStatus.BAD_REQUEST, 'Please upload a photo.');
+    throw new HttpError(httpStatus.BAD_REQUEST, 'Please upload an image.');
   }
 
   const uploadedFileName = await bootcampsService.uploadBootcampImage(

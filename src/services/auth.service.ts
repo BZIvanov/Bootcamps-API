@@ -82,7 +82,7 @@ export const updateUserPassword = async (
 
   const isMatch = await comparePassword(currentPassword, user.password);
   if (!isMatch) {
-    throw new HttpError(httpStatus.UNAUTHORIZED, 'Incorrect password');
+    throw new HttpError(httpStatus.BAD_REQUEST, 'Incorrect password');
   }
 
   user.password = newPassword;
@@ -96,6 +96,7 @@ export const forgotUserPassword = async (
   baseUrl: string,
   logger: Logger
 ): Promise<void> => {
+  // it should be the user's email
   const { email } = input;
 
   const user = await User.findOne({ email });
