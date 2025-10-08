@@ -1,13 +1,7 @@
 import type { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import { parseQuery } from '@/utils/parseQuery.util.js';
-import {
-  createReviewService,
-  deleteReviewService,
-  getReviewByIdService,
-  getReviewsService,
-  updateReviewService,
-} from '@/services/reviews.service.js';
+import * as reviewsService from '@/services/reviews.service.js';
 import type {
   CreateReviewBody,
   CreateReviewParams,
@@ -62,7 +56,7 @@ import type {
 export const getReviews = async (req: Request, res: Response) => {
   const query = parseQuery(req.query);
 
-  const { reviews, meta } = await getReviewsService(
+  const { reviews, meta } = await reviewsService.getReviews(
     query,
     req.params.bootcampId
   );
@@ -96,7 +90,7 @@ export const getReview = async (
   req: Request<ReviewIdParams>,
   res: Response
 ) => {
-  const review = await getReviewByIdService(req.params.reviewId);
+  const review = await reviewsService.getReviewById(req.params.reviewId);
 
   res.status(httpStatus.OK).json({ success: true, data: review });
 };
@@ -147,7 +141,7 @@ export const createReview = async (
   req: Request<CreateReviewParams, unknown, CreateReviewBody>,
   res: Response
 ) => {
-  const review = await createReviewService(
+  const review = await reviewsService.createReview(
     req.params.bootcampId,
     req.user,
     req.body
@@ -197,7 +191,7 @@ export const updateReview = async (
   req: Request<UpdateReviewParams, unknown, UpdateReviewBody>,
   res: Response
 ) => {
-  const review = await updateReviewService(
+  const review = await reviewsService.updateReview(
     req.params.reviewId,
     req.user,
     req.body
@@ -232,7 +226,7 @@ export const deleteReview = async (
   req: Request<ReviewIdParams>,
   res: Response
 ) => {
-  await deleteReviewService(req.params.reviewId, req.user);
+  await reviewsService.deleteReview(req.params.reviewId, req.user);
 
   res.status(httpStatus.OK).json({ success: true });
 };

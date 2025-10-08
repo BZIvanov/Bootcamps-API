@@ -7,7 +7,7 @@ import type { QueryString } from '@/utils/filters.util.js';
 import type { IUser } from '@/models/user.model.js';
 import { HttpError } from '@/utils/httpError.util.js';
 
-export const getUsersService = async (
+export const getUsers = async (
   query: QueryString
 ): Promise<PaginatedResult<IUser>> => {
   const filters = new Filters<IUser>(User.find(), query)
@@ -31,7 +31,7 @@ export const getUsersService = async (
   };
 };
 
-export const getUserByIdService = async (id: string): Promise<IUser> => {
+export const getUserById = async (id: string): Promise<IUser> => {
   const user = await User.findById(id);
 
   if (!user) {
@@ -41,7 +41,7 @@ export const getUserByIdService = async (id: string): Promise<IUser> => {
   return user;
 };
 
-export const deleteUserService = async (userId: string): Promise<void> => {
+export const deleteUser = async (userId: string): Promise<void> => {
   const user = await User.findById(userId);
 
   if (!user) {

@@ -91,7 +91,7 @@ export const updateUserPassword = async (
   return user;
 };
 
-export const handleForgotPassword = async (
+export const forgotUserPassword = async (
   input: ForgotPasswordBody,
   baseUrl: string,
   logger: Logger
@@ -132,7 +132,7 @@ export const handleForgotPassword = async (
   }
 };
 
-export const handleResetPassword = async (
+export const resetUserPassword = async (
   params: ResetPasswordParams,
   body: ResetPasswordBody
 ): Promise<IUser> => {

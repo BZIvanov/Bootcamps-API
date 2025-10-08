@@ -3,14 +3,7 @@ import httpStatus from 'http-status';
 import type { UploadedFile } from 'express-fileupload';
 import { HttpError } from '@/utils/httpError.util.js';
 import { parseQuery } from '@/utils/parseQuery.util.js';
-import {
-  createBootcampService,
-  deleteBootcampService,
-  getBootcampByIdService,
-  getBootcampsService,
-  updateBootcampService,
-  uploadBootcampPhotoService,
-} from '@/services/bootcamps.service.js';
+import * as bootcampsService from '@/services/bootcamps.service.js';
 import type {
   BootcampIdParams,
   CreateBootcampBody,
@@ -51,7 +44,7 @@ import type {
 export const getBootcamps = async (req: Request, res: Response) => {
   const query = parseQuery(req.query);
 
-  const result = await getBootcampsService(query);
+  const result = await bootcampsService.getAllBootcamps(query);
 
   res.status(httpStatus.OK).json({
     success: true,
@@ -81,7 +74,9 @@ export const getBootcamp = async (
   req: Request<BootcampIdParams>,
   res: Response
 ) => {
-  const bootcamp = await getBootcampByIdService(req.params.bootcampId);
+  const bootcamp = await bootcampsService.getBootcampById(
+    req.params.bootcampId
+  );
 
   res.status(httpStatus.OK).json({ success: true, data: bootcamp });
 };
@@ -120,7 +115,7 @@ export const createBootcamp = async (
   req: Request<unknown, unknown, CreateBootcampBody>,
   res: Response
 ) => {
-  const bootcamp = await createBootcampService(req.user, req.body);
+  const bootcamp = await bootcampsService.createBootcamp(req.user, req.body);
 
   res.status(httpStatus.CREATED).json({ success: true, data: bootcamp });
 };
@@ -165,7 +160,7 @@ export const updateBootcamp = async (
   req: Request<UpdateBootcampParams, unknown, UpdateBootcampBody>,
   res: Response
 ) => {
-  const bootcamp = await updateBootcampService(
+  const bootcamp = await bootcampsService.updateBootcamp(
     req.params.bootcampId,
     req.user,
     req.body
@@ -200,7 +195,7 @@ export const deleteBootcamp = async (
   req: Request<BootcampIdParams>,
   res: Response
 ) => {
-  await deleteBootcampService(req.params.bootcampId, req.user);
+  await bootcampsService.deleteBootcamp(req.params.bootcampId, req.user);
 
   res.status(httpStatus.OK).json({ success: true });
 };
@@ -245,7 +240,7 @@ export const deleteBootcamp = async (
  *       500:
  *         description: Upload failed
  */
-export const bootcampPhotoUpload = async (
+export const uploadBootcampImage = async (
   req: Request<BootcampIdParams>,
   res: Response
 ) => {
@@ -255,7 +250,7 @@ export const bootcampPhotoUpload = async (
     throw new HttpError(httpStatus.BAD_REQUEST, 'Please upload a photo.');
   }
 
-  const uploadedFileName = await uploadBootcampPhotoService(
+  const uploadedFileName = await bootcampsService.uploadBootcampImage(
     req.params.bootcampId,
     file as UploadedFile,
     req.user

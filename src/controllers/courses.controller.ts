@@ -1,13 +1,7 @@
 import type { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import { parseQuery } from '@/utils/parseQuery.util.js';
-import {
-  createCourseService,
-  getCourseByIdService,
-  getCoursesService,
-  updateCourseService,
-  deleteCourseByIdService,
-} from '@/services/courses.service.js';
+import * as coursesService from '@/services/courses.service.js';
 import type {
   CourseIdParams,
   CreateCourseBody,
@@ -62,7 +56,7 @@ import type {
 export const getCourses = async (req: Request, res: Response) => {
   const query = parseQuery(req.query);
 
-  const { courses, meta } = await getCoursesService(
+  const { courses, meta } = await coursesService.getCourses(
     query,
     req.params.bootcampId
   );
@@ -96,7 +90,7 @@ export const getCourse = async (
   req: Request<CourseIdParams>,
   res: Response
 ) => {
-  const course = await getCourseByIdService(req.params.courseId);
+  const course = await coursesService.getCourseById(req.params.courseId);
 
   res.status(httpStatus.OK).json({ success: true, data: course });
 };
@@ -151,7 +145,7 @@ export const createCourse = async (
   req: Request<CreateCourseParams, unknown, CreateCourseBody>,
   res: Response
 ) => {
-  const course = await createCourseService(
+  const course = await coursesService.createCourse(
     req.params.bootcampId,
     req.body,
     req.user
@@ -204,7 +198,7 @@ export const updateCourse = async (
   req: Request<UpdateCourseParams, unknown, UpdateCourseBody>,
   res: Response
 ) => {
-  const course = await updateCourseService(
+  const course = await coursesService.updateCourse(
     req.params.courseId,
     req.body,
     req.user
@@ -239,7 +233,7 @@ export const deleteCourse = async (
   req: Request<CourseIdParams>,
   res: Response
 ) => {
-  await deleteCourseByIdService(req.params.courseId, req.user);
+  await coursesService.deleteCourseById(req.params.courseId, req.user);
 
   res.status(httpStatus.OK).json({ success: true });
 };

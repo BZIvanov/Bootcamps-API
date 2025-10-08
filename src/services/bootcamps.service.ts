@@ -15,7 +15,7 @@ import type {
 } from '@/validation/bootcamps.validation.js';
 import { userTypes } from '@/constants/user.constants.js';
 
-export const getBootcampsService = async (
+export const getAllBootcamps = async (
   query: QueryString
 ): Promise<PaginatedResult<IBootcamp>> => {
   const filters = new Filters<IBootcamp>(
@@ -42,9 +42,7 @@ export const getBootcampsService = async (
   };
 };
 
-export const getBootcampByIdService = async (
-  id: string
-): Promise<IBootcamp> => {
+export const getBootcampById = async (id: string): Promise<IBootcamp> => {
   const bootcamp = await Bootcamp.findById(id).populate('courses');
 
   if (!bootcamp) {
@@ -57,7 +55,7 @@ export const getBootcampByIdService = async (
   return bootcamp;
 };
 
-export const createBootcampService = async (
+export const createBootcamp = async (
   user: IUser,
   data: CreateBootcampBody
 ): Promise<IBootcamp> => {
@@ -75,7 +73,7 @@ export const createBootcampService = async (
   return bootcamp;
 };
 
-export const updateBootcampService = async (
+export const updateBootcamp = async (
   id: string,
   user: IUser,
   data: UpdateBootcampBody
@@ -111,7 +109,7 @@ export const updateBootcampService = async (
   return updatedBootcamp;
 };
 
-export const deleteBootcampService = async (
+export const deleteBootcamp = async (
   id: string,
   user: IUser
 ): Promise<void> => {
@@ -135,7 +133,7 @@ export const deleteBootcampService = async (
   await bootcamp.deleteOne();
 };
 
-export const uploadBootcampPhotoService = async (
+export const uploadBootcampImage = async (
   bootcampId: string,
   file: UploadedFile,
   user: IUser

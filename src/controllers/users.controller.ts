@@ -1,11 +1,7 @@
 import type { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import { parseQuery } from '@/utils/parseQuery.util.js';
-import {
-  deleteUserService,
-  getUserByIdService,
-  getUsersService,
-} from '@/services/users.service.js';
+import * as usersService from '@/services/users.service.js';
 import type { UserIdParams } from '@/validation/users.validation.js';
 
 /**
@@ -46,7 +42,7 @@ import type { UserIdParams } from '@/validation/users.validation.js';
 export const getUsers = async (req: Request, res: Response) => {
   const query = parseQuery(req.query);
 
-  const result = await getUsersService(query);
+  const result = await usersService.getUsers(query);
 
   res.status(httpStatus.OK).json({
     success: true,
@@ -73,7 +69,7 @@ export const getUsers = async (req: Request, res: Response) => {
  *         description: User not found
  */
 export const getUser = async (req: Request<UserIdParams>, res: Response) => {
-  const user = await getUserByIdService(req.params.userId);
+  const user = await usersService.getUserById(req.params.userId);
 
   res.status(httpStatus.OK).json({ success: true, data: user });
 };
@@ -97,7 +93,7 @@ export const getUser = async (req: Request<UserIdParams>, res: Response) => {
  *         description: User not found
  */
 export const deleteUser = async (req: Request<UserIdParams>, res: Response) => {
-  await deleteUserService(req.params.userId);
+  await usersService.deleteUser(req.params.userId);
 
   res.status(httpStatus.OK).json({ success: true });
 };

@@ -13,10 +13,7 @@ import type {
   UpdateReviewBody,
 } from '@/validation/reviews.validation.js';
 
-export const getReviewsService = async (
-  query: QueryString,
-  bootcampId?: string
-) => {
+export const getReviews = async (query: QueryString, bootcampId?: string) => {
   if (bootcampId) {
     // Get all courses for a specific bootcamp. TODO: Maybe it should for a course, not bootcamp?
     const reviews = await Review.find({ bootcamp: bootcampId });
@@ -41,9 +38,7 @@ export const getReviewsService = async (
   return { reviews, meta };
 };
 
-export const getReviewByIdService = async (
-  reviewId: string
-): Promise<IReview> => {
+export const getReviewById = async (reviewId: string): Promise<IReview> => {
   const review = await Review.findById(reviewId).populate({
     path: 'bootcamp',
     select: 'name description',
@@ -59,7 +54,7 @@ export const getReviewByIdService = async (
   return review;
 };
 
-export const createReviewService = async (
+export const createReview = async (
   bootcampId: string,
   user: IUser,
   data: CreateReviewBody
@@ -82,7 +77,7 @@ export const createReviewService = async (
   return review;
 };
 
-export const updateReviewService = async (
+export const updateReview = async (
   reviewId: string,
   user: IUser,
   data: UpdateReviewBody
@@ -111,7 +106,7 @@ export const updateReviewService = async (
   return updatedReview!;
 };
 
-export const deleteReviewService = async (
+export const deleteReview = async (
   reviewId: string,
   user: IUser
 ): Promise<void> => {

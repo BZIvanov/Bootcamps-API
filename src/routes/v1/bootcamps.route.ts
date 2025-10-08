@@ -5,7 +5,7 @@ import {
   createBootcamp,
   updateBootcamp,
   deleteBootcamp,
-  bootcampPhotoUpload,
+  uploadBootcampImage,
 } from '@/controllers/bootcamps.controller.js';
 import authenticate from '@/middlewares/authenticate.middleware.js';
 import authorize from '@/middlewares/authorize.middleware.js';
@@ -55,7 +55,7 @@ router
     authenticate,
     authorize(userTypes.PUBLISHER, userTypes.ADMIN),
     validateRequest(bootcampIdParamSchema),
-    bootcampPhotoUpload
+    uploadBootcampImage
   );
 
 export default router;

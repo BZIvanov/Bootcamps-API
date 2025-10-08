@@ -4,7 +4,7 @@ import {
   login,
   logout,
   me,
-  updateUser,
+  updateDetails,
   updatePassword,
   forgotPassword,
   resetPassword,
@@ -28,7 +28,7 @@ router.route('/logout').post(logout);
 router.route('/me').get(authenticate, me);
 router
   .route('/update-details')
-  .put(authenticate, validateRequest(updateUserSchema), updateUser);
+  .put(authenticate, validateRequest(updateUserSchema), updateDetails);
 router
   .route('/update-password')
   .put(authenticate, validateRequest(updatePasswordSchema), updatePassword);

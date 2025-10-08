@@ -2,15 +2,7 @@ import type { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import type { IUser } from '@/models/user.model.js';
 import { isProd } from '@/config/env.config.js';
-import {
-  handleForgotPassword,
-  handleResetPassword,
-  issueAuthToken,
-  loginUser,
-  registerUser,
-  updateUserDetails,
-  updateUserPassword,
-} from '@/services/auth.service.js';
+import * as authService from '@/services/auth.service.js';
 import type {
   ForgotPasswordBody,
   LoginUserBody,
@@ -29,7 +21,7 @@ import type {
  */
 
 const sendTokenResponse = (user: IUser, statusCode: number, res: Response) => {
-  const token = issueAuthToken(user);
+  const token = authService.issueAuthToken(user);
 
   const options = {
     expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 1 day
@@ -87,7 +79,12 @@ export const register = async (
 ) => {
   const { username, email, password, role } = req.body;
 
-  const user = await registerUser({ username, email, password, role });
+  const user = await authService.registerUser({
+    username,
+    email,
+    password,
+    role,
+  });
 
   sendTokenResponse(user, httpStatus.CREATED, res);
 };
@@ -129,7 +126,7 @@ export const login = async (
 ) => {
   const { email, password } = req.body;
 
-  const user = await loginUser({ email, password });
+  const user = await authService.loginUser({ email, password });
 
   sendTokenResponse(user, httpStatus.OK, res);
 };
@@ -197,13 +194,16 @@ export const me = async (req: Request, res: Response) => {
  *       200:
  *         description: User updated successfully
  */
-export const updateUser = async (
+export const updateDetails = async (
   req: Request<unknown, unknown, UpdateUserBody>,
   res: Response
 ) => {
   const { username, email } = req.body;
 
-  const user = await updateUserDetails(req.user.id, { username, email });
+  const user = await authService.updateUserDetails(req.user.id, {
+    username,
+    email,
+  });
 
   res.status(httpStatus.OK).json({ success: true, data: user });
 };
@@ -243,7 +243,7 @@ export const updatePassword = async (
 ) => {
   const { currentPassword, newPassword } = req.body;
 
-  const user = await updateUserPassword(req.user.id, {
+  const user = await authService.updateUserPassword(req.user.id, {
     currentPassword,
     newPassword,
   });
@@ -280,7 +280,11 @@ export const forgotPassword = async (
 ) => {
   const baseUrl = `${req.protocol}://${req.get('host')}`;
 
-  await handleForgotPassword({ email: req.body.email }, baseUrl, req.log);
+  await authService.forgotUserPassword(
+    { email: req.body.email },
+    baseUrl,
+    req.log
+  );
 
   res.status(httpStatus.OK).json({
     success: true,
@@ -338,7 +342,7 @@ export const resetPassword = async (
   req: Request<ResetPasswordParams, unknown, ResetPasswordBody>,
   res: Response
 ) => {
-  const user = await handleResetPassword(req.params, req.body);
+  const user = await authService.resetUserPassword(req.params, req.body);
 
   sendTokenResponse(user, httpStatus.OK, res);
 };

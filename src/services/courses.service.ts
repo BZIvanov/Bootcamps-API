@@ -12,10 +12,7 @@ import type { IUser } from '@/models/user.model.js';
 import Bootcamp from '@/models/bootcamp.model.js';
 import { userTypes } from '@/constants/user.constants.js';
 
-export const getCoursesService = async (
-  query: QueryString,
-  bootcampId?: string
-) => {
+export const getCourses = async (query: QueryString, bootcampId?: string) => {
   if (bootcampId) {
     // Get all courses for a specific bootcamp
     const courses = await Course.find({ bootcamp: bootcampId });
@@ -44,7 +41,7 @@ export const getCoursesService = async (
   return { courses, meta };
 };
 
-export const getCourseByIdService = async (id: string) => {
+export const getCourseById = async (id: string) => {
   const course = await Course.findById(id).populate({
     path: 'bootcamp',
     select: 'name description',
@@ -60,7 +57,7 @@ export const getCourseByIdService = async (id: string) => {
   return course;
 };
 
-export const createCourseService = async (
+export const createCourse = async (
   bootcampId: string,
   data: CreateCourseBody,
   user: IUser
@@ -90,7 +87,7 @@ export const createCourseService = async (
   return course;
 };
 
-export const updateCourseService = async (
+export const updateCourse = async (
   courseId: string,
   data: UpdateCourseBody,
   user: IUser
@@ -118,10 +115,7 @@ export const updateCourseService = async (
   return updatedCourse;
 };
 
-export const deleteCourseByIdService = async (
-  courseId: string,
-  user: IUser
-) => {
+export const deleteCourseById = async (courseId: string, user: IUser) => {
   const course = await Course.findById(courseId);
 
   if (!course) {
