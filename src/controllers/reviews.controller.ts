@@ -1,11 +1,18 @@
-import type { Request, Response, NextFunction } from 'express';
+import type { Request, Response } from 'express';
 import httpStatus from 'http-status';
-import Bootcamp from '@/models/bootcamp.model.js';
-import Review from '@/models/review.model.js';
-import Filters from '@/utils/filters.util.js';
-import { HttpError } from '@/utils/httpError.util.js';
-import { userTypes } from '@/constants/user.constants.js';
 import { parseQuery } from '@/utils/parseQuery.util.js';
+import {
+  createReviewService,
+  deleteReviewService,
+  getReviewByIdService,
+  getReviewsService,
+  updateReviewService,
+} from '@/services/reviews.service.js';
+import type {
+  CreateReviewParams,
+  ReviewIdParams,
+  UpdateReviewParams,
+} from '@/validation/reviews.validation.js';
 
 /**
  * @swagger
@@ -55,37 +62,11 @@ export const getReviews = async (req: Request, res: Response) => {
 
   const query = parseQuery(req.query);
 
-  let reviewsQuery;
-
-  if (bootcampId) {
-    reviewsQuery = Review.find({ bootcamp: bootcampId });
-  } else {
-    const filters = new Filters(
-      Review.find().populate({
-        path: 'bootcamp',
-        select: 'name description',
-      }),
-      query
-    )
-      .filter()
-      .select()
-      .sort()
-      .paginate();
-
-    reviewsQuery = filters.exec();
-  }
-
-  const reviews = await reviewsQuery;
-
-  const total = reviews.length;
-  const page = parseInt((req.query.page as string) || '1', 10);
-  const limit = parseInt((req.query.limit as string) || '10', 10);
+  const { reviews, meta } = await getReviewsService(query, bootcampId);
 
   res.status(httpStatus.OK).json({
     success: true,
-    total,
-    page,
-    totalPages: Math.ceil(total / limit),
+    ...meta,
     data: reviews,
   });
 };
@@ -109,23 +90,10 @@ export const getReviews = async (req: Request, res: Response) => {
  *         description: Review not found
  */
 export const getReview = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
+  req: Request<ReviewIdParams>,
+  res: Response
 ) => {
-  const review = await Review.findById(req.params.id).populate({
-    path: 'bootcamp',
-    select: 'name description',
-  });
-
-  if (!review) {
-    return next(
-      new HttpError(
-        httpStatus.NOT_FOUND,
-        `Review with id ${req.params.id} not found`
-      )
-    );
-  }
+  const review = await getReviewByIdService(req.params.reviewId);
 
   res.status(httpStatus.OK).json({ success: true, data: review });
 };
@@ -173,25 +141,14 @@ export const getReview = async (
  *         description: Bootcamp not found
  */
 export const createReview = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
+  req: Request<CreateReviewParams>,
+  res: Response
 ) => {
-  req.body.bootcamp = req.params.bootcampId;
-  req.body.user = req.user.id;
-
-  const bootcamp = await Bootcamp.findById(req.params.bootcampId);
-
-  if (!bootcamp) {
-    return next(
-      new HttpError(
-        httpStatus.NOT_FOUND,
-        `Bootcamp with id ${req.params.bootcampId} not found`
-      )
-    );
-  }
-
-  const review = await Review.create(req.body);
+  const review = await createReviewService(
+    req.params.bootcampId,
+    req.user,
+    req.body
+  );
 
   res.status(httpStatus.CREATED).json({ success: true, data: review });
 };
@@ -234,34 +191,14 @@ export const createReview = async (
  *         description: Review not found
  */
 export const updateReview = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
+  req: Request<UpdateReviewParams>,
+  res: Response
 ) => {
-  let review = await Review.findById(req.params.id);
-
-  if (!review) {
-    return next(
-      new HttpError(
-        httpStatus.NOT_FOUND,
-        `Review with id ${req.params.id} not found`
-      )
-    );
-  }
-
-  if (
-    review.user.toString() !== req.user.id &&
-    req.user.role !== userTypes.ADMIN
-  ) {
-    return next(
-      new HttpError(httpStatus.UNAUTHORIZED, 'Not authorized to update review')
-    );
-  }
-
-  review = await Review.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
+  const review = await updateReviewService(
+    req.params.reviewId,
+    req.user,
+    req.body
+  );
 
   res.status(httpStatus.OK).json({ success: true, data: review });
 };
@@ -289,31 +226,10 @@ export const updateReview = async (
  *         description: Review not found
  */
 export const deleteReview = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
+  req: Request<ReviewIdParams>,
+  res: Response
 ) => {
-  const review = await Review.findById(req.params.id);
-
-  if (!review) {
-    return next(
-      new HttpError(
-        httpStatus.NOT_FOUND,
-        `Review with id ${req.params.id} not found`
-      )
-    );
-  }
-
-  if (
-    review.user.toString() !== req.user.id &&
-    req.user.role !== userTypes.ADMIN
-  ) {
-    return next(
-      new HttpError(httpStatus.UNAUTHORIZED, 'Not authorized to delete review')
-    );
-  }
-
-  await review.deleteOne();
+  await deleteReviewService(req.params.reviewId, req.user);
 
   res.status(httpStatus.OK).json({ success: true });
 };

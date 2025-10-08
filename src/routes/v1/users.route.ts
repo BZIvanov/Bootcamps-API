@@ -2,8 +2,6 @@ import { Router } from 'express';
 import {
   getUsers,
   getUser,
-  createUser,
-  updateUser,
   deleteUser,
 } from '@/controllers/users.controller.js';
 import authenticate from '@/middlewares/authenticate.middleware.js';
@@ -16,7 +14,7 @@ const router = Router({ mergeParams: true });
 router.use(authenticate);
 router.use(authorize(userTypes.ADMIN));
 
-router.route('/').get(getUsers).post(createUser);
-router.route('/:id').get(getUser).put(updateUser).delete(deleteUser);
+router.route('/').get(getUsers);
+router.route('/:userId').get(getUser).delete(deleteUser);
 
 export default router;

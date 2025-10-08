@@ -5,18 +5,18 @@ import type { IUser } from '@/models/user.model.js';
 import User from '@/models/user.model.js';
 import { HttpError } from '@/utils/httpError.util.js';
 import type {
-  CreateUserInput,
-  LoginUserInput,
-  UpdateUserInput,
-  UpdatePasswordInput,
-  ForgotPasswordInput,
+  RegisterUserBody,
+  LoginUserBody,
+  UpdateUserBody,
+  UpdatePasswordBody,
+  ForgotPasswordBody,
   ResetPasswordParams,
   ResetPasswordBody,
-} from '@/validation/users.validation.js';
+} from '@/validation/auth.validation.js';
 import { sendEmail } from '@/providers/mailer.provider.js';
 import { generateJwtToken, comparePassword } from './authUtils.service.js';
 
-export const registerUser = async (input: CreateUserInput): Promise<IUser> => {
+export const registerUser = async (input: RegisterUserBody): Promise<IUser> => {
   const { username, email, password, role } = input;
 
   const existingUser = await User.findOne({ email });
@@ -32,7 +32,7 @@ export const issueAuthToken = (user: IUser): string => {
   return generateJwtToken(user);
 };
 
-export const loginUser = async (input: LoginUserInput): Promise<IUser> => {
+export const loginUser = async (input: LoginUserBody): Promise<IUser> => {
   const { email, password } = input;
 
   const user = await User.findOne({ email }).select('+password');
@@ -50,9 +50,9 @@ export const loginUser = async (input: LoginUserInput): Promise<IUser> => {
 
 export const updateUserDetails = async (
   userId: string,
-  input: UpdateUserInput
+  input: UpdateUserBody
 ): Promise<IUser> => {
-  const fields: Partial<UpdateUserInput> = {
+  const fields: Partial<UpdateUserBody> = {
     ...(input.username && { username: input.username }),
     ...(input.email && { email: input.email }),
   };
@@ -71,7 +71,7 @@ export const updateUserDetails = async (
 
 export const updateUserPassword = async (
   userId: string,
-  input: UpdatePasswordInput
+  input: UpdatePasswordBody
 ): Promise<IUser> => {
   const { currentPassword, newPassword } = input;
 
@@ -92,7 +92,7 @@ export const updateUserPassword = async (
 };
 
 export const handleForgotPassword = async (
-  input: ForgotPasswordInput,
+  input: ForgotPasswordBody,
   baseUrl: string,
   logger: Logger
 ): Promise<void> => {

@@ -54,7 +54,7 @@
     "http-status": "^2.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.18.2",
-    "nodemailer": "^7.0.6",
+    "nodemailer": "^7.0.9",
     "pino": "^9.11.0",
     "pino-http": "^10.5.0",
     "slugify": "^1.6.6",

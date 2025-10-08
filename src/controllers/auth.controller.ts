@@ -14,7 +14,7 @@ import {
 import type {
   ResetPasswordBody,
   ResetPasswordParams,
-} from '@/validation/users.validation.js';
+} from '@/validation/auth.validation.js';
 
 /**
  * @swagger

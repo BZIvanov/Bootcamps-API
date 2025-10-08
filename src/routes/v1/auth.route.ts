@@ -18,7 +18,7 @@ import {
   updatePasswordSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
-} from '@/validation/users.validation.js';
+} from '@/validation/auth.validation.js';
 
 const router = Router();
 
