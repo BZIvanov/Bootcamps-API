@@ -129,6 +129,10 @@ export const getReview = async (
  *                 type: number
  *                 minimum: 1
  *                 maximum: 10
+ *           example:
+ *             title: "My first course review"
+ *             text: "It is an awesome course"
+ *             rating: 9
  *     responses:
  *       201:
  *         description: Review created successfully

@@ -12,7 +12,9 @@ export interface IReview extends Document {
 }
 
 export interface IReviewModel extends Model<IReview> {
-  getAverageRating(bootcampId: Schema.Types.ObjectId | string): Promise<void>;
+  recalculateAverageRating(
+    bootcampId: Schema.Types.ObjectId | string
+  ): Promise<void>;
 }
 
 const reviewSchema = new Schema<IReview>(
@@ -50,7 +52,7 @@ const reviewSchema = new Schema<IReview>(
 // one review per user only
 reviewSchema.index({ bootcamp: 1, user: 1 }, { unique: true });
 
-reviewSchema.statics.getAverageRating = async function (
+reviewSchema.statics.recalculateAverageRating = async function (
   bootcampId: Schema.Types.ObjectId | string
 ) {
   const agg = await this.aggregate([
@@ -70,17 +72,27 @@ reviewSchema.statics.getAverageRating = async function (
 };
 
 reviewSchema.post('save', function (this: IReview) {
-  (this.constructor as IReviewModel).getAverageRating(this.bootcamp);
+  (this.constructor as IReviewModel).recalculateAverageRating(this.bootcamp);
 });
 
 reviewSchema.pre(
   'deleteOne',
   { document: true, query: false },
   function (this: IReview, next) {
-    (this.constructor as IReviewModel).getAverageRating(this.bootcamp);
+    (this.constructor as IReviewModel).recalculateAverageRating(this.bootcamp);
     next();
   }
 );
+
+reviewSchema.set('toJSON', {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  transform: (_doc: any, ret: Record<string, any>) => {
+    ret.id = ret._id?.toString();
+    delete ret._id;
+    delete ret.__v;
+    return ret;
+  },
+});
 
 const Review = model<IReview, IReviewModel>(Models.REVIEW, reviewSchema);
 

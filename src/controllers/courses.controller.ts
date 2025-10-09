@@ -133,6 +133,12 @@ export const getCourse = async (
  *               minimumSkill:
  *                 type: string
  *                 enum: [beginner, intermediate, advanced]
+ *           example:
+ *             title: "My new course"
+ *             description: "Learn quick with my new course"
+ *             weeks: 3
+ *             tuition: 1250
+ *             minimumSkill: "beginner"
  *     responses:
  *       201:
  *         description: Course created successfully
@@ -186,6 +192,12 @@ export const createCourse = async (
  *               minimumSkill:
  *                 type: string
  *                 enum: [beginner, intermediate, advanced]
+ *           example:
+ *             title: "My new updated course"
+ *             description: "Learn quick with my new course"
+ *             weeks: 4
+ *             tuition: 1450
+ *             minimumSkill: "beginner"
  *     responses:
  *       200:
  *         description: Course updated successfully

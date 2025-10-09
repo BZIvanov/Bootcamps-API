@@ -16,7 +16,7 @@ export interface ICourse extends Document {
 }
 
 export interface ICourseModel extends Model<ICourse> {
-  getAverageCost(bootcampId: Schema.Types.ObjectId): Promise<void>;
+  recalculateAverageCost(bootcampId: Schema.Types.ObjectId): Promise<void>;
 }
 
 const courseSchema = new Schema<ICourse, ICourseModel>(
@@ -57,7 +57,7 @@ const courseSchema = new Schema<ICourse, ICourseModel>(
   { timestamps: true }
 );
 
-courseSchema.statics.getAverageCost = async function (
+courseSchema.statics.recalculateAverageCost = async function (
   bootcampId: Schema.Types.ObjectId | string
 ) {
   const agg = await this.aggregate([
@@ -83,16 +83,27 @@ courseSchema.statics.getAverageCost = async function (
 
 // with the below 2 hooks we want to recalculate the average bootcamp price everytime we add or remove a course
 courseSchema.post('save', function (this: ICourse) {
-  (this.constructor as ICourseModel).getAverageCost(this.bootcamp);
+  (this.constructor as ICourseModel).recalculateAverageCost(this.bootcamp);
 });
+
 courseSchema.pre(
   'deleteOne',
   { document: true, query: false },
   function (this: ICourse, next) {
-    (this.constructor as ICourseModel).getAverageCost(this.bootcamp);
+    (this.constructor as ICourseModel).recalculateAverageCost(this.bootcamp);
     next();
   }
 );
+
+courseSchema.set('toJSON', {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  transform: (_doc: any, ret: Record<string, any>) => {
+    ret.id = ret._id?.toString();
+    delete ret._id;
+    delete ret.__v;
+    return ret;
+  },
+});
 
 const Course = model<ICourse, ICourseModel>(Models.COURSE, courseSchema);
 

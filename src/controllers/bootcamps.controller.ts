@@ -100,7 +100,7 @@ export const getBootcamp = async (
  *             phone: "(123) 456-7890"
  *             address: "123 Main St, San Francisco, CA"
  *             careers: ["Web Development", "UI/UX"]
- *             image: "bootcamp.jpg"
+ *             image: "https://www.images.com/photos/photo"
  *     responses:
  *       201:
  *         description: Bootcamp created successfully
@@ -143,7 +143,7 @@ export const createBootcamp = async (
  *             phone: "(123) 456-7890"
  *             address: "123 Main St, San Francisco, CA"
  *             careers: ["Web Development", "UI/UX"]
- *             image: "bootcamp.jpg"
+ *             image: "https://www.images.com/photos/photo"
  *     responses:
  *       200:
  *         description: Bootcamp updated successfully

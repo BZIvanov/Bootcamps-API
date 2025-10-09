@@ -96,7 +96,7 @@ export const forgotUserPassword = async (
   baseUrl: string,
   logger: Logger
 ): Promise<void> => {
-  // it should be the user's email
+  // It should be the user's email
   const { email } = input;
 
   const user = await User.findOne({ email });
