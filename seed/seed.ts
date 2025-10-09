@@ -4,10 +4,10 @@ import path from 'path';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import logger from '../src/config/logger.config.js';
-import User from '../src/models/user.model.js';
-import Bootcamp from '../src/models/bootcamp.model.js';
-import Course from '../src/models/course.model.js';
-import Review from '../src/models/review.model.js';
+import User from '../src/modules/users/user.model.js';
+import Bootcamp from '../src/modules/bootcamps/bootcamp.model.js';
+import Course from '../src/modules/courses/course.model.js';
+import Review from '../src/modules/reviews/review.model.js';
 
 dotenv.config();
 

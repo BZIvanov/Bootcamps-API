@@ -88,3 +88,16 @@ Mongoose provides a mature, battle-tested ODM specifically built for MongoDB, wi
 
 **Reason**:  
 Persistence-related logic stays on the schema to enforce data integrity at the model layer, while business logic (token generation and password comparison) is placed in the service for better separation of concerns, testability, and maintainability.
+
+## `src` Folders Structure
+
+| Folder        | Responsibility                   | Example                                              |
+| ------------- | -------------------------------- | ---------------------------------------------------- |
+| `config`      | App setup/configuration          | DB connection, logger, env                           |
+| `middlewares` | Request/response flow logic      | Auth, error handler, validation                      |
+| `modules`     | Domain-specific logic            | Models, services, controllers, validation, constants |
+| `providers`   | External/infrastructure services | Mailer, S3, Redis, payment APIs                      |
+| `routes`      | Versioned API routes             | v1/index.ts, module routes                           |
+| `shared`      | Stateless reusable logic         | Validators, constants, utils, enums                  |
+| `types`       | Global type definitions          | Express augmentations, global interfaces             |
+| `utils`       | Generic helpers                  | String, date, response formatting                    |

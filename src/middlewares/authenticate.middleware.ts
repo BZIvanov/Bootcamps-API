@@ -3,8 +3,8 @@ import httpStatus from 'http-status';
 import type { Secret } from 'jsonwebtoken';
 import jwt from 'jsonwebtoken';
 import { HttpError } from '@/utils/httpError.util.js';
-import type { IUser } from '@/models/user.model.js';
-import User from '@/models/user.model.js';
+import type { IUser } from '@/modules/users/user.model.js';
+import User from '@/modules/users/user.model.js';
 
 interface JwtPayload {
   id: string;

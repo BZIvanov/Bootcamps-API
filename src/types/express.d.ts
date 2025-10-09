@@ -1,6 +1,6 @@
 import type { Logger } from 'pino';
 import type { FileArray } from 'express-fileupload';
-import type { IUser } from '@/models/user.model';
+import type { IUser } from '@/modules/users/user.model';
 
 declare global {
   namespace Express {

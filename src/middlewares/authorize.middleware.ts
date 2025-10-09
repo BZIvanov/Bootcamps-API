@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
 import httpStatus from 'http-status';
 import { HttpError } from '@/utils/httpError.util.js';
-import type { UserRole } from '@/constants/user.constants.js';
+import type { UserRole } from '@/modules/users/user.constants.js';
 
 const authorize =
   (...allowedRoles: UserRole[]) =>
