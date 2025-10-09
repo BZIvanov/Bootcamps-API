@@ -11,7 +11,7 @@ export type ReviewIdParams = z.infer<typeof reviewIdParamSchema>['params'];
 
 export const createReviewSchema = z.object({
   params: z.object({
-    bootcampId: mongoId,
+    courseId: mongoId,
   }),
   body: z
     .object({

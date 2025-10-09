@@ -38,27 +38,27 @@ import type {
  *       200:
  *         description: List of reviews
  *
- * /bootcamps/{bootcampId}/reviews:
+ * /courses/{courseId}/reviews:
  *   get:
- *     summary: Get all reviews for a bootcamp
+ *     summary: Get all reviews for a course
  *     tags: [Reviews]
  *     parameters:
  *       - in: path
- *         name: bootcampId
+ *         name: courseId
  *         required: true
  *         schema:
  *           type: string
- *         description: Bootcamp ID
+ *         description: Course ID
  *     responses:
  *       200:
- *         description: List of reviews for a specific bootcamp
+ *         description: List of reviews for a specific course
  */
 export const getReviews = async (req: Request, res: Response) => {
   const query = parseQuery(req.query);
 
   const { reviews, meta } = await reviewsService.getReviews(
     query,
-    req.params.bootcampId
+    req.params.courseId
   );
 
   res.status(httpStatus.OK).json({
@@ -97,19 +97,19 @@ export const getReview = async (
 
 /**
  * @swagger
- * /bootcamps/{bootcampId}/reviews:
+ * /courses/{courseId}/reviews:
  *   post:
- *     summary: Create a review for a bootcamp
+ *     summary: Create a review for a course
  *     tags: [Reviews]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: bootcampId
+ *         name: courseId
  *         required: true
  *         schema:
  *           type: string
- *         description: Bootcamp ID
+ *         description: Course ID
  *     requestBody:
  *       required: true
  *       content:
@@ -139,14 +139,14 @@ export const getReview = async (
  *       401:
  *         description: Unauthorized
  *       404:
- *         description: Bootcamp not found
+ *         description: Course not found
  */
 export const createReview = async (
   req: Request<CreateReviewParams, unknown, CreateReviewBody>,
   res: Response
 ) => {
   const review = await reviewsService.createReview(
-    req.params.bootcampId,
+    req.params.courseId,
     req.user,
     req.body
   );

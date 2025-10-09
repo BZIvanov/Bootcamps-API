@@ -15,6 +15,8 @@ export interface IUser extends Document {
   resetPasswordToken?: string | undefined;
   resetPasswordExpire?: Date | undefined;
   getResetPasswordToken(): string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const userSchema = new Schema<IUser>(

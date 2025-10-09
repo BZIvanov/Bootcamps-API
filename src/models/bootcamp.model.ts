@@ -15,7 +15,6 @@ export interface IBootcamp extends Document {
   phone?: string;
   address: string;
   careers: string[];
-  averageRating?: number;
   averageCost?: number;
   image: string;
   user: Schema.Types.ObjectId;
@@ -72,11 +71,6 @@ const bootcampSchema = new Schema(
         'Business',
         'Other',
       ],
-    },
-    averageRating: {
-      type: Number,
-      min: [1, 'Rating must be at least 1'],
-      max: [10, 'Rating must be 10 or less'],
     },
     averageCost: {
       type: Number,

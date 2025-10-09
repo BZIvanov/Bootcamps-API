@@ -1,19 +1,21 @@
 import type { Document, Model } from 'mongoose';
 import { Schema, model } from 'mongoose';
 import { Models } from '@/constants/model.constants.js';
-import Bootcamp from './bootcamp.model.js';
+import Course from './course.model.js';
 
 export interface IReview extends Document {
   title: string;
   text: string;
   rating: number;
-  bootcamp: Schema.Types.ObjectId;
+  course: Schema.Types.ObjectId;
   user: Schema.Types.ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface IReviewModel extends Model<IReview> {
   recalculateAverageRating(
-    bootcampId: Schema.Types.ObjectId | string
+    courseId: Schema.Types.ObjectId | string
   ): Promise<void>;
 }
 
@@ -35,9 +37,9 @@ const reviewSchema = new Schema<IReview>(
       max: 10,
       required: [true, 'Please add a rating between 1 and 10'],
     },
-    bootcamp: {
+    course: {
       type: Schema.Types.ObjectId,
-      ref: Models.BOOTCAMP,
+      ref: Models.COURSE,
       required: true,
     },
     user: {
@@ -50,21 +52,23 @@ const reviewSchema = new Schema<IReview>(
 );
 
 // one review per user only
-reviewSchema.index({ bootcamp: 1, user: 1 }, { unique: true });
+reviewSchema.index({ course: 1, user: 1 }, { unique: true });
 
 reviewSchema.statics.recalculateAverageRating = async function (
-  bootcampId: Schema.Types.ObjectId | string
+  courseId: Schema.Types.ObjectId | string
 ) {
   const agg = await this.aggregate([
-    { $match: { bootcamp: bootcampId } },
-    { $group: { _id: '$bootcamp', averageRating: { $avg: '$rating' } } },
+    { $match: { course: courseId } },
+    { $group: { _id: '$course', averageRating: { $avg: '$rating' } } },
   ]);
 
   try {
     if (agg.length > 0) {
-      await Bootcamp.findByIdAndUpdate(bootcampId, {
-        averageRating: agg[0].averageRating,
+      await Course.findByIdAndUpdate(courseId, {
+        averageRating: agg[0].averageRating.toFixed(1),
       });
+    } else {
+      await Course.findByIdAndUpdate(courseId, { averageRating: undefined });
     }
   } catch (err) {
     console.log('Review schema error: ', err);
@@ -72,14 +76,14 @@ reviewSchema.statics.recalculateAverageRating = async function (
 };
 
 reviewSchema.post('save', function (this: IReview) {
-  (this.constructor as IReviewModel).recalculateAverageRating(this.bootcamp);
+  (this.constructor as IReviewModel).recalculateAverageRating(this.course);
 });
 
 reviewSchema.pre(
   'deleteOne',
   { document: true, query: false },
   function (this: IReview, next) {
-    (this.constructor as IReviewModel).recalculateAverageRating(this.bootcamp);
+    (this.constructor as IReviewModel).recalculateAverageRating(this.course);
     next();
   }
 );

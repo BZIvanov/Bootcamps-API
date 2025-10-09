@@ -11,6 +11,7 @@ export interface ICourse extends Document {
   minimumSkill: 'beginner' | 'intermediate' | 'advanced';
   bootcamp: Schema.Types.ObjectId;
   user: Schema.Types.ObjectId;
+  averageRating?: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -52,6 +53,11 @@ const courseSchema = new Schema<ICourse, ICourseModel>(
       type: Schema.Types.ObjectId,
       ref: Models.USER,
       required: true,
+    },
+    averageRating: {
+      type: Number,
+      min: [1, 'Rating must be at least 1'],
+      max: [10, 'Rating must be 10 or less'],
     },
   },
   { timestamps: true }
