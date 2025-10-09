@@ -6,24 +6,24 @@ import Filters from '@/utils/filters.util.js';
 import { getPaginationMeta } from '@/utils/pagination.util.js';
 import { HttpError } from '@/utils/httpError.util.js';
 import type { IUser } from '@/models/user.model.js';
-import Bootcamp from '@/models/bootcamp.model.js';
+import Course from '@/models/course.model.js';
 import { userTypes } from '@/constants/user.constants.js';
 import type {
   CreateReviewBody,
   UpdateReviewBody,
 } from '@/validation/reviews.validation.js';
 
-export const getReviews = async (query: QueryString, bootcampId?: string) => {
-  if (bootcampId) {
-    // Get all courses for a specific bootcamp. TODO: Maybe it should for a course, not bootcamp?
-    const reviews = await Review.find({ bootcamp: bootcampId });
+export const getReviews = async (query: QueryString, courseId?: string) => {
+  if (courseId) {
+    // Get all review for a specific course.
+    const reviews = await Review.find({ course: courseId });
     const meta = getPaginationMeta(reviews.length, query);
 
     return { reviews, meta };
   }
 
   const filters = new Filters(
-    Review.find().populate({ path: 'bootcamp', select: 'name description' }),
+    Review.find().populate({ path: 'course', select: 'title description' }),
     query
   )
     .filter()
@@ -40,8 +40,8 @@ export const getReviews = async (query: QueryString, bootcampId?: string) => {
 
 export const getReviewById = async (reviewId: string): Promise<IReview> => {
   const review = await Review.findById(reviewId).populate({
-    path: 'bootcamp',
-    select: 'name description',
+    path: 'course',
+    select: 'title description',
   });
 
   if (!review) {
@@ -55,22 +55,22 @@ export const getReviewById = async (reviewId: string): Promise<IReview> => {
 };
 
 export const createReview = async (
-  bootcampId: string,
+  courseId: string,
   user: IUser,
   data: CreateReviewBody
 ): Promise<IReview> => {
-  const bootcamp = await Bootcamp.findById(bootcampId);
+  const course = await Course.findById(courseId);
 
-  if (!bootcamp) {
+  if (!course) {
     throw new HttpError(
       httpStatus.NOT_FOUND,
-      `Bootcamp with id ${bootcampId} not found`
+      `Course with id ${courseId} not found`
     );
   }
 
   const review = await Review.create({
     ...data,
-    bootcamp: bootcampId,
+    course: courseId,
     user: user.id,
   });
 

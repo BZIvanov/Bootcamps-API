@@ -19,8 +19,8 @@ import reviewsRouter from './reviews.route.js';
 
 const router = Router({ mergeParams: true });
 
-// /api/v1/bootcamps/123/reviews => this will go to reviews router where it will be just '/' with the same method
-router.use('/:bootcampId/reviews', reviewsRouter);
+// /api/v1/courses/123/reviews => this will go to reviews router where it will be just '/' with the same method
+router.use('/:courseId/reviews', reviewsRouter);
 
 router
   .route('/')
