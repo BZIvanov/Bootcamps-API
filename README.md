@@ -1,21 +1,27 @@
 # Bootcamps API
 
-## How to use?
+A learning-focused REST API that powers a fictional **bootcamp management platform** — where publishers can create bootcamps and courses, and users can explore and review them.
 
-1. Clone the Github Repo.
-2. Run in the terminal the following:
+## Getting Started
+
+1. Clone the repository
+2. Run in the terminal the following to install dependencies:
 
 ```bash
 npm install
 ```
 
-3. To start the server in development mode run:
+3. Configure environment variables
+
+You need to create your **.env** file. You can copy-paste the content from the file `.env.example` to the file `.env` and update with your own values.
+
+4. Run the server
+
+Start the API in development mode with automatic reload:
 
 ```bash
 npm run dev
 ```
-
-But before that you need to create your **.env** file. You can copy-paste the content from the file `.env.example` to the file `.env` and update with the correct values
 
 ## Available Scripts
 

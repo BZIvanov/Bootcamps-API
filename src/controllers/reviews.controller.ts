@@ -183,6 +183,9 @@ export const createReview = async (
  *                 type: number
  *                 minimum: 1
  *                 maximum: 10
+ *           example:
+ *             title: "My updated course review"
+ *             rating: 9
  *     responses:
  *       200:
  *         description: Review updated successfully
