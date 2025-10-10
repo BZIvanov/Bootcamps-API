@@ -11,12 +11,13 @@ import apiRoutes from '@/routes/index.js';
 import rateLimiter from '@/middlewares/rateLimiter.middleware.js';
 import httpLogger from '@/middlewares/httpLogger.middleware.js';
 import errorHandler from '@/middlewares/errorHandler.middleware.js';
+import { MAX_FILE_SIZE } from '@/constants/file.constants.js';
 
 const app = express();
 
 app.use(express.json({ limit: '10kb' }));
 
-app.use(fileupload({ limits: { fileSize: 5 * 1024 * 1024 } })); // 5MB max
+app.use(fileupload({ limits: { fileSize: MAX_FILE_SIZE } }));
 
 app.use(hpp());
 app.use(helmet());

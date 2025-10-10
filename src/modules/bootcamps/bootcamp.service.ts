@@ -15,6 +15,7 @@ import type {
   UpdateBootcampBody,
 } from '@/modules/bootcamps/bootcamp.validation.js';
 import { userTypes } from '@/modules/users/user.constants.js';
+import { MAX_FILE_SIZE } from '@/constants/file.constants.js';
 
 export const getAllBootcamps = async (
   query: QueryString
@@ -159,11 +160,10 @@ export const uploadBootcampImage = async (
     throw new HttpError(httpStatus.BAD_REQUEST, 'Please upload an image file.');
   }
 
-  const maxSize = 1 * 1024 * 1024; // 1MB
-  if (file.size > maxSize) {
+  if (file.size > MAX_FILE_SIZE) {
     throw new HttpError(
       httpStatus.BAD_REQUEST,
-      'File size should be less than 1MB.'
+      'File size should be less than 5MB.'
     );
   }
 
