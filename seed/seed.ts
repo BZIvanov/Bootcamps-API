@@ -3,13 +3,16 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import logger from '../src/config/logger.config.js';
 import User from '../src/modules/users/user.model.js';
 import Bootcamp from '../src/modules/bootcamps/bootcamp.model.js';
 import Course from '../src/modules/courses/course.model.js';
 import Review from '../src/modules/reviews/review.model.js';
 
-dotenv.config();
+const basePath = path.resolve(process.cwd());
+const envFileName = '.env.development';
+const envPath = path.join(basePath, envFileName);
+
+dotenv.config({ path: envPath });
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,7 +22,7 @@ const readJSON = <T>(fileName: string): T =>
 
 const seedData = async () => {
   try {
-    logger.info('Seeding data to DB...');
+    console.log('Seeding data to DB...');
 
     const bootcamps = readJSON('bootcamps.json');
     const courses = readJSON('courses.json');
@@ -35,10 +38,10 @@ const seedData = async () => {
     await Review.create(reviews);
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    logger.info('Successfully seeded data to DB');
+    console.log('Successfully seeded data to DB');
     process.exit(0);
   } catch (err) {
-    logger.fatal({ err }, 'DB seed data error');
+    console.error('DB seed data error', err);
     process.exit(1);
   }
 };
@@ -50,10 +53,10 @@ const deleteData = async () => {
     await Course.deleteMany();
     await Review.deleteMany();
 
-    logger.info('All documents deleted from DB');
+    console.log('All documents deleted from DB');
     process.exit(0);
   } catch (err) {
-    logger.fatal({ err }, 'DB delete error');
+    console.error('DB delete error', err);
     process.exit(1);
   }
 };
@@ -66,7 +69,7 @@ if (!dbUri) {
 const main = async () => {
   try {
     await mongoose.connect(dbUri);
-    logger.info('MongoDB connected');
+    console.log('MongoDB connected');
 
     if (process.argv[2] === '-i') {
       await seedData();
@@ -76,7 +79,7 @@ const main = async () => {
 
     process.exit(0);
   } catch (err) {
-    logger.fatal({ err }, 'MongoDB connection error');
+    console.error('MongoDB connection error', err);
     process.exit(1);
   }
 };

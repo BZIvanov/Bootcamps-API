@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 import { HttpError } from '@/utils/httpError.util.js';
 import type { IUser } from '@/modules/users/user.model.js';
 import User from '@/modules/users/user.model.js';
+import ENV from '@/config/env.config.js';
 
 interface JwtPayload {
   id: string;
@@ -34,10 +35,7 @@ export default async function authenticate(
       );
     }
 
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET as Secret
-    ) as JwtPayload;
+    const decoded = jwt.verify(token, ENV.JWT_SECRET as Secret) as JwtPayload;
 
     const currentUser: IUser | null = await User.findById(decoded.id);
     if (!currentUser) {

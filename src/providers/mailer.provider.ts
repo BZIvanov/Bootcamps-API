@@ -1,5 +1,6 @@
 import type { Transporter, SendMailOptions } from 'nodemailer';
 import nodemailer from 'nodemailer';
+import ENV from '@/config/env.config.js';
 import logger from '@/config/logger.config.js';
 
 interface MailOptions {
@@ -9,28 +10,17 @@ interface MailOptions {
 }
 
 export async function sendEmail(options: MailOptions): Promise<void> {
-  const host = process.env.SMTP_HOST;
-  const port = process.env.SMTP_PORT
-    ? Number(process.env.SMTP_PORT)
-    : undefined;
-  const user = process.env.SMTP_USERNAME;
-  const pass = process.env.SMTP_PASSWORD;
-
-  if (!host || !port || !user || !pass) {
-    throw new Error('SMTP configuration is missing in environment variables');
-  }
-
   const transporter: Transporter = nodemailer.createTransport({
-    host,
-    port,
+    host: ENV.SMTP_HOST,
+    port: Number(ENV.SMTP_PORT),
     auth: {
-      user,
-      pass,
+      user: ENV.SMTP_USERNAME,
+      pass: ENV.SMTP_PASSWORD,
     },
   });
 
   const message: SendMailOptions = {
-    from: `${process.env.FROM_NAME ?? 'NoName'} <${process.env.FROM_EMAIL ?? 'no-reply@example.com'}>`,
+    from: `${ENV.FROM_NAME ?? 'NoName'} <${ENV.FROM_EMAIL ?? 'no-reply@example.com'}>`,
     to: options.email,
     subject: options.subject,
     text: options.text,

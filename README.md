@@ -57,7 +57,7 @@ We provide interactive API documentation using Swagger/OpenAPI. You can explore 
 
 **Accessing the docs**
 
-Once the server is running, open the following URL in your browser: `http://localhost:3100/api-docs`
+Once the server is running, open the following URL in your browser: [http://localhost:3100/api-docs](http://localhost:3100/api-docs)
 
 ## 🧭 Architectural Decisions
 

@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import hpp from 'hpp';
 import helmet from 'helmet';
 import cors from 'cors';
+import ENV from '@/config/env.config.js';
 import { setupSwagger } from '@/config/swagger.config.js';
 import apiRoutes from '@/routes/index.js';
 import rateLimiter from '@/middlewares/rateLimiter.middleware.js';
@@ -26,7 +27,7 @@ app.use(helmet());
 app.use(rateLimiter);
 
 // --- CORS & cookies ---
-app.use(cors({ origin: process.env.CLIENT_URL || '*' }));
+app.use(cors({ origin: ENV.CLIENT_URL || '*' }));
 app.use(cookieParser());
 
 // --- HTTP request logging ---

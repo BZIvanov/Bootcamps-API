@@ -1,12 +1,12 @@
 import type { LoggerOptions } from 'pino';
 import pino from 'pino';
-import { isProd } from '@/config/env.config.js';
+import ENV from '@/config/env.config.js';
 
 const baseConfig: LoggerOptions = {
-  level: process.env.LOG_LEVEL || (isProd ? 'info' : 'debug'),
+  level: ENV.LOG_LEVEL || (ENV.isProd ? 'info' : 'debug'),
 };
 
-const devTransport: LoggerOptions = !isProd
+const devTransport: LoggerOptions = !ENV.isProd
   ? {
       transport: {
         target: 'pino-pretty',
