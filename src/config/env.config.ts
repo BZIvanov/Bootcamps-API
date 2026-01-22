@@ -45,9 +45,7 @@ const envSchema = z.object({
   CLIENT_URL: z.url('CLIENT_URL must be a valid URL'),
 });
 
-// --------------------
 // 5️⃣ Parse and validate
-// --------------------
 const parsed = envSchema.safeParse(process.env);
 
 if (!parsed.success) {
@@ -61,9 +59,7 @@ if (!parsed.success) {
   process.exit(1);
 }
 
-// --------------------
 // 6️⃣ Export validated ENV
-// --------------------
 
 const ENVIRONMENTS = Object.freeze({
   DEVELOPMENT: 'development',
